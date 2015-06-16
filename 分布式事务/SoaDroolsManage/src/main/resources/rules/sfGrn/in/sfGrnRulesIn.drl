@@ -1,0 +1,166 @@
+package mb.erp.dr.o2o.drools.rules.grn;
+
+import mb.erp.dr.soa.vo.SfGrnVo;
+import mb.erp.dr.soa.vo.SfDgnVo;
+import mb.erp.dr.soa.vo.SfGrnDtlVo;
+import mb.erp.dr.soa.service.wareh.NewWarehService;
+import mb.erp.dr.soa.vo.SfWarehOrderTranVo;
+import mb.erp.dr.soa.vo.SfWarehTransitTranVo;
+import mb.erp.dr.soa.bean.NewOrderSearchBean;
+import mb.erp.dr.soa.dao.SfDgnMapper;
+import mb.erp.dr.soa.dao.SfWarehTranMapper;
+import mb.erp.dr.soa.constant.O2OBillConstant.NewBillType;
+import mb.erp.dr.soa.constant.O2OBillConstant.GdnMode;
+import java.util.List;
+import java.util.ArrayList;
+/**
+rule "原始单据类型是否ABG或TBN"
+	salience 100
+	no-loop true
+    when
+    	$grn : GrnVo(srcDocType == BillType.ABG || srcDocType == BillType.TBN)
+    then
+    	// System.out.println( "原始单据类型是ABG或TBN" );
+    	$grn.getRulesGroup().add("rule1");
+        update($grn);
+end
+
+rule "是否需要增加余额"
+    salience 90
+    no-loop true
+    when
+        $grn : GrnVo(controlStatus matches "^1.*" && rulesGroup not  contains "rule1")
+    then
+        // System.out.println( "需要增加余额" );
+        $grn.getRulesGroup().add("rule2");
+        update($grn);
+end
+
+rule "调用增加余额接口"
+    salience 80
+    no-loop true
+    when
+        $grn : GrnVo(rulesGroup  contains "rule2" ||  rulesGroup  contains "rule1" )
+        $balanceService:BalanceService()
+    then
+        // System.out.println( "调用增加余额接口，供货方："+$grn.getDispUnitId()+" 购货方："+$grn.getUnitId()+" 总金额"+$grn.getTtlVal()+" 入库单编号："+$grn.getGrnNum() );
+        BalanceBean balanceBean = new BalanceBean();
+        balanceBean.setUid($grn.getDispUnitId()); // 供货方（发货组织）
+        balanceBean.setCpdUid($grn.getUnitId()); // 购货方(接收方)
+        balanceBean.setBalance($grn.getTtlVal()); // 总金额
+        balanceBean.setDocType(BillType.GRN);
+        balanceBean.setDocNum($grn.getGrnNum());
+        $balanceService.increaseBalance(balanceBean);
+end
+**/
+rule "原始单据是否增加了在购库存"
+    salience 100
+    lock-on-active true
+    when
+        $sfGrn : SfGrnVo(controlStatus matches "^[1].*" )
+        $warehMapper : SfWarehTranMapper()
+   then
+         if ($sfGrn.getSfDgnCode() != null && !"".equals($sfGrn.getSfDgnCode())) {
+              // System.out.println( "新ERP入库判断原始单据增加了在购库存,接收仓库组织ID:"+$sfGrn.getWarehId()+"交货单号码:"+$sfGrn.getSfDgnCode());
+              NewOrderSearchBean orderSearchBean = new NewOrderSearchBean();
+              orderSearchBean.setWarehId($sfGrn.getWarehId());
+              orderSearchBean.setDocNum($sfGrn.getSfDgnCode());
+              orderSearchBean.setDocType(NewBillType.DGN);
+              //判断交货单是否添加过在购库存
+              List<SfWarehOrderTranVo> warehOrderTranVo = $warehMapper.searchOrderTranInfo(orderSearchBean);
+              if (warehOrderTranVo != null && warehOrderTranVo.size() > 0) {
+                 // System.out.println( "新ERP原始单据增加了在购库存" );
+                 $sfGrn.getRulesGroup().add("rule1");
+              }
+         }
+end
+
+rule "接收仓库释放在购库存"
+    salience 90
+   lock-on-active true
+    when
+        $grn : SfGrnVo($rulesGroup : rulesGroup)
+        $warehService: NewWarehService()
+        $sfDgnMapper :SfDgnMapper()
+   then
+        if($rulesGroup.contains("rule1")) {
+            // System.out.println( "需要释放在购库存, 接收仓库编码："+$grn.getWarehId()+" 组织编码："+$grn.getUnitId()+" 交货单编码："+$grn.getSfDgnCode());
+	        SfDgnVo dgnVo =  $sfDgnMapper.selectDgnByCode($grn.getSfDgnCode());
+            $warehService.reduceQtyOnOrderByDgn(dgnVo.getId());
+        }
+end
+
+
+rule "是否需要增加库存"
+    salience 80
+   lock-on-active true
+    when
+        $grn : SfGrnVo(controlStatus matches "^[0-1[1]].*")
+        $warehService:NewWarehService()
+   then
+        // System.out.println( "新ERP入库需要增加库存" );
+        $grn.getRulesGroup().add("rule2");
+end
+
+rule "增加库存"
+    salience 70
+   lock-on-active true
+    when
+        $grn : SfGrnVo($rulesGroup : rulesGroup)
+        $warehService:NewWarehService()
+   then
+        if($rulesGroup.contains("rule2")) {
+            // System.out.println( "需要增加库存, 接收仓库编码："+$grn.getWarehId()+" 组织编码："+$grn.getUnitId()+" 入库单编号："+$grn.getGrnNum() );
+            $warehService.increaseStockByGrn($grn.getId());
+        }
+end
+
+rule "入库单上是否存在货位"
+    salience 60
+    lock-on-active true
+    when
+        $grn : SfGrnVo($rulesGroup : rulesGroup)
+        $warehService:NewWarehService()
+   then
+        if ($rulesGroup.contains("rule2")) {
+           // System.out.println( "新ERP按收货货位或者指定货位增加库存:入库单ID"+$grn.getId());
+           $warehService.increaseLocQtyByGRN($grn.getId());
+        }
+end
+
+rule "原始单据是否增加了在途库存"
+    salience 50
+    lock-on-active true
+    when
+        $sfGrn : SfGrnVo($rulesGroup : rulesGroup)
+        $warehMapper : SfWarehTranMapper()
+   then
+         if ($sfGrn.getSfDgnCode() != null && !"".equals($sfGrn.getSfDgnCode())) {
+              // System.out.println( "新ERP入库判断出库单是否增加了在途库存,接收仓库组织ID:"+$sfGrn.getWarehId()+"入库单号码:"+$sfGrn.getGrnNum());
+              NewOrderSearchBean orderSearchBean = new NewOrderSearchBean();
+              orderSearchBean.setWarehId($sfGrn.getWarehId());
+              orderSearchBean.setDocNum($sfGrn.getGrnNum());
+              orderSearchBean.setDocType(NewBillType.GDN);
+              //判断出库单是否添加过在途库存
+              List<SfWarehTransitTranVo> warehTransitTranVo = $warehMapper.searchTransitTranInfo(orderSearchBean);
+              if (warehTransitTranVo != null && warehTransitTranVo.size() > 0) {
+                 // System.out.println( "新ERP出库增加了在途库存" );
+                 $sfGrn.getRulesGroup().add("rule3");
+              }
+         }
+end
+
+rule "如果是调拨流程则减少在途库存"
+    salience 40
+    lock-on-active true
+    when
+        $sfGrn : SfGrnVo($rulesGroup : rulesGroup)
+        $warehService:NewWarehService()
+   then
+         if($rulesGroup.contains("rule3") 
+         	&& (GdnMode.SHOR.name().equals($sfGrn.getRcptMode()) || $sfGrn.getUnitId().equals($sfGrn.getDispUnitId()))) {
+            // System.out.println( "入库时 - 调拨减少在途库存" );
+        	$warehService.reduceQtyInTransitByGrn($sfGrn.getId()); // 根据入库单减少在途库存
+        }
+end
+

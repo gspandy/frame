@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.PubO2oFlowMapper" >
+  <resultMap id="PubO2oFlowVoMap" type="mb.erp.dr.soa.old.vo.PubO2oFlowVo" >
+    <id column="O2O_SEQID" property="o2oSeqid" jdbcType="DECIMAL" />
+    <result column="BIZ_TYPE" property="bizType" jdbcType="VARCHAR" />
+    <result column="DATA_TYPE" property="dataType" jdbcType="VARCHAR" />
+    <result column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <result column="DATA_NO" property="dataNo" jdbcType="VARCHAR" />
+    <result column="QTY" property="qty" jdbcType="DECIMAL" />
+    <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+    <result column="INNER_NO" property="innerNo" jdbcType="VARCHAR" />
+    <result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="SHOPID" property="shopid" jdbcType="VARCHAR" />
+    <result column="WAREHID" property="warehid" jdbcType="VARCHAR" />
+    <result column="VENDEEID" property="vendeeid" jdbcType="VARCHAR" />
+    <result column="BUSSINESS_MODE" property="bussinessMode" jdbcType="VARCHAR" />
+    <result column="DOC_STATUS" property="docStatus" jdbcType="VARCHAR" />
+    <result column="DATA_TYPE_NO" property="dataTypeNo" jdbcType="VARCHAR" />
+  </resultMap>
+  
+    <!-- 获取流水号,批次号 - 结果信息表写入接口（O2O_SEQID） -->
+  <select id="getO2oSeqIdAndBatchNo" resultMap="PubO2oFlowVoMap">
+      select MTSBW.SEQ_O2O.NEXTVAL AS O2O_SEQID,MTSBW.SEQ_BATCH.NEXTVAL AS BATCH_NO from dual
+  </select>
+  <select id="getO2oSeqId" resultType="java.lang.Long">
+      select MTSBW.SEQ_O2O.NEXTVAL  from dual
+  </select>
+  
+  <select id="getO2oInfo"  parameterType="java.util.Map" resultMap="PubO2oFlowVoMap">
+      SELECT 
+      	O2O_SEQID,BIZ_TYPE,DATA_TYPE,UNIT_ID,DATA_NO,QTY,AMOUNT,INNER_NO,BATCH_NO,CREATE_DATE,REMARK,SHOPID,WAREHID,VENDEEID,BUSSINESS_MODE,DOC_STATUS,DATA_TYPE_NO 
+      FROM MTSBW.PUB_O2O_FLOW T WHERE T.DATA_NO = #{b2cDocCode,jdbcType=VARCHAR} AND T.BATCH_NO = #{batchNo,jdbcType=VARCHAR}  for update
+  </select>
+  
+  <insert id="save" parameterType="mb.erp.dr.soa.old.vo.PubO2oFlowVo" >
+    insert into MTSBW.PUB_O2O_FLOW
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="o2oSeqid != null " >
+        O2O_SEQID,
+      </if>
+      <if test="bizType != null and bizType != ''" >
+        BIZ_TYPE,
+      </if>
+      <if test="dataType != null and dataType != ''" >
+        DATA_TYPE,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="dataNo != null and dataNo != ''" >
+        DATA_NO,
+      </if>
+      <if test="qty != null " >
+        QTY,
+      </if>
+      <if test="amount != null " >
+        AMOUNT,
+      </if>
+      <if test="innerNo != null and innerNo != ''" >
+        INNER_NO,
+      </if>
+      <if test="batchNo != null and batchNo != ''" >
+        BATCH_NO,
+      </if>
+        CREATE_DATE,
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="shopid != null and shopid != ''" >
+        SHOPID,
+      </if>
+      <if test="warehid != null and warehid != ''" >
+        WAREHID,
+      </if>
+      <if test="vendeeid != null and vendeeid != ''" >
+        VENDEEID,
+      </if>
+      <if test="bussinessMode != null and bussinessMode != ''" >
+        BUSSINESS_MODE,
+      </if>
+      <if test="docStatus != null and docStatus != ''" >
+        DOC_STATUS,
+      </if>
+      <if test="dataTypeNo != null and dataTypeNo != ''" >
+        DATA_TYPE_NO,
+      </if>
+      <if test="dataFlowSeqid != null and dataFlowSeqid != ''" >
+        DATA_FLOW_SEQID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="o2oSeqid != null " >
+        #{o2oSeqid,jdbcType=DECIMAL},
+      </if>
+      <if test="bizType != null and bizType != ''" >
+        #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null and dataType != ''" >
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataNo != null and dataNo != ''" >
+        #{dataNo,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null " >
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null " >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="innerNo != null and innerNo != ''" >
+        #{innerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNo != null and batchNo != ''" >
+        #{batchNo,jdbcType=VARCHAR},
+      </if>
+        SYSDATE,
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="shopid != null and shopid != ''" >
+        #{shopid,jdbcType=VARCHAR},
+      </if>
+      <if test="warehid != null and warehid != ''" >
+        #{warehid,jdbcType=VARCHAR},
+      </if>
+      <if test="vendeeid != null and vendeeid != ''" >
+        #{vendeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessMode != null and bussinessMode != ''" >
+        #{bussinessMode,jdbcType=VARCHAR},
+      </if>
+      <if test="docStatus != null and docStatus != ''" >
+        #{docStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="dataTypeNo != null and dataTypeNo != ''" >
+        #{dataTypeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFlowSeqid != null and dataFlowSeqid != ''" >
+        #{dataFlowSeqid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <delete id="deleteSql" parameterType="mb.erp.dr.soa.old.vo.PubO2oFlowVo">
+  	delete from pub_o2o_flow t where t.inner_no =#{innerNo,jdbcType=VARCHAR} or t.data_no = #{dataNo,jdbcType=VARCHAR}
+  </delete>
+  
+    <!-- 队列出错时，更新预处理单据流  -->
+  <update id="updatePrepare" parameterType="mb.erp.dr.soa.old.vo.PubO2oFlowVo">
+    UPDATE pub_o2o_flow T SET T.DOC_STATUS = 'RE' , 
+    	T.REMARK = case when T.DOC_STATUS = 'RE' then T.REMARK||' ; '||#{remark,jdbcType=VARCHAR}  else #{remark,jdbcType=VARCHAR} end 
+    WHERE T.DATA_NO = #{dataNo,jdbcType=VARCHAR}  AND T.BATCH_NO = #{batchNo,jdbcType=VARCHAR} 
+  </update>
+  
+  <!-- 队列重处理成功后，更新预处理单据流  -->
+  <update id="updateCorrect" parameterType="mb.erp.dr.soa.old.vo.PubO2oFlowVo">
+    UPDATE pub_o2o_flow T SET
+	    <if test="docStatus != null and docStatus != ''" >
+           T.DOC_STATUS = #{docStatus,jdbcType=VARCHAR},
+      	</if>
+    	T.REMARK = #{remark,jdbcType=VARCHAR}
+    WHERE T.DATA_NO = #{dataNo,jdbcType=VARCHAR} AND T.BATCH_NO = #{batchNo,jdbcType=VARCHAR} 
+  </update>
+</mapper>

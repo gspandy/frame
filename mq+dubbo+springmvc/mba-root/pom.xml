@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>mb.mba</groupId>
+  <artifactId>mba-root</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <modules>
+    <module>../mbaInterface</module>
+    <module>../mbaDroolsManager</module>
+  </modules>
+  
+  <properties>
+    <mbaInterface-version>0.0.1-SNAPSHOT</mbaInterface-version>
+    <mbaDroolsManager-version>0.0.1-SNAPSHOT</mbaDroolsManager-version>
+    <SoaBillService_old-version>1.0.0</SoaBillService_old-version>
+    
+    <org.springframework-version>3.2.3.RELEASE</org.springframework-version>
+    <org.aspectj-version>1.6.10</org.aspectj-version>
+    <org.slf4j-version>1.6.6</org.slf4j-version>
+    <junit-version>4.12</junit-version>
+  </properties>
+  
+  <dependencyManagement>
+	  <dependencies>
+	    <dependency>
+	           <groupId>mb.mba</groupId>
+	          <artifactId>mbaInterface</artifactId>
+	          <version>${mbaInterface-version}</version>
+	    </dependency>
+	    <dependency>
+               <groupId>mb.mba</groupId>
+              <artifactId>mbaDroolsManager</artifactId>
+              <version>${mbaDroolsManager-version}</version>
+        </dependency>
+	    
+	    <dependency>
+		  <groupId>mb.erp.dr.soa</groupId>
+		  <artifactId>SoaBillService_old</artifactId>
+		  <version>${SoaBillService_old-version}</version>
+		</dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+	  </dependencies>
+  </dependencyManagement>
+  
+  <!-- 项目部署 -->
+  <distributionManagement>
+    <repository>
+    <id>dal-releases</id>
+    <url>http://10.100.200.4:8081/nexus/content/repositories/dal-releases</url>  
+    </repository>
+    <snapshotRepository>
+    <id>dal</id>
+    <url>http://10.100.200.4:8081/nexus/content/repositories/dal</url>  
+    </snapshotRepository>
+    </distributionManagement>
+</project>

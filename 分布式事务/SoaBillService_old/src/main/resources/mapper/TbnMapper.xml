@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.TbnMapper" >
+    <!-- 调配单结果集 -->
+  <resultMap id="TbnResultMap" type="mb.erp.dr.soa.old.vo.TbnVo" >
+    <id column="VENDER_ID" property="venderId"  />
+    <id column="TBN_NUM" property="tbnNum"  />
+    <result column="DOC_DATE" property="docDate"  />
+    <result column="VENDEE_ID" property="vendeeId"  />
+    <result column="DISP_WAREH_ID" property="dispWarehId"  />
+    <result column="RCV_WAREH_ID" property="rcvWarehId"  />
+    <result column="ADN_NUM" property="adnNum"  />
+    <result column="OPR_ID" property="oprId"  />
+    <result column="BUYER_ID" property="buyerId"  />
+    <result column="SELLER_ID" property="sellerId"  />
+    <result column="INVSG_ID" property="invsgId"  />
+    <result column="DELIV_MTHD" property="delivMthd"  />
+    <result column="DELIV_ADDR" property="delivAddr"  />
+    <result column="DELIV_PSTD" property="delivPstd"  />
+    <result column="REQD_AT" property="reqdAt"  />
+    <result column="DISP_TIME" property="dispTime"  />
+    <result column="RCV_TIME" property="rcvTime"  />
+    <result column="TAX_RATE" property="taxRate"  />
+    <result column="CURRENCY" property="currency"  />
+    <result column="CR_QTY" property="crQty"  />
+    <result column="CR_VAL" property="crVal"  />
+    <result column="DELIV_QTY" property="delivQty"  />
+    <result column="DELIV_VAL" property="delivVal"  />
+    <result column="RCV_QTY" property="rcvQty"  />
+    <result column="RCV_VAL" property="rcvVal"  />
+    <result column="PROGRESS" property="progress"  />
+    <result column="SUSPENDED" property="suspended"  />
+    <result column="CANCELLED" property="cancelled"  />
+    <result column="REMARK" property="remark"  />
+    <result column="INVSG_TIME" property="invsgTime"  />
+    <result column="VOLV_FINID" property="volvFinid"  />
+    <result column="RCVID" property="rcvid"  />
+    <result column="CR_ORDERVAL" property="crOrderval"  />
+    <result column="TBN_TYPE" property="tbnType"  />
+    <result column="BRAND_ID" property="brandId"  />
+    <result column="FACT_VENDEE_ID" property="factVendeeId"  />
+    <result column="FACT_WAREH_ID" property="factWarehId"  />
+    <result column="FACT_IDT_NUM" property="factIdtNum"  />
+    <result column="SRC_UNIT_ID" property="srcUnitId"  />
+    <result column="SRC_DOC_NUM" property="srcDocNum"  />
+    <result column="SRC_DOC_TYPE" property="srcDocType"  />
+    <result column="REASON_CODE" property="reasonCode"  />
+    <result column="ISUNIFORM" property="isuniform"  />
+    <result column="DATA_SOURCE" property="dataSource"  />
+    <result column="APPROVED" property="approved"  />
+    <result column="IS_REFRESH_PRICE" property="isRefreshPrice"  />
+    <result column="ERP_TYPE" property="erpType"  />
+    <result column="IS_UNION" property="isUnion"  />
+    <result column="RCV_ADDR" property="rcvAddr"  />
+    <result column="RCV_USER" property="rcvUser"  />
+    <result column="RCV_PHONE_NO" property="rcvPhoneNo"  />
+    <result column="IS_OOS" property="isOos"  />
+    <result column="EXPRESS_NUM" property="expressNum"  />
+    <result column="EXPRESS_STATE" property="expressState"  />
+    <result column="EXPRESS_CO" property="expressCo"  />
+    <result column="EXPRESS_FEE" property="expressFee"  />
+    <result column="ORG_DOC_NUM" property="orgDocNum"  />
+    <result column="ORG_DOC_TYPE" property="orgDocType"  />
+    <result column="CONSIGN_TYPE" property="consignType"  />
+     <result column="OS_DOC_CODE" property="osDocCode" />
+  </resultMap>
+  <!-- 调配单明细结果集 -->
+  <resultMap id="TbnDtlResultMap" type="mb.erp.dr.soa.old.vo.TbnDtlVo" >
+    <id column="VENDER_ID" property="venderId"  />
+    <id column="TBN_NUM" property="tbnNum"  />
+    <id column="PROD_ID" property="prodId"  />
+    <result column="UNIT_PRICE" property="unitPrice"  />
+    <result column="DISC_RATE" property="discRate"  />
+    <result column="EXPD_QTY" property="expdQty"  />
+    <result column="DELIV_QTY" property="delivQty"  />
+    <result column="RCV_QTY" property="rcvQty"  />
+    <result column="REMARK" property="remark"  />
+    <result column="ORDER_PRICE" property="orderPrice"  />
+    <result column="ORDER_DISC_RATE" property="orderDiscRate"  />
+  </resultMap>
+  <sql id="Tbn_Column_List" >
+    VENDER_ID, TBN_NUM, DOC_DATE, VENDEE_ID, DISP_WAREH_ID, RCV_WAREH_ID, ADN_NUM, OPR_ID, 
+    BUYER_ID, SELLER_ID, INVSG_ID, DELIV_MTHD, DELIV_ADDR, DELIV_PSTD, REQD_AT, DISP_TIME, 
+    RCV_TIME, TAX_RATE, CURRENCY, CR_QTY, CR_VAL, DELIV_QTY, DELIV_VAL, RCV_QTY, RCV_VAL, 
+    PROGRESS, SUSPENDED, CANCELLED, REMARK, INVSG_TIME, VOLV_FINID, RCVID, CR_ORDERVAL, 
+    TBN_TYPE, BRAND_ID, FACT_VENDEE_ID, FACT_WAREH_ID, FACT_IDT_NUM, SRC_UNIT_ID, SRC_DOC_NUM, 
+    SRC_DOC_TYPE, REASON_CODE, ISUNIFORM, DATA_SOURCE, APPROVED, IS_REFRESH_PRICE, ERP_TYPE, 
+    IS_UNION, RCV_ADDR, RCV_USER, RCV_PHONE_NO, IS_OOS, EXPRESS_NUM, EXPRESS_STATE, EXPRESS_CO, 
+    EXPRESS_FEE, ORG_DOC_NUM, ORG_DOC_TYPE, CONSIGN_TYPE, OS_DOC_CODE
+  </sql>
+  
+  <sql id="Tbn_del_Column_List" >
+    VENDER_ID, TBN_NUM, PROD_ID, UNIT_PRICE, DISC_RATE, EXPD_QTY, DELIV_QTY, RCV_QTY, 
+    REMARK, ORDER_PRICE, ORDER_DISC_RATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="TbnResultMap" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    select 
+    <include refid="Tbn_Column_List" />
+    from TBN
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </select>
+  <select id="searchTbnDtl" resultMap="TbnDtlResultMap" parameterType="mb.erp.dr.soa.bean.OrderSearchBean" >
+    select 
+    <include refid="Tbn_del_Column_List" />
+    from TBN_DTL
+    where VENDER_ID = #{unitId}
+    <if test="docNum != null and docNum != ''" >
+      and TBN_NUM = #{docNum}
+      </if>
+     <if test="prodId != null and prodId != ''" >
+      and PROD_ID = #{prodId}
+      </if>
+  </select>
+  <insert id="saveDtl" parameterType="mb.erp.dr.soa.old.vo.TbnDtlVo" >
+    insert into MTSBW.TBN_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        VENDER_ID,
+      </if>
+      <if test="tbnNum != null and tbnNum != ''" >
+        TBN_NUM,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE,
+      </if>
+      <if test="expdQty != null" >
+        EXPD_QTY,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="orderPrice != null" >
+        ORDER_PRICE,
+      </if>
+      <if test="orderDiscRate != null" >
+        ORDER_DISC_RATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        #{venderId},
+      </if>
+      <if test="tbnNum != null and tbnNum != ''" >
+        #{tbnNum},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice},
+      </if>
+      <if test="discRate != null" >
+        #{discRate},
+      </if>
+      <if test="expdQty != null" >
+        #{expdQty},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark},
+      </if>
+      <if test="orderPrice != null" >
+        #{orderPrice},
+      </if>
+      <if test="orderDiscRate != null" >
+        #{orderDiscRate},
+      </if>
+    </trim>
+  </insert>
+  <insert id="save" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    insert into MTSBW.TBN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        VENDER_ID,
+      </if>
+      <if test="tbnNum != null and tbnNum != ''" >
+        TBN_NUM,
+      </if>
+        DOC_DATE,
+      <if test="vendeeId != null and vendeeId != ''" >
+        VENDEE_ID,
+      </if>
+      <if test="dispWarehId != null and dispWarehId != ''" >
+        DISP_WAREH_ID,
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        RCV_WAREH_ID,
+      </if>
+      <if test="adnNum != null and adnNum != ''" >
+        ADN_NUM,
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        OPR_ID,
+      </if>
+      <if test="buyerId != null and buyerId != ''" >
+        BUYER_ID,
+      </if>
+      <if test="sellerId != null and sellerId != ''" >
+        SELLER_ID,
+      </if>
+      <if test="invsgId != null and invsgId != ''" >
+        INVSG_ID,
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        DELIV_MTHD,
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        DELIV_ADDR,
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        DELIV_PSTD,
+      </if>
+        REQD_AT,
+      <if test="dispTime != null and dispTime != ''" >
+        DISP_TIME,
+      </if>
+      <if test="rcvTime != null and rcvTime != ''" >
+        RCV_TIME,
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="crQty != null" >
+        CR_QTY,
+      </if>
+      <if test="crVal != null" >
+        CR_VAL,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL,
+      </if>
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        SUSPENDED,
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        CANCELLED,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="invsgTime != null and invsgTime != ''" >
+        INVSG_TIME,
+      </if>
+      <if test="volvFinid != null and volvFinid != ''" >
+        VOLV_FINID,
+      </if>
+      <if test="rcvid != null and rcvid != ''" >
+        RCVID,
+      </if>
+      <if test="crOrderval != null" >
+        CR_ORDERVAL,
+      </if>
+      <if test="tbnType != null and tbnType != ''" >
+        TBN_TYPE,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="factVendeeId != null and factVendeeId != ''" >
+        FACT_VENDEE_ID,
+      </if>
+      <if test="factWarehId != null and factWarehId != ''" >
+        FACT_WAREH_ID,
+      </if>
+      <if test="factIdtNum != null and factIdtNum != ''" >
+        FACT_IDT_NUM,
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        SRC_UNIT_ID,
+      </if>
+      <if test="srcDocNum != null and srcDocNum != ''" >
+        SRC_DOC_NUM,
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        SRC_DOC_TYPE,
+      </if>
+      <if test="reasonCode != null and reasonCode != ''" >
+        REASON_CODE,
+      </if>
+      <if test="isuniform != null and isuniform != ''" >
+        ISUNIFORM,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="approved != null and approved != ''" >
+        APPROVED,
+      </if>
+      <if test="isRefreshPrice != null and isRefreshPrice != ''" >
+        IS_REFRESH_PRICE,
+      </if>
+      <if test="erpType != null and erpType != ''" >
+        ERP_TYPE,
+      </if>
+      <if test="isUnion != null and isUnion != ''" >
+        IS_UNION,
+      </if>
+      <if test="rcvAddr != null and rcvAddr != ''" >
+        RCV_ADDR,
+      </if>
+      <if test="rcvUser != null and rcvUser != ''" >
+        RCV_USER,
+      </if>
+      <if test="rcvPhoneNo != null and rcvPhoneNo != ''" >
+        RCV_PHONE_NO,
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        IS_OOS,
+      </if>
+      <if test="expressNum != null and expressNum != ''" >
+        EXPRESS_NUM,
+      </if>
+      <if test="expressState != null and expressState != ''" >
+        EXPRESS_STATE,
+      </if>
+      <if test="expressCo != null and expressCo != ''" >
+        EXPRESS_CO,
+      </if>
+      <if test="expressFee != null" >
+        EXPRESS_FEE,
+      </if>
+      <if test="orgDocNum != null and orgDocNum != ''" >
+        ORG_DOC_NUM,
+      </if>
+      <if test="orgDocType != null and orgDocType != ''" >
+        ORG_DOC_TYPE,
+      </if>
+      <if test="consignType != null and consignType != ''" >
+        CONSIGN_TYPE,
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        #{venderId},
+      </if>
+      <if test="tbnNum != null and tbnNum != ''" >
+        #{tbnNum},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="vendeeId != null and vendeeId != ''" >
+        #{vendeeId},
+      </if>
+      <if test="dispWarehId != null and dispWarehId != ''" >
+        #{dispWarehId},
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        #{rcvWarehId},
+      </if>
+      <if test="adnNum != null and adnNum != ''" >
+        #{adnNum},
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        #{oprId},
+      </if>
+      <if test="buyerId != null and buyerId != ''" >
+        #{buyerId},
+      </if>
+      <if test="sellerId != null and sellerId != ''" >
+        #{sellerId},
+      </if>
+      <if test="invsgId != null and invsgId != ''" >
+        #{invsgId},
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        #{delivMthd},
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        #{delivAddr},
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        #{delivPstd},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="dispTime != null and dispTime != ''" >
+        SYSDATE,
+      </if>
+      <if test="rcvTime != null and rcvTime != ''" >
+        #{rcvTime},
+      </if>
+      <if test="taxRate != null" >
+        #{taxRate},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency},
+      </if>
+      <if test="crQty != null" >
+        #{crQty},
+      </if>
+      <if test="crVal != null" >
+        #{crVal},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty},
+      </if>
+      <if test="delivVal != null" >
+        #{delivVal},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty},
+      </if>
+      <if test="rcvVal != null" >
+        #{rcvVal},
+      </if>
+      <if test="progress != null and progress != ''" >
+        #{progress},
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        #{suspended},
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        #{cancelled},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark},
+      </if>
+      <if test="invsgTime != null and invsgTime != ''" >
+        #{invsgTime},
+      </if>
+      <if test="volvFinid != null and volvFinid != ''" >
+        #{volvFinid},
+      </if>
+      <if test="rcvid != null and rcvid != ''" >
+        #{rcvid},
+      </if>
+      <if test="crOrderval != null" >
+        #{crOrderval},
+      </if>
+      <if test="tbnType != null and tbnType != ''" >
+        #{tbnType},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId},
+      </if>
+      <if test="factVendeeId != null and factVendeeId != ''" >
+        #{factVendeeId},
+      </if>
+      <if test="factWarehId != null and factWarehId != ''" >
+        #{factWarehId},
+      </if>
+      <if test="factIdtNum != null and factIdtNum != ''" >
+        #{factIdtNum},
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        #{srcUnitId},
+      </if>
+      <if test="srcDocNum != null and srcDocNum != ''" >
+        #{srcDocNum},
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        #{srcDocType},
+      </if>
+      <if test="reasonCode != null and reasonCode != ''" >
+        #{reasonCode},
+      </if>
+      <if test="isuniform != null and isuniform != ''" >
+        #{isuniform},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource},
+      </if>
+      <if test="approved != null and approved != ''" >
+        #{approved},
+      </if>
+      <if test="isRefreshPrice != null and isRefreshPrice != ''" >
+        #{isRefreshPrice},
+      </if>
+      <if test="erpType != null and erpType != ''" >
+        #{erpType},
+      </if>
+      <if test="isUnion != null and isUnion != ''" >
+        #{isUnion},
+      </if>
+      <if test="rcvAddr != null and rcvAddr != ''" >
+        #{rcvAddr},
+      </if>
+      <if test="rcvUser != null and rcvUser != ''" >
+        #{rcvUser},
+      </if>
+      <if test="rcvPhoneNo != null and rcvPhoneNo != ''" >
+        #{rcvPhoneNo},
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        #{isOos},
+      </if>
+      <if test="expressNum != null and expressNum != ''" >
+        #{expressNum},
+      </if>
+      <if test="expressState != null and expressState != ''" >
+        #{expressState},
+      </if>
+      <if test="expressCo != null and expressCo != ''" >
+        #{expressCo},
+      </if>
+      <if test="expressFee != null" >
+        #{expressFee},
+      </if>
+      <if test="orgDocNum != null and orgDocNum != ''" >
+        #{orgDocNum},
+      </if>
+      <if test="orgDocType != null and orgDocType != ''" >
+        #{orgDocType},
+      </if>
+      <if test="consignType != null and consignType != ''" >
+        #{consignType},
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        #{osDocCode},
+      </if>
+    </trim>
+  </insert>
+  <!-- 验证调配单的状态 -->
+  <select id="selectProcess" resultType="java.lang.String" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    select PROGRESS
+    from MTSBW.TBN
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </select>
+  <!-- 更新调配单状态 -->
+  <update id="updateProcess" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    update MTSBW.TBN
+    set 
+      PROGRESS = #{progress}
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+       <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+      
+  </update>
+
+  <!-- 更新调配单 -->
+  <update id="updateTbnByPrimaryKey" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    update MTSBW.TBN
+    <set >
+      <if test="docDate != null" >
+        DOC_DATE = #{docDate,jdbcType=DATE},
+      </if>
+      <if test="vendeeId != null" >
+        VENDEE_ID = #{vendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispWarehId != null" >
+        DISP_WAREH_ID = #{dispWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvWarehId != null" >
+        RCV_WAREH_ID = #{rcvWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="adnNum != null" >
+        ADN_NUM = #{adnNum,jdbcType=VARCHAR},
+      </if>
+      <if test="oprId != null" >
+        OPR_ID = #{oprId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerId != null" >
+        BUYER_ID = #{buyerId,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerId != null" >
+        SELLER_ID = #{sellerId,jdbcType=VARCHAR},
+      </if>
+      <if test="invsgId != null" >
+        INVSG_ID = #{invsgId,jdbcType=VARCHAR},
+      </if>
+      <if test="delivMthd != null" >
+        DELIV_MTHD = #{delivMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="delivAddr != null" >
+        DELIV_ADDR = #{delivAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="delivPstd != null" >
+        DELIV_PSTD = #{delivPstd,jdbcType=VARCHAR},
+      </if>
+      <if test="reqdAt != null" >
+        REQD_AT = #{reqdAt},
+      </if>
+      <if test="dispTime != null" >
+        DISP_TIME = #{dispTime},
+      </if>
+      <if test="rcvTime != null" >
+        RCV_TIME = #{rcvTime},
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="crQty != null" >
+        CR_QTY = #{crQty,jdbcType=DECIMAL},
+      </if>
+      <if test="crVal != null" >
+        CR_VAL = #{crVal,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY = #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL = #{delivVal,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY = #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL = #{rcvVal,jdbcType=DECIMAL},
+      </if>
+      <if test="progress != null" >
+        PROGRESS = #{progress,jdbcType=CHAR},
+      </if>
+      <if test="suspended != null" >
+        SUSPENDED = #{suspended,jdbcType=CHAR},
+      </if>
+      <if test="cancelled != null" >
+        CANCELLED = #{cancelled,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="invsgTime != null" >
+        INVSG_TIME = #{invsgTime},
+      </if>
+      <if test="volvFinid != null" >
+        VOLV_FINID = #{volvFinid,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvid != null" >
+        RCVID = #{rcvid,jdbcType=VARCHAR},
+      </if>
+      <if test="crOrderval != null" >
+        CR_ORDERVAL = #{crOrderval,jdbcType=DECIMAL},
+      </if>
+      <if test="tbnType != null" >
+        TBN_TYPE = #{tbnType,jdbcType=CHAR},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="factVendeeId != null" >
+        FACT_VENDEE_ID = #{factVendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="factWarehId != null" >
+        FACT_WAREH_ID = #{factWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="factIdtNum != null" >
+        FACT_IDT_NUM = #{factIdtNum,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitId != null" >
+        SRC_UNIT_ID = #{srcUnitId,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocNum != null" >
+        SRC_DOC_NUM = #{srcDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocType != null" >
+        SRC_DOC_TYPE = #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="reasonCode != null" >
+        REASON_CODE = #{reasonCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isuniform != null" >
+        ISUNIFORM = #{isuniform,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="approved != null" >
+        APPROVED = #{approved,jdbcType=VARCHAR},
+      </if>
+      <if test="isRefreshPrice != null" >
+        IS_REFRESH_PRICE = #{isRefreshPrice,jdbcType=CHAR},
+      </if>
+      <if test="erpType != null" >
+        ERP_TYPE = #{erpType,jdbcType=CHAR},
+      </if>
+      <if test="isUnion != null" >
+        IS_UNION = #{isUnion,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvAddr != null" >
+        RCV_ADDR = #{rcvAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvUser != null" >
+        RCV_USER = #{rcvUser,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvPhoneNo != null" >
+        RCV_PHONE_NO = #{rcvPhoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isOos != null" >
+        IS_OOS = #{isOos,jdbcType=CHAR},
+      </if>
+      <if test="expressNum != null" >
+        EXPRESS_NUM = #{expressNum,jdbcType=VARCHAR},
+      </if>
+      <if test="expressState != null" >
+        EXPRESS_STATE = #{expressState,jdbcType=VARCHAR},
+      </if>
+      <if test="expressCo != null" >
+        EXPRESS_CO = #{expressCo,jdbcType=VARCHAR},
+      </if>
+      <if test="expressFee != null" >
+        EXPRESS_FEE = #{expressFee,jdbcType=DECIMAL},
+      </if>
+      <if test="orgDocNum != null" >
+        ORG_DOC_NUM = #{orgDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="orgDocType != null" >
+        ORG_DOC_TYPE = #{orgDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="consignType != null" >
+        CONSIGN_TYPE = #{consignType,jdbcType=VARCHAR},
+      </if>
+      <if test="osDocCode != null" >
+        OS_DOC_CODE = #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where VENDER_ID = #{venderId,jdbcType=VARCHAR}
+      and TBN_NUM = #{tbnNum,jdbcType=VARCHAR}
+       <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  <!-- 撤销调配单 -->
+  <update id="cancel" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    update MTSBW.TBN
+    set 
+      CANCELLED = #{cancelled}
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  <!--  原始单据修改 =================================================================== -->
+  <!-- 原始单据修改-调配单表头（发货） -->
+  <update id="updateOriginalTbnF" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    update MTSBW.TBN
+    set 
+      PROGRESS = #{progress},
+      deliv_Qty = 0,<!-- 发货数量 -->
+      DISP_TIME = sysdate
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+       <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+       </if>
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （发货）-->
+  <update id="updateOriginalTbnDtlF" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    update MTSBW.TBN_DTL
+    set 
+      deliv_Qty = 0<!-- 发货数量 -->
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单表头 （收货）-->
+  <update id="updateOriginalTbnS" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    update MTSBW.TBN
+    set 
+      PROGRESS = #{progress},
+      rcv_Qty = 0,<!-- 收货数量 -->
+      RCV_TIME = sysdate
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+       <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+       </if>
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （收货）-->
+  <update id="updateOriginalTbnDtlS" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+    update MTSBW.TBN_DTL
+    set 
+      rcv_Qty = 0<!-- 发货数量 -->
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单表头 （已发货接口）-->
+  <update id="updateOriginalTbnYfh" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+  update MTSBW.TBN T
+    set 
+      PROGRESS = #{progress},
+      (deliv_Qty,deliv_Val) = (SELECT G.TTL_QTY,G.TTL_VAL FROM GDN G WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM )
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+       <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+       </if>
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （已发货接口）-->
+  <update id="updateOriginalTbnDtlYfh" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+  update MTSBW.TBN_DTL T
+    set 
+      deliv_Qty= NVL((
+	      SELECT GD.quantity 
+	      FROM GDN_DTL GD  INNER JOIN GDN G ON G.UNIT_ID = GD.UNIT_ID AND G.GDN_NUM = GD.GDN_NUM
+	      WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM AND GD.PROD_ID = T.PROD_ID
+       ),0)
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  
+  <!-- 原始单据修改-调配单表头 （已收货接口）-->
+  <update id="updateOriginalTbnYsh" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+  update MTSBW.TBN T
+    set 
+      PROGRESS = #{progress},
+      (rcv_Qty,rcv_Val)= (SELECT G.TTL_QTY,G.TTL_VAL FROM GRN G WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM )
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+      <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+       </if>
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （已收货接口）-->
+  <update id="updateOriginalTbnDtlYsh" parameterType="mb.erp.dr.soa.old.vo.TbnVo" >
+  update MTSBW.TBN_DTL T
+    set 
+      rcv_Qty= NVL((
+          SELECT GD.quantity 
+          FROM GRN_DTL GD  INNER JOIN GRN G ON G.UNIT_ID = GD.UNIT_ID AND G.GRN_NUM = GD.GRN_NUM
+          WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM AND GD.PROD_ID = T.PROD_ID
+       ),0)
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 根据出库单 GDN 查询 调配单 -->
+  <select id="selectTbnByGdn" parameterType="mb.erp.dr.soa.old.vo.GdnVo"  resultMap="TbnResultMap">
+    SELECT T.* FROM TBN T INNER JOIN GDN G ON G.SRC_DOC_NUM = T.TBN_NUM  AND G.SRC_UNIT_ID = T.VENDER_ID
+                      WHERE G.SRC_DOC_TYPE = 'TBN'
+                      AND   G.UNIT_ID = #{unitId}
+                      AND   G.GDN_NUM = #{gdnNum} 
+  </select>
+  
+  <!-- 根据入库单 GRN 查询 调配单 -->
+  <select id="selectTbnByGrn" parameterType="mb.erp.dr.soa.old.vo.GrnVo"  resultMap="TbnResultMap">
+    SELECT T.* FROM TBN T INNER JOIN GRN G ON G.SRC_DOC_NUM = T.TBN_NUM AND G.SRC_UNIT_ID = T.VENDER_ID
+                      WHERE G.SRC_DOC_TYPE = 'TBN'
+                      AND   G.UNIT_ID = #{unitId}
+                      AND   G.GRN_NUM = #{grnNum} 
+  </select>
+  
+  <!-- 从调配单中获取税率 -->
+  <select id="selectTaxRateFromTbn" parameterType="map"  resultType="java.lang.Double">
+  	 SELECT NVL(MAX(T.TAX_RATE),-1)
+	    FROM TBN T 
+	   WHERE T.SUSPENDED = 'F'
+	     AND T.CANCELLED = 'F'
+	     AND T.VENDER_ID = #{unit_id}
+	     AND T.TBN_NUM = #{docNum}
+  </select>
+</mapper>

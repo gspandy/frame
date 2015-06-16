@@ -1,0 +1,1463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfDgnMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.SfDgnVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="BF_ORG_UNIT_ID" property="bfOrgUnitId" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="DOC_DATE" property="docDate" jdbcType="DATE" />
+    <result column="WAREH_ID" property="warehId" jdbcType="DECIMAL" />
+    <result column="BF_ORG_RCV_UNIT_ID" property="bfOrgRcvUnitId" jdbcType="DECIMAL" />
+    <result column="BF_ORG_RCV_WAREH_ID" property="bfOrgRcvWarehId" jdbcType="DECIMAL" />
+    <result column="CTRLR_ID" property="ctrlrId" jdbcType="DECIMAL" />
+    <result column="CONTACT_ID" property="contactId" jdbcType="DECIMAL" />
+    <result column="SRC_DOC_TYPE" property="srcDocType" jdbcType="VARCHAR" />
+    <result column="SRC_UNIT_ID" property="srcUnitId" jdbcType="DECIMAL" />
+    <result column="SRC_DOC_CODE" property="srcDocCode" jdbcType="VARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="TTL_QTY" property="ttlQty" jdbcType="DECIMAL" />
+    <result column="TTL_VAL" property="ttlVal" jdbcType="DECIMAL" />
+    <result column="TAX_RATE" property="taxRate" jdbcType="DECIMAL" />
+    <result column="REQD_AT" property="reqdAt" jdbcType="DATE" />
+    <result column="GOODCODE" property="goodcode" jdbcType="VARCHAR" />
+    <result column="MFC_NUM" property="mfcNum" jdbcType="VARCHAR" />
+    <result column="AREA" property="area" jdbcType="VARCHAR" />
+    <result column="FACTORY_ID" property="factoryId" jdbcType="DECIMAL" />
+    <result column="LOC_ID" property="locId" jdbcType="DECIMAL" />
+    <result column="PEQD_AT" property="peqdAt" jdbcType="DATE" />
+    <result column="PLAN_TO_WAREH_DATE" property="planToWarehDate" jdbcType="DATE" />
+    <result column="PRE_CARRY_DATE" property="preCarryDate" jdbcType="DATE" />
+    <result column="IS_WHOLE_SUBMIT" property="isWholeSubmit" jdbcType="CHAR" />
+    <result column="IS_COMBINE_ASSIGN" property="isCombineAssign" jdbcType="CHAR" />
+    <result column="IS_RE_CAL_PRICE" property="isReCalPrice" jdbcType="CHAR" />
+    <result column="IS_GEN_STK_ON_BUY" property="isGenStkOnBuy" jdbcType="CHAR" />
+    <result column="IS_GEN_STK_ON_ROAD" property="isGenStkOnRoad" jdbcType="CHAR" />
+    <result column="IS_CAN_DELIVERY" property="isCanDelivery" jdbcType="CHAR" />
+    <result column="IS_CAN_ACROSS" property="isCanAcross" jdbcType="CHAR" />
+    <result column="IS_GEN_LOG_REC_DOC" property="isGenLogRecDoc" jdbcType="CHAR" />
+    <result column="IS_GEN_PKN" property="isGenPkn" jdbcType="CHAR" />
+    <result column="IS_FINNCE_BALANCE" property="isFinnceBalance" jdbcType="CHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="BRAND_ID" property="brandId" jdbcType="DECIMAL" />
+    <result column="DOC_STATE" property="docState" jdbcType="DECIMAL" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LAST_MODIFIED_USER" property="lastModifiedUser" jdbcType="VARCHAR" />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+    <result column="PROGRESS" property="progress" jdbcType="VARCHAR" />
+    <result column="FLAG" property="flag" jdbcType="VARCHAR" />
+    <result column="IS_STRAIGHT_DELIVERY" property="isStraightDelivery" jdbcType="CHAR" />
+    <result column="DELIV_MODE" property="delivMode" jdbcType="VARCHAR" />
+    <result column="IS_QN" property="isQn" jdbcType="CHAR" />
+    <result column="STR_SCAN_TIME" property="strScanTime" jdbcType="TIMESTAMP" />
+    <result column="IS_GEN_GRN" property="isGenGrn" jdbcType="CHAR" />
+    <result column="ACT_SEN_WAREH_ID" property="actSenWarehId" jdbcType="DECIMAL" />
+    <result column="END_SCAN_TIME" property="endScanTime" jdbcType="TIMESTAMP" />
+    <result column="URGENCY" property="urgency" jdbcType="VARCHAR" />
+    <result column="SCANER_ID" property="scanerId" jdbcType="DECIMAL" />
+    <result column="OLOC_ID" property="olocId" jdbcType="DECIMAL" />
+    <result column="PDA_PROGRESS" property="pdaProgress" jdbcType="VARCHAR" />
+    <result column="PICK_TYPE" property="pickType" jdbcType="VARCHAR" />
+    <result column="PRINT_G_TIMES" property="printGTimes" jdbcType="DECIMAL" />
+    <result column="OPE_STATUS" property="opeStatus" jdbcType="VARCHAR" />
+    <result column="BOX_WEIGHT" property="boxWeight" jdbcType="VARCHAR" />
+    <result column="PRI_EXP_TYPE" property="priExpType" jdbcType="VARCHAR" />
+    <result column="PRI_MODE" property="priMode" jdbcType="VARCHAR" />
+    <result column="COMBINED_DGN_CODE" property="combinedDgnCode" jdbcType="VARCHAR" />
+    <result column="TOTAL_BOX_COUNT" property="totalBoxCount" jdbcType="DECIMAL" />
+    <result column="TOTAL_WEIGHT" property="totalWeight" jdbcType="DECIMAL" />
+    <result column="TOTAL_VOLUMN" property="totalVolumn" jdbcType="DECIMAL" />
+    <result column="COMBINED_SYMBOL" property="combinedSymbol" jdbcType="DECIMAL" />
+    <result column="IS_COMBINED" property="isCombined" jdbcType="DECIMAL" />
+    <result column="SPLIT_MODE" property="splitMode" jdbcType="VARCHAR" />
+    <result column="CLIENT_ORDER_CODE" property="clientOrderCode" jdbcType="VARCHAR" />
+    <result column="SHIPPING_ID" property="shippingId" jdbcType="DECIMAL" />
+    <result column="PRODUCT_COUNT" property="productCount" jdbcType="DECIMAL" />
+    <result column="LOW_ORDER_FLAG" property="lowOrderFlag" jdbcType="CHAR" />
+    <result column="LOW_SHOP_ID" property="lowShopId" jdbcType="DECIMAL" />
+    <result column="SF_BAT_MNN_ID" property="sfBatMnnId" jdbcType="DECIMAL" />
+    <result column="IS_PRINT_GDN" property="isPrintGdn" jdbcType="CHAR" />
+    <result column="LOC_CODE" property="locCode" jdbcType="VARCHAR" />
+    <result column="OLOC_CODE" property="olocCode" jdbcType="VARCHAR" />
+    <result column="PICK_MODE" property="pickMode" jdbcType="VARCHAR" />
+    <result column="TRANS_STATE" property="transState" jdbcType="VARCHAR" />
+    <result column="IS_TRANSFER" property="isTransfer" jdbcType="CHAR" />
+    <result column="TRANSFER_STATE" property="transferState" jdbcType="VARCHAR" />
+    <result column="UBIETY_WAREH" property="ubietyWareh" jdbcType="DECIMAL" />
+    <result column="TRANSFER_ORG_ID" property="transferOrgId" jdbcType="DECIMAL" />
+    <result column="ORIGIN_UNIT_ID" property="originUnitId" jdbcType="DECIMAL" />
+    <result column="ORIGIN_DOC_TYPE" property="originDocType" jdbcType="VARCHAR" />
+    <result column="ORIGIN_DOC_NUM" property="originDocNum" jdbcType="VARCHAR" />
+    <result column="TEMP_COMBINED_SYMBOL" property="tempCombinedSymbol" jdbcType="DECIMAL" />
+    <result column="COMBIN_FLAG_T" property="combinFlagT" jdbcType="VARCHAR" />
+    <result column="TRAN_WAREH_ID" property="tranWarehId" jdbcType="DECIMAL" />
+    <result column="GPICKTIME" property="gpicktime" jdbcType="DECIMAL" />
+    <result column="ACT_RCV_UNIT_ID" property="actRcvUnitId" jdbcType="DECIMAL" />
+    <result column="ACT_RCV_WAREH_ID" property="actRcvWarehId" jdbcType="DECIMAL" />
+    <result column="DGN_TYPE_SL" property="dgnTypeSl" jdbcType="VARCHAR" />
+    <result column="ADD_RESS" property="addRess" jdbcType="VARCHAR" />
+    <result column="GDN_STATE" property="gdnState" jdbcType="VARCHAR" />
+    <result column="IF_END_BAT" property="ifEndBat" jdbcType="CHAR" />
+    <result column="DELIV_MTHD" property="delivMthd" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="DELIV_PSTD" property="delivPstd" jdbcType="VARCHAR" />
+    <result column="CREATE_TYPE" property="createType" jdbcType="VARCHAR" />
+    <result column="PRINTFLAG" property="printflag" jdbcType="VARCHAR" />
+    <result column="OOS_OPE_SHOPID" property="oosOpeShopid" jdbcType="DECIMAL" />
+    <result column="IS_INVOICE_VERIFY" property="isInvoiceVerify" jdbcType="CHAR" />
+    <result column="IS_AUTO_DIST" property="isAutoDist" jdbcType="CHAR" />
+    <result column="IS_ADDED" property="isAdded" jdbcType="CHAR" />
+    <result column="PKN_CONFIRM_TIME" property="pknConfirmTime" jdbcType="DATE" />
+    <result column="WIF_NUM" property="wifNum" jdbcType="VARCHAR" />
+    <result column="OERP_REMARK" property="oerpRemark" jdbcType="VARCHAR" />
+    <result column="TRANSFER_VALIDED" property="transferValided" jdbcType="CHAR" />
+    <result column="IS_MERGER" property="isMerger" jdbcType="CHAR" />
+    <result column="OS_DOC_CODE" property="osDocCode" jdbcType="VARCHAR" />
+    <result column="VENDEE_CODE" property="vendeeCode" jdbcType="VARCHAR" />
+    <result column="VENDER_CODE" property="venderCode" jdbcType="VARCHAR" />
+    <result column="RCV_WAREH_CODE" property="rcvWarehCode" jdbcType="VARCHAR" />
+    <result column="DISP_WAREH_CODE" property="dispWarehCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="SfDgnDtlVoMap" type="mb.erp.dr.soa.vo.SfDgnDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SF_DGN_ID" property="sfDgnId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="PROD_CODE" property="prodCode" jdbcType="VARCHAR" />
+    <result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+    <result column="DELIVERED_QUA" property="deliveredQua" jdbcType="DECIMAL" />
+    <result column="ASSIGNED_QUA" property="assignedQua" jdbcType="DECIMAL" />
+    <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="UNIT_ADDT_COST" property="unitAddtCost" jdbcType="DECIMAL" />
+    <result column="UNIT_COST" property="unitCost" jdbcType="DECIMAL" />
+    <result column="OLD_DISC_RATE" property="oldDiscRate" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="OUT_QTY" property="outQty" jdbcType="DECIMAL" />
+    <result column="PICKED_QTY" property="pickedQty" jdbcType="DECIMAL" />
+    <result column="LOC_ID" property="locId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, BF_ORG_UNIT_ID, CODE, DOC_DATE, WAREH_ID, BF_ORG_RCV_UNIT_ID, BF_ORG_RCV_WAREH_ID, 
+    CTRLR_ID, CONTACT_ID, SRC_DOC_TYPE, SRC_UNIT_ID, SRC_DOC_CODE, CURRENCY, TTL_QTY, 
+    TTL_VAL, TAX_RATE, REQD_AT, GOODCODE, MFC_NUM, AREA, FACTORY_ID, LOC_ID, PEQD_AT, 
+    PLAN_TO_WAREH_DATE, PRE_CARRY_DATE, IS_WHOLE_SUBMIT, IS_COMBINE_ASSIGN, IS_RE_CAL_PRICE, 
+    IS_GEN_STK_ON_BUY, IS_GEN_STK_ON_ROAD, IS_CAN_DELIVERY, IS_CAN_ACROSS, IS_GEN_LOG_REC_DOC, 
+    IS_GEN_PKN, IS_FINNCE_BALANCE, REMARK, BRAND_ID, DOC_STATE, CREATE_USER, CREATE_DATE, 
+    LAST_MODIFIED_USER, LAST_MODIFIED_DATE, PROGRESS, FLAG, IS_STRAIGHT_DELIVERY, DELIV_MODE, 
+    IS_QN, STR_SCAN_TIME, IS_GEN_GRN, ACT_SEN_WAREH_ID, END_SCAN_TIME, URGENCY, SCANER_ID, 
+    OLOC_ID, PDA_PROGRESS, PICK_TYPE, PRINT_G_TIMES, OPE_STATUS, BOX_WEIGHT, PRI_EXP_TYPE, 
+    PRI_MODE, COMBINED_DGN_CODE, TOTAL_BOX_COUNT, TOTAL_WEIGHT, TOTAL_VOLUMN, COMBINED_SYMBOL, 
+    IS_COMBINED, SPLIT_MODE, CLIENT_ORDER_CODE, SHIPPING_ID, PRODUCT_COUNT, LOW_ORDER_FLAG, 
+    LOW_SHOP_ID, SF_BAT_MNN_ID, IS_PRINT_GDN, LOC_CODE, OLOC_CODE, PICK_MODE, TRANS_STATE, 
+    IS_TRANSFER, TRANSFER_STATE, UBIETY_WAREH, TRANSFER_ORG_ID, ORIGIN_UNIT_ID, ORIGIN_DOC_TYPE, 
+    ORIGIN_DOC_NUM, TEMP_COMBINED_SYMBOL, COMBIN_FLAG_T, TRAN_WAREH_ID, GPICKTIME, ACT_RCV_UNIT_ID, 
+    ACT_RCV_WAREH_ID, DGN_TYPE_SL, ADD_RESS, GDN_STATE, IF_END_BAT, DELIV_MTHD, DATA_SOURCE, 
+    DELIV_PSTD, CREATE_TYPE, PRINTFLAG, OOS_OPE_SHOPID, IS_INVOICE_VERIFY, IS_AUTO_DIST, 
+    IS_ADDED, PKN_CONFIRM_TIME, WIF_NUM, OERP_REMARK, TRANSFER_VALIDED, IS_MERGER, OS_DOC_CODE
+  </sql>
+  <select id="selectDgnById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from SF_DGN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectDgnByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from SF_DGN
+    where CODE = #{code,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询新ERP交货单进度 -->
+  <select id="selectDocState" parameterType="mb.erp.dr.soa.vo.SfDgnVo"  resultType="java.lang.Integer">
+    SELECT doc_state FROM SF_DGN
+    <where>
+      <if test="id != null and id !=''">
+            ID = #{id}
+	  </if>
+	  <if test="code != null and code !=''">
+	    	AND CODE = #{code}
+	  </if>
+    </where>
+  </select>
+  
+  <!-- 查询交货单详情 -->
+  <select id="genSfDgnDtlByDgn" parameterType="mb.erp.dr.soa.vo.SfDgnVo"  resultMap="SfDgnDtlVoMap">
+    SELECT * FROM SF_DGN_DTL WHERE SF_DGN_ID = #{id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from SF_DGN
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="saveSfDgn" parameterType="mb.erp.dr.soa.vo.SfDgnVo" >
+    insert into SF_DGN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    	ID,
+      <if test="bfOrgUnitId != null and bfOrgUnitId != ''" >
+        BF_ORG_UNIT_ID,
+      </if>
+      <if test="code != null and code != ''" >
+        CODE,
+      </if>
+        DOC_DATE,
+      <if test="warehId != null and warehId != ''" >
+        WAREH_ID,
+      </if>
+      <if test="bfOrgRcvUnitId != null and bfOrgRcvUnitId != ''" >
+        BF_ORG_RCV_UNIT_ID,
+      </if>
+      <if test="bfOrgRcvWarehId != null and bfOrgRcvWarehId != ''" >
+        BF_ORG_RCV_WAREH_ID,
+      </if>
+      <if test="ctrlrId != null and ctrlrId != ''" >
+        CTRLR_ID,
+      </if>
+      <if test="contactId != null and contactId != ''" >
+        CONTACT_ID,
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        SRC_DOC_TYPE,
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        SRC_UNIT_ID,
+      </if>
+      <if test="srcDocCode != null and srcDocCode != ''" >
+        SRC_DOC_CODE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="ttlQty != null" >
+        TTL_QTY,
+      </if>
+      <if test="ttlVal != null" >
+        TTL_VAL,
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE,
+      </if>
+        REQD_AT,
+      <if test="goodcode != null and goodcode != ''" >
+        GOODCODE,
+      </if>
+      <if test="mfcNum != null and mfcNum != ''" >
+        MFC_NUM,
+      </if>
+      <if test="area != null and area != ''" >
+        AREA,
+      </if>
+      <if test="factoryId != null and factoryId != ''" >
+        FACTORY_ID,
+      </if>
+      <if test="locId != null and locId != ''" >
+        LOC_ID,
+      </if>
+      <if test="peqdAt != null and peqdAt != ''" >
+        PEQD_AT,
+      </if>
+      <if test="planToWarehDate != null and planToWarehDate != ''" >
+        PLAN_TO_WAREH_DATE,
+      </if>
+      <if test="preCarryDate != null and preCarryDate != ''" >
+        PRE_CARRY_DATE,
+      </if>
+      <if test="isWholeSubmit != null and isWholeSubmit != ''" >
+        IS_WHOLE_SUBMIT,
+      </if>
+      <if test="isCombineAssign != null and isCombineAssign != ''" >
+        IS_COMBINE_ASSIGN,
+      </if>
+      <if test="isReCalPrice != null and isReCalPrice != ''" >
+        IS_RE_CAL_PRICE,
+      </if>
+      <if test="isGenStkOnBuy != null and isGenStkOnBuy != ''" >
+        IS_GEN_STK_ON_BUY,
+      </if>
+      <if test="isGenStkOnRoad != null and isGenStkOnRoad != ''" >
+        IS_GEN_STK_ON_ROAD,
+      </if>
+      <if test="isCanDelivery != null and isCanDelivery != ''" >
+        IS_CAN_DELIVERY,
+      </if>
+      <if test="isCanAcross != null and isCanAcross != ''" >
+        IS_CAN_ACROSS,
+      </if>
+      <if test="isGenLogRecDoc != null and isGenLogRecDoc != ''" >
+        IS_GEN_LOG_REC_DOC,
+      </if>
+      <if test="isGenPkn != null and isGenPkn != ''" >
+        IS_GEN_PKN,
+      </if>
+      <if test="isFinnceBalance != null and isFinnceBalance != ''" >
+        IS_FINNCE_BALANCE,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+        DOC_STATE,
+      <if test="createUser != null and createUser != ''" >
+        CREATE_USER,
+      </if>
+        CREATE_DATE,
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        LAST_MODIFIED_USER,
+      </if>
+        LAST_MODIFIED_DATE,
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="flag != null and flag != ''" >
+        FLAG,
+      </if>
+      <if test="isStraightDelivery != null and isStraightDelivery != ''" >
+        IS_STRAIGHT_DELIVERY,
+      </if>
+      <if test="delivMode != null and delivMode != ''" >
+        DELIV_MODE,
+      </if>
+      <if test="isQn != null and isQn != ''" >
+        IS_QN,
+      </if>
+      <if test="strScanTime != null and strScanTime != ''" >
+        STR_SCAN_TIME,
+      </if>
+      <if test="isGenGrn != null and isGenGrn != ''" >
+        IS_GEN_GRN,
+      </if>
+      <if test="actSenWarehId != null and actSenWarehId != ''" >
+        ACT_SEN_WAREH_ID,
+      </if>
+      <if test="endScanTime != null and endScanTime != ''" >
+        END_SCAN_TIME,
+      </if>
+      <if test="urgency != null and urgency != ''" >
+        URGENCY,
+      </if>
+      <if test="scanerId != null and scanerId != ''" >
+        SCANER_ID,
+      </if>
+      <if test="olocId != null and olocId != ''" >
+        OLOC_ID,
+      </if>
+      <if test="pdaProgress != null and pdaProgress != ''" >
+        PDA_PROGRESS,
+      </if>
+      <if test="pickType != null and pickType != ''" >
+        PICK_TYPE,
+      </if>
+      <if test="printGTimes != null and printGTimes != ''" >
+        PRINT_G_TIMES,
+      </if>
+      <if test="opeStatus != null and opeStatus != ''" >
+        OPE_STATUS,
+      </if>
+      <if test="boxWeight != null and boxWeight != ''" >
+        BOX_WEIGHT,
+      </if>
+      <if test="priExpType != null and priExpType != ''" >
+        PRI_EXP_TYPE,
+      </if>
+      <if test="priMode != null and priMode != ''" >
+        PRI_MODE,
+      </if>
+      <if test="combinedDgnCode != null and combinedDgnCode != ''" >
+        COMBINED_DGN_CODE,
+      </if>
+      <if test="totalBoxCount != null and totalBoxCount != ''" >
+        TOTAL_BOX_COUNT,
+      </if>
+      <if test="totalWeight != null and totalWeight != ''" >
+        TOTAL_WEIGHT,
+      </if>
+      <if test="totalVolumn != null and totalVolumn != ''" >
+        TOTAL_VOLUMN,
+      </if>
+      <if test="combinedSymbol != null and combinedSymbol != ''" >
+        COMBINED_SYMBOL,
+      </if>
+      <if test="isCombined != null and isCombined != ''" >
+        IS_COMBINED,
+      </if>
+      <if test="splitMode != null and splitMode != ''" >
+        SPLIT_MODE,
+      </if>
+      <if test="clientOrderCode != null and clientOrderCode != ''" >
+        CLIENT_ORDER_CODE,
+      </if>
+      <if test="shippingId != null and shippingId != ''" >
+        SHIPPING_ID,
+      </if>
+      <if test="productCount != null and productCount != ''" >
+        PRODUCT_COUNT,
+      </if>
+      <if test="lowOrderFlag != null and lowOrderFlag != ''" >
+        LOW_ORDER_FLAG,
+      </if>
+      <if test="lowShopId != null and lowShopId != ''" >
+        LOW_SHOP_ID,
+      </if>
+      <if test="sfBatMnnId != null and sfBatMnnId != ''" >
+        SF_BAT_MNN_ID,
+      </if>
+      <if test="isPrintGdn != null and isPrintGdn != ''" >
+        IS_PRINT_GDN,
+      </if>
+      <if test="locCode != null and locCode != ''" >
+        LOC_CODE,
+      </if>
+      <if test="olocCode != null and olocCode != ''" >
+        OLOC_CODE,
+      </if>
+      <if test="pickMode != null and pickMode != ''" >
+        PICK_MODE,
+      </if>
+      <if test="transState != null and transState != ''" >
+        TRANS_STATE,
+      </if>
+      <if test="isTransfer != null and isTransfer != ''" >
+        IS_TRANSFER,
+      </if>
+      <if test="transferState != null and transferState != ''" >
+        TRANSFER_STATE,
+      </if>
+      <if test="ubietyWareh != null and ubietyWareh != ''" >
+        UBIETY_WAREH,
+      </if>
+      <if test="transferOrgId != null and transferOrgId != ''" >
+        TRANSFER_ORG_ID,
+      </if>
+      <if test="originUnitId != null and originUnitId != ''" >
+        ORIGIN_UNIT_ID,
+      </if>
+      <if test="originDocType != null and originDocType != ''" >
+        ORIGIN_DOC_TYPE,
+      </if>
+      <if test="originDocNum != null and originDocNum != ''" >
+        ORIGIN_DOC_NUM,
+      </if>
+      <if test="tempCombinedSymbol != null and tempCombinedSymbol != ''" >
+        TEMP_COMBINED_SYMBOL,
+      </if>
+      <if test="combinFlagT != null and combinFlagT != ''" >
+        COMBIN_FLAG_T,
+      </if>
+      <if test="tranWarehId != null and tranWarehId != ''" >
+        TRAN_WAREH_ID,
+      </if>
+      <if test="gpicktime != null and gpicktime != ''" >
+        GPICKTIME,
+      </if>
+      <if test="actRcvUnitId != null and actRcvUnitId != ''" >
+        ACT_RCV_UNIT_ID,
+      </if>
+      <if test="actRcvWarehId != null and actRcvWarehId != ''" >
+        ACT_RCV_WAREH_ID,
+      </if>
+      <if test="dgnTypeSl != null and dgnTypeSl != ''" >
+        DGN_TYPE_SL,
+      </if>
+      <if test="addRess != null and addRess != ''" >
+        ADD_RESS,
+      </if>
+      <if test="gdnState != null and gdnState != ''" >
+        GDN_STATE,
+      </if>
+      <if test="ifEndBat != null and ifEndBat != ''" >
+        IF_END_BAT,
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        DELIV_MTHD,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        DELIV_PSTD,
+      </if>
+      <if test="createType != null and createType != ''" >
+        CREATE_TYPE,
+      </if>
+      <if test="printflag != null and printflag != ''" >
+        PRINTFLAG,
+      </if>
+      <if test="oosOpeShopid != null and oosOpeShopid != ''" >
+        OOS_OPE_SHOPID,
+      </if>
+      <if test="isInvoiceVerify != null and isInvoiceVerify != ''" >
+        IS_INVOICE_VERIFY,
+      </if>
+      <if test="isAutoDist != null and isAutoDist != ''" >
+        IS_AUTO_DIST,
+      </if>
+      <if test="isAdded != null and isAdded != ''" >
+        IS_ADDED,
+      </if>
+      <if test="pknConfirmTime != null and pknConfirmTime != ''" >
+        PKN_CONFIRM_TIME,
+      </if>
+      <if test="wifNum != null and wifNum != ''" >
+        WIF_NUM,
+      </if>
+      <if test="oerpRemark != null and oerpRemark != ''" >
+        OERP_REMARK,
+      </if>
+      <if test="transferValided != null and transferValided != ''" >
+        TRANSFER_VALIDED,
+      </if>
+      <if test="isMerger != null and isMerger != ''" >
+        IS_MERGER,
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    	#{id},
+      <if test="bfOrgUnitId != null and bfOrgUnitId != ''" >
+        #{bfOrgUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="code != null and code != ''" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      TRUNC(SYSDATE),
+      <if test="warehId != null and warehId != ''" >
+        #{warehId,jdbcType=DECIMAL},
+      </if>
+      <if test="bfOrgRcvUnitId != null and bfOrgRcvUnitId != ''" >
+        #{bfOrgRcvUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="bfOrgRcvWarehId != null and bfOrgRcvWarehId != ''" >
+        #{bfOrgRcvWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="ctrlrId != null and ctrlrId != ''" >
+        #{ctrlrId,jdbcType=DECIMAL},
+      </if>
+      <if test="contactId != null and contactId != ''" >
+        #{contactId,jdbcType=DECIMAL},
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        #{srcUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="srcDocCode != null and srcDocCode != ''" >
+        #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="ttlQty != null" >
+        #{ttlQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlVal != null" >
+        #{ttlVal,jdbcType=DECIMAL},
+      </if>
+      <if test="taxRate != null" >
+        #{taxRate,jdbcType=DECIMAL},
+      </if>
+      TRUNC(SYSDATE),
+      <if test="goodcode != null and goodcode != ''" >
+        #{goodcode,jdbcType=VARCHAR},
+      </if>
+      <if test="mfcNum != null and mfcNum != ''" >
+        #{mfcNum,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null and area != ''" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="factoryId != null and factoryId != ''" >
+        #{factoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="locId != null and locId != ''" >
+        #{locId,jdbcType=DECIMAL},
+      </if>
+      <if test="peqdAt != null and peqdAt != ''" >
+        #{peqdAt,jdbcType=DATE},
+      </if>
+      <if test="planToWarehDate != null and planToWarehDate != ''" >
+        #{planToWarehDate,jdbcType=DATE},
+      </if>
+      <if test="preCarryDate != null and preCarryDate != ''" >
+        #{preCarryDate,jdbcType=DATE},
+      </if>
+      <if test="isWholeSubmit != null and isWholeSubmit != ''" >
+        #{isWholeSubmit,jdbcType=CHAR},
+      </if>
+      <if test="isCombineAssign != null and isCombineAssign != ''" >
+        #{isCombineAssign,jdbcType=CHAR},
+      </if>
+      <if test="isReCalPrice != null and isReCalPrice != ''" >
+        #{isReCalPrice,jdbcType=CHAR},
+      </if>
+      <if test="isGenStkOnBuy != null and isGenStkOnBuy != ''" >
+        #{isGenStkOnBuy,jdbcType=CHAR},
+      </if>
+      <if test="isGenStkOnRoad != null and isGenStkOnRoad != ''" >
+        #{isGenStkOnRoad,jdbcType=CHAR},
+      </if>
+      <if test="isCanDelivery != null and isCanDelivery != ''" >
+        #{isCanDelivery,jdbcType=CHAR},
+      </if>
+      <if test="isCanAcross != null and isCanAcross != ''" >
+        #{isCanAcross,jdbcType=CHAR},
+      </if>
+      <if test="isGenLogRecDoc != null and isGenLogRecDoc != ''" >
+        #{isGenLogRecDoc,jdbcType=CHAR},
+      </if>
+      <if test="isGenPkn != null and isGenPkn != ''" >
+        #{isGenPkn,jdbcType=CHAR},
+      </if>
+      <if test="isFinnceBalance != null and isFinnceBalance != ''" >
+        #{isFinnceBalance,jdbcType=CHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=DECIMAL},
+      </if>
+        #{docState,jdbcType=DECIMAL},
+      <if test="createUser != null and createUser != ''" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+        SYSDATE,
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+        SYSDATE,
+      <if test="progress != null and progress != ''" >
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null and flag != ''" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="isStraightDelivery != null and isStraightDelivery != ''" >
+        #{isStraightDelivery,jdbcType=CHAR},
+      </if>
+      <if test="delivMode != null and delivMode != ''" >
+        #{delivMode,jdbcType=VARCHAR},
+      </if>
+      <if test="isQn != null and isQn != ''" >
+        #{isQn,jdbcType=CHAR},
+      </if>
+      <if test="strScanTime != null and strScanTime != ''" >
+        #{strScanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isGenGrn != null and isGenGrn != ''" >
+        #{isGenGrn,jdbcType=CHAR},
+      </if>
+      <if test="actSenWarehId != null and actSenWarehId != ''" >
+        #{actSenWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="endScanTime != null and endScanTime != ''" >
+        #{endScanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgency != null and urgency != ''" >
+        #{urgency,jdbcType=VARCHAR},
+      </if>
+      <if test="scanerId != null and scanerId != ''" >
+        #{scanerId,jdbcType=DECIMAL},
+      </if>
+      <if test="olocId != null and olocId != ''" >
+        #{olocId,jdbcType=DECIMAL},
+      </if>
+      <if test="pdaProgress != null and pdaProgress != ''" >
+        #{pdaProgress,jdbcType=VARCHAR},
+      </if>
+      <if test="pickType != null and pickType != ''" >
+        #{pickType,jdbcType=VARCHAR},
+      </if>
+      <if test="printGTimes != null and printGTimes != ''" >
+        #{printGTimes,jdbcType=DECIMAL},
+      </if>
+      <if test="opeStatus != null and opeStatus != ''" >
+        #{opeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="boxWeight != null and boxWeight != ''" >
+        #{boxWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="priExpType != null and priExpType != ''" >
+        #{priExpType,jdbcType=VARCHAR},
+      </if>
+      <if test="priMode != null and priMode != ''" >
+        #{priMode,jdbcType=VARCHAR},
+      </if>
+      <if test="combinedDgnCode != null and combinedDgnCode != ''" >
+        #{combinedDgnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="totalBoxCount != null and totalBoxCount != ''" >
+        #{totalBoxCount,jdbcType=DECIMAL},
+      </if>
+      <if test="totalWeight != null and totalWeight != ''" >
+        #{totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="totalVolumn != null and totalVolumn != ''" >
+        #{totalVolumn,jdbcType=DECIMAL},
+      </if>
+      <if test="combinedSymbol != null and combinedSymbol != ''" >
+        #{combinedSymbol,jdbcType=DECIMAL},
+      </if>
+      <if test="isCombined != null and isCombined != ''" >
+        #{isCombined,jdbcType=DECIMAL},
+      </if>
+      <if test="splitMode != null and splitMode != ''" >
+        #{splitMode,jdbcType=VARCHAR},
+      </if>
+      <if test="clientOrderCode != null and clientOrderCode != ''" >
+        #{clientOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingId != null and shippingId != ''" >
+        #{shippingId,jdbcType=DECIMAL},
+      </if>
+      <if test="productCount != null and productCount != ''" >
+        #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="lowOrderFlag != null and lowOrderFlag != ''" >
+        #{lowOrderFlag,jdbcType=CHAR},
+      </if>
+      <if test="lowShopId != null and lowShopId != ''" >
+        #{lowShopId,jdbcType=DECIMAL},
+      </if>
+      <if test="sfBatMnnId != null and sfBatMnnId != ''" >
+        #{sfBatMnnId,jdbcType=DECIMAL},
+      </if>
+      <if test="isPrintGdn != null and isPrintGdn != ''" >
+        #{isPrintGdn,jdbcType=CHAR},
+      </if>
+      <if test="locCode != null and locCode != ''" >
+        #{locCode,jdbcType=VARCHAR},
+      </if>
+      <if test="olocCode != null and olocCode != ''" >
+        #{olocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pickMode != null and pickMode != ''" >
+        #{pickMode,jdbcType=VARCHAR},
+      </if>
+      <if test="transState != null and transState != ''" >
+        #{transState,jdbcType=VARCHAR},
+      </if>
+      <if test="isTransfer != null and isTransfer != ''" >
+        #{isTransfer,jdbcType=CHAR},
+      </if>
+      <if test="transferState != null and transferState != ''" >
+        #{transferState,jdbcType=VARCHAR},
+      </if>
+      <if test="ubietyWareh != null and ubietyWareh != ''" >
+        #{ubietyWareh,jdbcType=DECIMAL},
+      </if>
+      <if test="transferOrgId != null and transferOrgId != ''" >
+        #{transferOrgId,jdbcType=DECIMAL},
+      </if>
+      <if test="originUnitId != null and originUnitId != ''" >
+        #{originUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="originDocType != null and originDocType != ''" >
+        #{originDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="originDocNum != null and originDocNum != ''" >
+        #{originDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tempCombinedSymbol != null and tempCombinedSymbol != ''" >
+        #{tempCombinedSymbol,jdbcType=DECIMAL},
+      </if>
+      <if test="combinFlagT != null and combinFlagT != ''" >
+        #{combinFlagT,jdbcType=VARCHAR},
+      </if>
+      <if test="tranWarehId != null and tranWarehId != ''" >
+        #{tranWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="gpicktime != null and gpicktime != ''" >
+        #{gpicktime,jdbcType=DECIMAL},
+      </if>
+      <if test="actRcvUnitId != null and actRcvUnitId != ''" >
+        #{actRcvUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="actRcvWarehId != null and actRcvWarehId != ''" >
+        #{actRcvWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="dgnTypeSl != null and dgnTypeSl != ''" >
+        #{dgnTypeSl,jdbcType=VARCHAR},
+      </if>
+      <if test="addRess != null and addRess != ''" >
+        #{addRess,jdbcType=VARCHAR},
+      </if>
+      <if test="gdnState != null and gdnState != ''" >
+        #{gdnState,jdbcType=VARCHAR},
+      </if>
+      <if test="ifEndBat != null and ifEndBat != ''" >
+        #{ifEndBat,jdbcType=CHAR},
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        #{delivMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        #{delivPstd,jdbcType=VARCHAR},
+      </if>
+      <if test="createType != null and createType != ''" >
+        #{createType,jdbcType=VARCHAR},
+      </if>
+      <if test="printflag != null and printflag != ''" >
+        #{printflag,jdbcType=VARCHAR},
+      </if>
+      <if test="oosOpeShopid != null and oosOpeShopid != ''" >
+        #{oosOpeShopid,jdbcType=DECIMAL},
+      </if>
+      <if test="isInvoiceVerify != null and isInvoiceVerify != ''" >
+        #{isInvoiceVerify,jdbcType=CHAR},
+      </if>
+      <if test="isAutoDist != null and isAutoDist != ''" >
+        #{isAutoDist,jdbcType=CHAR},
+      </if>
+      <if test="isAdded != null and isAdded != ''" >
+        #{isAdded,jdbcType=CHAR},
+      </if>
+      <if test="pknConfirmTime != null and pknConfirmTime != ''" >
+        #{pknConfirmTime,jdbcType=DATE},
+      </if>
+      <if test="wifNum != null and wifNum != ''" >
+        #{wifNum,jdbcType=VARCHAR},
+      </if>
+      <if test="oerpRemark != null and oerpRemark != ''" >
+        #{oerpRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="transferValided != null and transferValided != ''" >
+        #{transferValided,jdbcType=CHAR},
+      </if>
+      <if test="isMerger != null and isMerger != ''" >
+        #{isMerger,jdbcType=CHAR},
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateSfDgn" parameterType="mb.erp.dr.soa.vo.SfDgnVo" >
+    update SF_DGN
+    <set >
+      <if test="bfOrgUnitId != null" >
+        BF_ORG_UNIT_ID = #{bfOrgUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="docDate != null" >
+        DOC_DATE = #{docDate,jdbcType=DATE},
+      </if>
+      <if test="warehId != null" >
+        WAREH_ID = #{warehId,jdbcType=DECIMAL},
+      </if>
+      <if test="bfOrgRcvUnitId != null" >
+        BF_ORG_RCV_UNIT_ID = #{bfOrgRcvUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="bfOrgRcvWarehId != null" >
+        BF_ORG_RCV_WAREH_ID = #{bfOrgRcvWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="ctrlrId != null" >
+        CTRLR_ID = #{ctrlrId,jdbcType=DECIMAL},
+      </if>
+      <if test="contactId != null" >
+        CONTACT_ID = #{contactId,jdbcType=DECIMAL},
+      </if>
+      <if test="srcDocType != null" >
+        SRC_DOC_TYPE = #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitId != null" >
+        SRC_UNIT_ID = #{srcUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="srcDocCode != null" >
+        SRC_DOC_CODE = #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="ttlQty != null" >
+        TTL_QTY = #{ttlQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlVal != null" >
+        TTL_VAL = #{ttlVal,jdbcType=DECIMAL},
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="reqdAt != null" >
+        REQD_AT = #{reqdAt,jdbcType=DATE},
+      </if>
+      <if test="goodcode != null" >
+        GOODCODE = #{goodcode,jdbcType=VARCHAR},
+      </if>
+      <if test="mfcNum != null" >
+        MFC_NUM = #{mfcNum,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        AREA = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="factoryId != null" >
+        FACTORY_ID = #{factoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="locId != null" >
+        LOC_ID = #{locId,jdbcType=DECIMAL},
+      </if>
+      <if test="peqdAt != null" >
+        PEQD_AT = #{peqdAt,jdbcType=DATE},
+      </if>
+      <if test="planToWarehDate != null" >
+        PLAN_TO_WAREH_DATE = #{planToWarehDate,jdbcType=DATE},
+      </if>
+      <if test="preCarryDate != null" >
+        PRE_CARRY_DATE = #{preCarryDate,jdbcType=DATE},
+      </if>
+      <if test="isWholeSubmit != null" >
+        IS_WHOLE_SUBMIT = #{isWholeSubmit,jdbcType=CHAR},
+      </if>
+      <if test="isCombineAssign != null" >
+        IS_COMBINE_ASSIGN = #{isCombineAssign,jdbcType=CHAR},
+      </if>
+      <if test="isReCalPrice != null" >
+        IS_RE_CAL_PRICE = #{isReCalPrice,jdbcType=CHAR},
+      </if>
+      <if test="isGenStkOnBuy != null" >
+        IS_GEN_STK_ON_BUY = #{isGenStkOnBuy,jdbcType=CHAR},
+      </if>
+      <if test="isGenStkOnRoad != null" >
+        IS_GEN_STK_ON_ROAD = #{isGenStkOnRoad,jdbcType=CHAR},
+      </if>
+      <if test="isCanDelivery != null" >
+        IS_CAN_DELIVERY = #{isCanDelivery,jdbcType=CHAR},
+      </if>
+      <if test="isCanAcross != null" >
+        IS_CAN_ACROSS = #{isCanAcross,jdbcType=CHAR},
+      </if>
+      <if test="isGenLogRecDoc != null" >
+        IS_GEN_LOG_REC_DOC = #{isGenLogRecDoc,jdbcType=CHAR},
+      </if>
+      <if test="isGenPkn != null" >
+        IS_GEN_PKN = #{isGenPkn,jdbcType=CHAR},
+      </if>
+      <if test="isFinnceBalance != null" >
+        IS_FINNCE_BALANCE = #{isFinnceBalance,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=DECIMAL},
+      </if>
+      <if test="docState != null" >
+        DOC_STATE = #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedUser != null" >
+        LAST_MODIFIED_USER = #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null" >
+        LAST_MODIFIED_DATE = #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="progress != null" >
+        PROGRESS = #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="isStraightDelivery != null" >
+        IS_STRAIGHT_DELIVERY = #{isStraightDelivery,jdbcType=CHAR},
+      </if>
+      <if test="delivMode != null" >
+        DELIV_MODE = #{delivMode,jdbcType=VARCHAR},
+      </if>
+      <if test="isQn != null" >
+        IS_QN = #{isQn,jdbcType=CHAR},
+      </if>
+      <if test="strScanTime != null" >
+        STR_SCAN_TIME = #{strScanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isGenGrn != null" >
+        IS_GEN_GRN = #{isGenGrn,jdbcType=CHAR},
+      </if>
+      <if test="actSenWarehId != null" >
+        ACT_SEN_WAREH_ID = #{actSenWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="endScanTime != null" >
+        END_SCAN_TIME = #{endScanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="urgency != null" >
+        URGENCY = #{urgency,jdbcType=VARCHAR},
+      </if>
+      <if test="scanerId != null" >
+        SCANER_ID = #{scanerId,jdbcType=DECIMAL},
+      </if>
+      <if test="olocId != null" >
+        OLOC_ID = #{olocId,jdbcType=DECIMAL},
+      </if>
+      <if test="pdaProgress != null" >
+        PDA_PROGRESS = #{pdaProgress,jdbcType=VARCHAR},
+      </if>
+      <if test="pickType != null" >
+        PICK_TYPE = #{pickType,jdbcType=VARCHAR},
+      </if>
+      <if test="printGTimes != null" >
+        PRINT_G_TIMES = #{printGTimes,jdbcType=DECIMAL},
+      </if>
+      <if test="opeStatus != null" >
+        OPE_STATUS = #{opeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="boxWeight != null" >
+        BOX_WEIGHT = #{boxWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="priExpType != null" >
+        PRI_EXP_TYPE = #{priExpType,jdbcType=VARCHAR},
+      </if>
+      <if test="priMode != null" >
+        PRI_MODE = #{priMode,jdbcType=VARCHAR},
+      </if>
+      <if test="combinedDgnCode != null" >
+        COMBINED_DGN_CODE = #{combinedDgnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="totalBoxCount != null" >
+        TOTAL_BOX_COUNT = #{totalBoxCount,jdbcType=DECIMAL},
+      </if>
+      <if test="totalWeight != null" >
+        TOTAL_WEIGHT = #{totalWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="totalVolumn != null" >
+        TOTAL_VOLUMN = #{totalVolumn,jdbcType=DECIMAL},
+      </if>
+      <if test="combinedSymbol != null" >
+        COMBINED_SYMBOL = #{combinedSymbol,jdbcType=DECIMAL},
+      </if>
+      <if test="isCombined != null" >
+        IS_COMBINED = #{isCombined,jdbcType=DECIMAL},
+      </if>
+      <if test="splitMode != null" >
+        SPLIT_MODE = #{splitMode,jdbcType=VARCHAR},
+      </if>
+      <if test="clientOrderCode != null" >
+        CLIENT_ORDER_CODE = #{clientOrderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingId != null" >
+        SHIPPING_ID = #{shippingId,jdbcType=DECIMAL},
+      </if>
+      <if test="productCount != null" >
+        PRODUCT_COUNT = #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="lowOrderFlag != null" >
+        LOW_ORDER_FLAG = #{lowOrderFlag,jdbcType=CHAR},
+      </if>
+      <if test="lowShopId != null" >
+        LOW_SHOP_ID = #{lowShopId,jdbcType=DECIMAL},
+      </if>
+      <if test="sfBatMnnId != null" >
+        SF_BAT_MNN_ID = #{sfBatMnnId,jdbcType=DECIMAL},
+      </if>
+      <if test="isPrintGdn != null" >
+        IS_PRINT_GDN = #{isPrintGdn,jdbcType=CHAR},
+      </if>
+      <if test="locCode != null" >
+        LOC_CODE = #{locCode,jdbcType=VARCHAR},
+      </if>
+      <if test="olocCode != null" >
+        OLOC_CODE = #{olocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pickMode != null" >
+        PICK_MODE = #{pickMode,jdbcType=VARCHAR},
+      </if>
+      <if test="transState != null" >
+        TRANS_STATE = #{transState,jdbcType=VARCHAR},
+      </if>
+      <if test="isTransfer != null" >
+        IS_TRANSFER = #{isTransfer,jdbcType=CHAR},
+      </if>
+      <if test="transferState != null" >
+        TRANSFER_STATE = #{transferState,jdbcType=VARCHAR},
+      </if>
+      <if test="ubietyWareh != null" >
+        UBIETY_WAREH = #{ubietyWareh,jdbcType=DECIMAL},
+      </if>
+      <if test="transferOrgId != null" >
+        TRANSFER_ORG_ID = #{transferOrgId,jdbcType=DECIMAL},
+      </if>
+      <if test="originUnitId != null" >
+        ORIGIN_UNIT_ID = #{originUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="originDocType != null" >
+        ORIGIN_DOC_TYPE = #{originDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="originDocNum != null" >
+        ORIGIN_DOC_NUM = #{originDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tempCombinedSymbol != null" >
+        TEMP_COMBINED_SYMBOL = #{tempCombinedSymbol,jdbcType=DECIMAL},
+      </if>
+      <if test="combinFlagT != null" >
+        COMBIN_FLAG_T = #{combinFlagT,jdbcType=VARCHAR},
+      </if>
+      <if test="tranWarehId != null" >
+        TRAN_WAREH_ID = #{tranWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="gpicktime != null" >
+        GPICKTIME = #{gpicktime,jdbcType=DECIMAL},
+      </if>
+      <if test="actRcvUnitId != null" >
+        ACT_RCV_UNIT_ID = #{actRcvUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="actRcvWarehId != null" >
+        ACT_RCV_WAREH_ID = #{actRcvWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="dgnTypeSl != null" >
+        DGN_TYPE_SL = #{dgnTypeSl,jdbcType=VARCHAR},
+      </if>
+      <if test="addRess != null" >
+        ADD_RESS = #{addRess,jdbcType=VARCHAR},
+      </if>
+      <if test="gdnState != null" >
+        GDN_STATE = #{gdnState,jdbcType=VARCHAR},
+      </if>
+      <if test="ifEndBat != null" >
+        IF_END_BAT = #{ifEndBat,jdbcType=CHAR},
+      </if>
+      <if test="delivMthd != null" >
+        DELIV_MTHD = #{delivMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="delivPstd != null" >
+        DELIV_PSTD = #{delivPstd,jdbcType=VARCHAR},
+      </if>
+      <if test="createType != null" >
+        CREATE_TYPE = #{createType,jdbcType=VARCHAR},
+      </if>
+      <if test="printflag != null" >
+        PRINTFLAG = #{printflag,jdbcType=VARCHAR},
+      </if>
+      <if test="oosOpeShopid != null" >
+        OOS_OPE_SHOPID = #{oosOpeShopid,jdbcType=DECIMAL},
+      </if>
+      <if test="isInvoiceVerify != null" >
+        IS_INVOICE_VERIFY = #{isInvoiceVerify,jdbcType=CHAR},
+      </if>
+      <if test="isAutoDist != null" >
+        IS_AUTO_DIST = #{isAutoDist,jdbcType=CHAR},
+      </if>
+      <if test="isAdded != null" >
+        IS_ADDED = #{isAdded,jdbcType=CHAR},
+      </if>
+      <if test="pknConfirmTime != null" >
+        PKN_CONFIRM_TIME = #{pknConfirmTime,jdbcType=DATE},
+      </if>
+      <if test="wifNum != null" >
+        WIF_NUM = #{wifNum,jdbcType=VARCHAR},
+      </if>
+      <if test="oerpRemark != null" >
+        OERP_REMARK = #{oerpRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="transferValided != null" >
+        TRANSFER_VALIDED = #{transferValided,jdbcType=CHAR},
+      </if>
+      <if test="isMerger != null" >
+        IS_MERGER = #{isMerger,jdbcType=CHAR},
+      </if>
+      <if test="osDocCode != null" >
+        OS_DOC_CODE = #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+	      <if test="code != null and code != ''" >
+	         AND CODE = #{code}
+	      </if>
+	     <if test="docStateList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="docStateList"  open="(" separator="or" close=")">               
+                DOC_STATE =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  
+  <insert id="saveSfDgnDtl" parameterType="mb.erp.dr.soa.vo.SfDgnDtlVo" >
+    insert into SF_DGN_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    	ID,
+      <if test="sfDgnId != null and sfDgnId != ''" >
+        SF_DGN_ID,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="quantity != null and quantity != ''" >
+        QUANTITY,
+      </if>
+      <if test="deliveredQua != null and deliveredQua != ''" >
+        DELIVERED_QUA,
+      </if>
+      <if test="assignedQua != null and assignedQua != ''" >
+        ASSIGNED_QUA,
+      </if>
+      <if test="unitPrice != null and unitPrice != ''" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="unitAddtCost != null and unitAddtCost != ''" >
+        UNIT_ADDT_COST,
+      </if>
+      <if test="unitCost != null and unitCost != ''" >
+        UNIT_COST,
+      </if>
+      <if test="oldDiscRate != null and oldDiscRate != ''" >
+        OLD_DISC_RATE,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="outQty != null and outQty != ''" >
+        OUT_QTY,
+      </if>
+      <if test="pickedQty != null and pickedQty != ''" >
+        PICKED_QTY,
+      </if>
+      <if test="locId != null and locId != ''" >
+        LOC_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    	#{id},
+      <if test="sfDgnId != null and sfDgnId != ''" >
+        #{sfDgnId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null and quantity != ''" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveredQua != null and deliveredQua != ''" >
+        #{deliveredQua,jdbcType=DECIMAL},
+      </if>
+      <if test="assignedQua != null and assignedQua != ''" >
+        #{assignedQua,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null and unitPrice != ''" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="unitAddtCost != null and unitAddtCost != ''" >
+        #{unitAddtCost,jdbcType=DECIMAL},
+      </if>
+      <if test="unitCost != null and unitCost != ''" >
+        #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="oldDiscRate != null and oldDiscRate != ''" >
+        #{oldDiscRate,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="outQty != null and outQty != ''" >
+        #{outQty,jdbcType=DECIMAL},
+      </if>
+      <if test="pickedQty != null and pickedQty != ''" >
+        #{pickedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="locId != null and locId != ''" >
+        #{locId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="mb.erp.dr.soa.vo.SfDgnDtlVo" >
+    update SF_DGN_DTL
+    <set >
+      <if test="sfDgnId != null" >
+        SF_DGN_ID = #{sfDgnId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        QUANTITY = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveredQua != null" >
+        DELIVERED_QUA = #{deliveredQua,jdbcType=DECIMAL},
+      </if>
+      <if test="assignedQua != null" >
+        ASSIGNED_QUA = #{assignedQua,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="unitAddtCost != null" >
+        UNIT_ADDT_COST = #{unitAddtCost,jdbcType=DECIMAL},
+      </if>
+      <if test="unitCost != null" >
+        UNIT_COST = #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="oldDiscRate != null" >
+        OLD_DISC_RATE = #{oldDiscRate,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="outQty != null" >
+        OUT_QTY = #{outQty,jdbcType=DECIMAL},
+      </if>
+      <if test="pickedQty != null" >
+        PICKED_QTY = #{pickedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="locId != null" >
+        LOC_ID = #{locId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <!-- 根据调配单生成交货单 -->
+  <select id="genDgnByDrTbn" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT FU_GET_NEXT_IDENTITY('SF_DGN', 1) AS ID,
+       'DD' AS DGN_TYPE_SL,
+       '02' AS DATA_SOURCE,
+       '02' AS CREATE_TYPE,
+       '0' AS DOC_STATE,
+       T.DOC_DATE,
+       T.BRAND_ID,
+       T.VENDER_ID AS BF_ORG_RCV_UNIT_ID,
+       O3.CODE VENDER_CODE,
+       T.RCV_WAREH_ID AS BF_ORG_RCV_WAREH_ID,
+       O4.CODE RCV_WAREH_CODE,
+       T.TTL_QTY AS TTL_QTY,
+       T.TTL_VAL AS TTL_VAL,
+       T.TAX_RATE,
+       T.CURRENCY,
+       T.CREATE_USER,
+       T.CREATE_DATE,
+       T.LAST_MODIFIED_USER,
+       T.LAST_MODIFIED_DATE,
+<!--        T.CODE AS SRC_DOC_CODE, -->
+       T.VENDER_ID AS SRC_UNIT_ID,
+       T.VENDER_ID AS ORIGIN_UNIT_ID,
+       T.TBN_NUM AS ORIGIN_DOC_NUM,
+       'TBN' AS ORIGIN_DOC_TYPE,
+       T.REQD_AT AS REQD_AT,
+       T.DELIV_MTHD AS DELIV_MTHD,
+       T.DELIV_PSTD AS DELIV_PSTD,
+       T.DELIV_ADDR AS ADD_RESS,
+       T.DELIV_ADDR AS DELIV_ADDR,
+       'N' AS GDN_STATE,
+       'TBN' AS SRC_DOC_TYPE,
+       'AGRT' AS DELIV_MODE,
+       TBN_NUM AS SRC_DOC_CODE,
+       'PG' AS PROGRESS,
+       T.VENDEE_ID AS BF_ORG_UNIT_ID,
+       O1.CODE VENDEE_CODE,
+       T.DISP_WAREH_ID AS WAREH_ID,
+       O2.CODE DISP_WAREH_CODE
+  FROM DR_TBN T
+ INNER JOIN BF_ORG O1 ON O1.ID = T.VENDEE_ID
+ INNER JOIN BF_ORG O2 ON O2.ID = T.DISP_WAREH_ID
+ INNER JOIN BF_ORG O3 ON O3.ID = T.VENDER_ID
+ INNER JOIN BF_ORG O4 ON O4.ID = T.RCV_WAREH_ID
+ WHERE T.ID = #{tbnId,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 根据调配单生成交货单明细 -->
+  <select id="genDgnDtlByDrTbn"  parameterType="java.util.Map" resultMap="SfDgnDtlVoMap">
+    SELECT FU_GET_NEXT_IDENTITY('SF_DGN_DTL', 1) AS ID,
+       #{dgnId} AS SF_DGN_ID,
+       B.PROD_ID,
+       P.PROD_NUM AS PROD_CODE,
+       B.UNIT_PRICE,
+       B.EXPD_QTY AS QUANTITY,
+       B.EXPD_QTY AS PICKED_QTY,
+       B.DISC_RATE AS DISC_RATE
+  FROM DR_TBN_DTL B
+ INNER JOIN BF_PRODUCT P ON P.ID = B.PROD_ID
+ WHERE EXISTS (SELECT 1
+          FROM DR_TBN A
+         WHERE A.ID = B.DR_TBN_ID
+           AND A.ID = #{tbnId,jdbcType=DECIMAL})
+  </select>
+  
+  <!-- 根据现货单生成交货单 -->
+  <select id="genDgnBySfIdt"  parameterType="java.lang.Long" resultMap="BaseResultMap">
+	   SELECT 
+	       'DD' AS DGN_TYPE_SL,
+	       '02' AS DATA_SOURCE,
+	       '02' AS CREATE_TYPE,
+	       TRUNC(SYSDATE) AS DOC_DATE,
+	       BRAND_ID,
+	       BF_ORG_VENDEE_ID AS BF_ORG_RCV_UNIT_ID,
+	       BF_ORG_RCV_WAREH_ID AS BF_ORG_RCV_WAREH_ID,
+	       ORDER_QTY AS TTL_QTY,
+	       ORDER_VAL AS TTL_VAL,
+	       CURRENCY,
+	       REMARK,
+	       CREATE_USER,
+	       CREATE_DATE,
+	       LAST_MODIFIED_USER,
+	       LAST_MODIFIED_DATE,
+	       CODE AS SRC_DOC_CODE,
+	       BF_ORG_VENDEE_ID AS SRC_UNIT_ID,
+	       BF_ORG_VENDEE_ID AS ORIGIN_UNIT_ID,
+	       CODE AS ORIGIN_DOC_NUM,
+	       'IDT' AS ORIGIN_DOC_TYPE,
+	       REQD_AT AS REQD_AT,
+	       DELIV_MTHD AS DELIV_MTHD,
+	       DELIV_PSTD AS DELIV_PSTD,
+	       DELIV_ADDR AS ADD_RESS,
+	       T.DELIV_ADDR AS DELIV_ADDR,
+	       'N' AS GDN_STATE,
+	       'IDT' AS SRC_DOC_TYPE,
+	       CASE 
+	          WHEN T.BF_ORG_VENDEE_ID=T.BF_ORG_VENDER_ID THEN  'SHOR' 
+	          ELSE 'AGOR' END  
+	       AS DELIV_MODE,
+	       'PG' AS PROGRESS,
+	       0 AS DOC_STATE,
+	       BF_ORG_VENDER_ID AS BF_ORG_UNIT_ID,
+	       T.DISP_WAREH_ID AS WAREH_ID
+	  FROM SF_IDT T
+	  WHERE T.ID = #{sfIdtId}
+  </select>
+  
+  <!-- 根据现货单详情生成交货单详情 -->
+  <select id="genDgnDtlBySfIdtDtl"  parameterType="java.util.Map" resultMap="SfDgnDtlVoMap">
+	  	SELECT 
+	       B.PROD_ID,
+	       P.PROD_NUM,
+	       B.UNIT_PRICE,       
+	       B.ORDER_QTY AS QUANTITY,
+	       B.ORDER_QTY AS PICKED_QTY,
+	       B.DISC_RATE AS DISC_RATE
+	  FROM SF_IDT_DTL B
+	 INNER JOIN BF_PRODUCT P ON B.PROD_ID = P.ID
+	 WHERE EXISTS (SELECT 1
+	          FROM SF_IDT A
+	         WHERE A.ID = B.SF_IDT_ID
+	           AND A.ID = #{sfIdtId})
+  </select>
+  
+ 	<select id="selectTaxRateFromSfDgn" parameterType="java.lang.String" resultType="java.lang.Double">
+		SELECT NVL(MAX(D.TAX_RATE),-1)
+		FROM SF_DGN D 
+		WHERE D.CODE = #{code}
+	</select>
+</mapper>

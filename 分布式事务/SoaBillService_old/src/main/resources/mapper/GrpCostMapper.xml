@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.GrpCostMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.GrpCostVo" >
+    <id column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <id column="COST_GRP_ID" property="costGrpId" jdbcType="VARCHAR" />
+    <id column="PROD_ID" property="prodId" jdbcType="CHAR" />
+    <result column="UNIT_COST" property="unitCost" jdbcType="DECIMAL" />
+    <result column="STOCK" property="stock" jdbcType="DECIMAL" />
+    <result column="CALC_AT" property="calcAt" jdbcType="DATE" />
+    <result column="INIT_UNIT_COST" property="initUnitCost" jdbcType="DECIMAL" />
+    <result column="INIT_STK" property="initStk" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    UNIT_ID, COST_GRP_ID, PROD_ID, UNIT_COST, STOCK, CALC_AT, INIT_UNIT_COST, INIT_STK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="mb.erp.dr.soa.old.vo.GrpCostVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.GRP_COST
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+      and COST_GRP_ID = #{costGrpId,jdbcType=VARCHAR}
+      and PROD_ID = #{prodId,jdbcType=CHAR}
+  </select>
+  
+  <select id="selectByUnitIDProdId" resultMap="BaseResultMap" parameterType="map">
+	    SELECT * FROM(  
+           SELECT A.UNIT_COST,
+           1 AS DATASORT FROM FI_GRP_COST A
+           INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID=B.ID
+           WHERE B.UNIT_ID IN (SELECT C.ID FROM BF_ORG C WHERE C.CODE=#{unit_id})
+           AND A.PROD_ID IN (SELECT D.ID FROM BF_PRODUCT D WHERE D.PROD_NUM=#{prod_num})
+           UNION
+            SELECT A.UNIT_COST,
+           2 AS DATASORT FROM FI_GRP_COST A
+           INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID=B.ID
+           WHERE B.UNIT_ID IN (SELECT C.ID FROM BF_ORG C WHERE C.CODE=#{unit_id})
+           AND A.PROD_ID IN (SELECT D.BF_PROD_CLS_ID FROM BF_PRODUCT D WHERE D.PROD_NUM=#{prod_num})
+           ) ORDER BY DATASORT
+  </select>
+	
+  <select id="selectByUnitIDProdIdWareID" resultMap="BaseResultMap" parameterType="map">
+       SELECT B.UNIT_COST FROM COST_GRP A,GRP_COST B 
+         WHERE B.PROD_ID = #{prod_id}
+         AND A.COST_GRP_ID=B.COST_GRP_ID 
+         AND A.UNIT_ID = #{unit_id}
+         AND EXISTS(SELECT 1 FROM WAREHOUSE C,SYS_UNIT D 
+         WHERE C.COST_GRP_ID=B.COST_GRP_ID
+         AND C.WAREH_ID=D.UNIT_ID AND C.WAREH_ID=#{wareh_id})
+  </select>
+  
+  <select id="bulkGetByUnitIDProdId" resultMap="BaseResultMap" parameterType="map">
+       SELECT B.PROD_ID, B.UNIT_COST
+		  FROM COST_GRP A
+		 INNER JOIN GRP_COST B ON A.COST_GRP_ID = B.COST_GRP_ID
+		                      AND A.UNIT_ID = B.UNIT_ID
+		 WHERE EXISTS (SELECT 1 FROM TMP_PRODUCT_NUM T WHERE T.PROD_NUM = B.PROD_ID)
+		   AND A.UNIT_ID = #{unit_id}
+  </select>
+  
+  <select id="bulkGetByUnitIDProdIdWareID" resultMap="BaseResultMap" parameterType="map">
+      SELECT B.PROD_ID, B.UNIT_COST
+		  FROM COST_GRP A, GRP_COST B
+		 WHERE EXISTS (SELECT 1 FROM TMP_PRODUCT_NUM T WHERE T.PROD_NUM = B.PROD_ID)
+		   AND A.COST_GRP_ID = B.COST_GRP_ID
+		   AND A.UNIT_ID = B.UNIT_ID
+		   AND A.UNIT_ID = #{unit_id}
+		   AND EXISTS (SELECT 1
+		          FROM WAREHOUSE C, SYS_UNIT D
+		         WHERE C.COST_GRP_ID = B.COST_GRP_ID
+		           AND C.WAREH_ID = D.UNIT_ID
+		           AND C.WAREH_ID = #{wareh_id})
+  </select>
+  
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.old.vo.GrpCostVo" >
+    insert into MTSBW.GRP_COST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="costGrpId != null and costGrpId != ''" >
+        COST_GRP_ID,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="unitCost != null and unitCost != ''" >
+        UNIT_COST,
+      </if>
+      <if test="stock != null and stock != ''" >
+        STOCK,
+      </if>
+      <if test="calcAt != null and calcAt != ''" >
+        CALC_AT,
+      </if>
+      <if test="initUnitCost != null and initUnitCost != ''" >
+        INIT_UNIT_COST,
+      </if>
+      <if test="initStk != null and initStk != ''" >
+        INIT_STK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="costGrpId != null and costGrpId != ''" >
+        #{costGrpId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=CHAR},
+      </if>
+      <if test="unitCost != null and unitCost != ''" >
+        #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null and stock != ''" >
+        #{stock,jdbcType=DECIMAL},
+      </if>
+      <if test="calcAt != null and calcAt != ''" >
+        #{calcAt,jdbcType=DATE},
+      </if>
+      <if test="initUnitCost != null and initUnitCost != ''" >
+        #{initUnitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="initStk != null and initStk != ''" >
+        #{initStk,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.old.vo.GrpCostVo" >
+    update MTSBW.GRP_COST
+    <set >
+      <if test="unitCost != null" >
+        UNIT_COST = #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null" >
+        STOCK = #{stock,jdbcType=DECIMAL},
+      </if>
+      <if test="calcAt != null" >
+        CALC_AT = #{calcAt,jdbcType=DATE},
+      </if>
+      <if test="initUnitCost != null" >
+        INIT_UNIT_COST = #{initUnitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="initStk != null" >
+        INIT_STK = #{initStk,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+      and COST_GRP_ID = #{costGrpId,jdbcType=VARCHAR}
+      and PROD_ID = #{prodId,jdbcType=CHAR}
+  </update>
+</mapper>

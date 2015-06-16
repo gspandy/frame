@@ -1,0 +1,1360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfGrnMapper" >
+  <resultMap id="grnMap" type="mb.erp.dr.soa.vo.SfGrnVo" >
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="UNIT_ID" jdbcType="DECIMAL" property="unitId" />
+    <result column="GRN_NUM" jdbcType="VARCHAR" property="grnNum" />
+    <result column="DOC_DATE" jdbcType="DATE" property="docDate" />
+    <result column="RCPT_MODE" jdbcType="VARCHAR" property="rcptMode" />
+    <result column="WAREH_ID" jdbcType="DECIMAL" property="warehId" />
+    <result column="OPR_ID" jdbcType="DECIMAL" property="oprId" />
+    <result column="CTRLR_ID" jdbcType="DECIMAL" property="ctrlrId" />
+    <result column="DISP_UNIT_ID" jdbcType="DECIMAL" property="dispUnitId" />
+    <result column="DELIV_WAREH_ID" jdbcType="DECIMAL" property="delivWarehId" />
+    <result column="SRC_DOC_TYPE" jdbcType="VARCHAR" property="srcDocType" />
+    <result column="SRC_UNIT_ID" jdbcType="DECIMAL" property="srcUnitId" />
+    <result column="SRC_DOC_NUM" jdbcType="VARCHAR" property="srcDocNum" />
+    <result column="CURRENCY" jdbcType="VARCHAR" property="currency" />
+    <result column="TTL_QTY" jdbcType="DECIMAL" property="ttlQty" />
+    <result column="TTL_VAL" jdbcType="DECIMAL" property="ttlVal" />
+    <result column="TAX_RATE" jdbcType="DECIMAL" property="taxRate" />
+    <result column="TAX_VAL" jdbcType="DECIMAL" property="taxVal" />
+    <result column="PSN_VAL" jdbcType="DECIMAL" property="psnVal" />
+    <result column="ADDT_COST" jdbcType="DECIMAL" property="addtCost" />
+    <result column="COST" jdbcType="DECIMAL" property="cost" />
+    <result column="RCPT_TIME" jdbcType="TIMESTAMP" property="rcptTime" />
+    <result column="PA_STR_AT" jdbcType="TIMESTAMP" property="paStrAt" />
+    <result column="PA_COMP_AT" jdbcType="TIMESTAMP" property="paCompAt" />
+    <result column="COST_CHG" jdbcType="CHAR" property="costChg" />
+    <result column="PROGRESS" jdbcType="VARCHAR" property="progress" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="PDA_PROGRESS" jdbcType="VARCHAR" property="pdaProgress" />
+    <result column="EFFICIENT_TIME" jdbcType="TIMESTAMP" property="efficientTime" />
+    <result column="COST_TIME" jdbcType="TIMESTAMP" property="costTime" />
+    <result column="BUSINESS_CONTRACT_NUM" jdbcType="VARCHAR" property="businessContractNum" />
+    <result column="NEED_SEND" jdbcType="VARCHAR" property="needSend" />
+    <result column="SHMT_NBR" jdbcType="VARCHAR" property="shmtNbr" />
+    <result column="RCV_TYPE" jdbcType="VARCHAR" property="rcvType" />
+    <result column="INNER_ORDERNO" jdbcType="VARCHAR" property="innerOrderno" />
+    <result column="RF_RCV" jdbcType="CHAR" property="rfRcv" />
+    <result column="BRAND_ID" jdbcType="DECIMAL" property="brandId" />
+    <result column="RCV_STATE" jdbcType="VARCHAR" property="rcvState" />
+    <result column="IS_CROSS_TRANSFER" jdbcType="CHAR" property="isCrossTransfer" />
+    <result column="IS_QLT_CHECKED" jdbcType="CHAR" property="isQltChecked" />
+    <result column="PLANED_RCH_TIME" jdbcType="TIMESTAMP" property="planedRchTime" />
+    <result column="ACTUAL_RCH_TIME" jdbcType="TIMESTAMP" property="actualRchTime" />
+    <result column="ACTUAL_RCV_WAREH_ID" jdbcType="DECIMAL" property="actualRcvWarehId" />
+    <result column="DOC_STATE" jdbcType="DECIMAL" property="docState" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="LAST_MODIFIED_USER" jdbcType="VARCHAR" property="lastModifiedUser" />
+    <result column="LAST_MODIFIED_DATE" jdbcType="TIMESTAMP" property="lastModifiedDate" />
+    <result column="FLAG" jdbcType="VARCHAR" property="flag" />
+    <result column="QTY_TYPE" jdbcType="VARCHAR" property="qtyType" />
+    <result column="DEAL_DIFF" jdbcType="CHAR" property="dealDiff" />
+    <result column="SF_RVD_CODE" jdbcType="VARCHAR" property="sfRvdCode" />
+    <result column="OERP_FLAG" jdbcType="VARCHAR" property="oerpFlag" />
+    <result column="EFFICIENT" jdbcType="CHAR" property="efficient" />
+    <result column="DATA_SOURCE" jdbcType="VARCHAR" property="dataSource" />
+    <result column="APPROVED" jdbcType="VARCHAR" property="approved" />
+    <result column="OLD_GRN_CODE" jdbcType="VARCHAR" property="oldGrnCode" />
+    <result column="CHECKED_STATUS" jdbcType="VARCHAR" property="checkedStatus" />
+    <result column="CHECKED_BATCHNO" jdbcType="VARCHAR" property="checkedBatchno" />
+    <result column="CHECKED_USER" jdbcType="VARCHAR" property="checkedUser" />
+    <result column="CHECKED_TIME" jdbcType="TIMESTAMP" property="checkedTime" />
+    <result column="IS_RECEIPT_CHECK" jdbcType="CHAR" property="isReceiptCheck" />
+    <result column="IS_STRUCK" jdbcType="CHAR" property="isStruck" />
+    <result column="STRUCK_REASON" jdbcType="VARCHAR" property="struckReason" />
+    <result column="DOC_ROOT" jdbcType="VARCHAR" property="docRoot" />
+    <result column="DOC_ROOT_INFO" jdbcType="VARCHAR" property="docRootInfo" />
+    <result column="SAP_FLAG" jdbcType="CHAR" property="sapFlag" />
+    <result column="SAP_TIME" jdbcType="TIMESTAMP" property="sapTime" />
+    <result column="OERP_TIME" jdbcType="TIMESTAMP" property="oerpTime" />
+    <result column="ROOT_DOC_TYPE" jdbcType="VARCHAR" property="rootDocType" />
+    <result column="ROOT_DOC_NUM" jdbcType="VARCHAR" property="rootDocNum" />
+    <result column="PRODUCT_COUNT" jdbcType="DECIMAL" property="productCount" />
+    <result column="IS_CHECKED" jdbcType="CHAR" property="isChecked" />
+    <result column="LOCKED_STATUS" jdbcType="CHAR" property="lockedStatus" />
+    <result column="OS_DOC_CODE" jdbcType="VARCHAR" property="osDocCode" />
+  </resultMap>
+  
+  <resultMap id="grnDtlMap" type="mb.erp.dr.soa.vo.SfGrnDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SF_GRN_ID" property="sfGrnId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+    <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="UNIT_ADDT_COST" property="unitAddtCost" jdbcType="DECIMAL" />
+    <result column="UNIT_COST" property="unitCost" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="OLD_DISC_RATE" property="oldDiscRate" jdbcType="DECIMAL" />
+    <result column="PRE_QTY" property="preQty" jdbcType="DECIMAL" />
+    <result column="DELIV_QTY" property="delivQty" jdbcType="DECIMAL" />
+    <result column="MONEY" property="money" jdbcType="DECIMAL" />
+    <result column="IS_COST_CHECKED" property="isCostChecked" jdbcType="CHAR" />
+    <result column="RCPT_LOC_ID" property="rcptLocId" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <resultMap id="enMarginProdNumMap" type="mb.erp.dr.soa.bean.EnMarginProdNumBean">
+    <result column="PROD_NUM" property="prodNum" jdbcType="VARCHAR" />
+    <result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+    <result column="COST_GRP_ID" property="costGrpId" jdbcType="DECIMAL" />
+    <result column="YEAR_MONTH" property="yearMonth" jdbcType="VARCHAR" />
+    <result column="COST" property="cost" jdbcType="DECIMAL" />
+    <result column="BILL_UNIT_COST" property="billUnitCost" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="Grn_List">
+    ID, UNIT_ID, GRN_NUM, DOC_DATE, RCPT_MODE, WAREH_ID, OPR_ID, CTRLR_ID, DISP_UNIT_ID, 
+    DELIV_WAREH_ID, SRC_DOC_TYPE, SRC_UNIT_ID, SRC_DOC_NUM, CURRENCY, TTL_QTY, TTL_VAL, 
+    TAX_RATE, TAX_VAL, PSN_VAL, ADDT_COST, COST, RCPT_TIME, PA_STR_AT, PA_COMP_AT, COST_CHG, 
+    PROGRESS, REMARK, PDA_PROGRESS, EFFICIENT_TIME, COST_TIME, BUSINESS_CONTRACT_NUM, 
+    NEED_SEND, SHMT_NBR, RCV_TYPE, INNER_ORDERNO, RF_RCV, BRAND_ID, RCV_STATE, IS_CROSS_TRANSFER, 
+    IS_QLT_CHECKED, PLANED_RCH_TIME, ACTUAL_RCH_TIME, ACTUAL_RCV_WAREH_ID, DOC_STATE, 
+    CREATE_USER, CREATE_DATE, LAST_MODIFIED_USER, LAST_MODIFIED_DATE, FLAG, QTY_TYPE, 
+    DEAL_DIFF, SF_RVD_CODE, OERP_FLAG, EFFICIENT, DATA_SOURCE, APPROVED, OLD_GRN_CODE, 
+    CHECKED_STATUS, CHECKED_BATCHNO, CHECKED_USER, CHECKED_TIME, IS_RECEIPT_CHECK, IS_STRUCK, 
+    STRUCK_REASON, DOC_ROOT, DOC_ROOT_INFO, SAP_FLAG, SAP_TIME, OERP_TIME, ROOT_DOC_TYPE, 
+    ROOT_DOC_NUM, PRODUCT_COUNT, IS_CHECKED, LOCKED_STATUS, OS_DOC_CODE
+  </sql>
+  
+  <sql id="Grn_dtl_List" >
+    ID, SF_GRN_ID, PROD_ID, QUANTITY, UNIT_PRICE, DISC_RATE, UNIT_ADDT_COST, UNIT_COST, 
+    REMARK, OLD_DISC_RATE, PRE_QTY, DELIV_QTY, MONEY, IS_COST_CHECKED, RCPT_LOC_ID
+  </sql>
+  <select id="selectGrnById" parameterType="java.lang.Long" resultMap="grnMap">
+	    select 
+	    <include refid="Grn_List" />
+	    from SF_GRN
+	    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="searchGrnDtl" resultMap="grnDtlMap" parameterType="mb.erp.dr.soa.bean.OrderSearchBean" >
+    select 
+    <include refid="Grn_dtl_List" />
+    from SF_GRN_DTL
+    where UNIT_ID = #{unitId}
+    <if test="docNum != null and docNum != ''" >
+     and GRN_NUM = #{docNum}
+     </if>
+     <if test="prodId != null and prodId != ''" >
+         and PROD_ID = #{prodId}
+     </if>
+  </select>
+  
+  <select id="selectGrnDtlByGrnId" parameterType="java.lang.Long" resultMap="grnDtlMap">
+        select 
+        <include refid="Grn_dtl_List" />
+        from SF_GRN_DTL
+        where SF_GRN_ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+   <select id="selectGrnDtlWithoutLocId" parameterType="java.lang.Long" resultMap="grnDtlMap">
+        select 
+        <include refid="Grn_dtl_List" />
+        from SF_GRN_DTL
+        where SF_GRN_ID = #{id,jdbcType=DECIMAL}
+        and RCPT_LOC_ID is NULL
+  </select>
+  
+  <!-- 保存入库单 -->
+  <insert id="save" parameterType="mb.erp.dr.soa.vo.SfGrnVo" >
+    insert into SF_GRN
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      ID,
+      <if test="unitId != null">
+        UNIT_ID,
+      </if>
+      <if test="grnNum != null">
+        GRN_NUM,
+      </if>
+        DOC_DATE,
+      <if test="rcptMode != null">
+        RCPT_MODE,
+      </if>
+      <if test="warehId != null">
+        WAREH_ID,
+      </if>
+      <if test="oprId != null">
+        OPR_ID,
+      </if>
+      <if test="ctrlrId != null">
+        CTRLR_ID,
+      </if>
+      <if test="dispUnitId != null">
+        DISP_UNIT_ID,
+      </if>
+      <if test="delivWarehId != null">
+        DELIV_WAREH_ID,
+      </if>
+      <if test="srcDocType != null">
+        SRC_DOC_TYPE,
+      </if>
+      <if test="srcUnitId != null">
+        SRC_UNIT_ID,
+      </if>
+      <if test="srcDocNum != null">
+        SRC_DOC_NUM,
+      </if>
+      <if test="currency != null">
+        CURRENCY,
+      </if>
+      <if test="ttlQty != null">
+        TTL_QTY,
+      </if>
+      <if test="ttlVal != null">
+        TTL_VAL,
+      </if>
+      <if test="taxRate != null">
+        TAX_RATE,
+      </if>
+      <if test="taxVal != null">
+        TAX_VAL,
+      </if>
+      <if test="psnVal != null">
+        PSN_VAL,
+      </if>
+      <if test="addtCost != null">
+        ADDT_COST,
+      </if>
+      <if test="cost != null">
+        COST,
+      </if>
+      <if test="rcptTime != null">
+        RCPT_TIME,
+      </if>
+      <if test="paStrAt != null">
+        PA_STR_AT,
+      </if>
+      <if test="paCompAt != null">
+        PA_COMP_AT,
+      </if>
+      <if test="costChg != null">
+        COST_CHG,
+      </if>
+      <if test="progress != null">
+        PROGRESS,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="pdaProgress != null">
+        PDA_PROGRESS,
+      </if>
+      <if test="efficientTime != null">
+        EFFICIENT_TIME,
+      </if>
+      <if test="costTime != null">
+        COST_TIME,
+      </if>
+      <if test="businessContractNum != null">
+        BUSINESS_CONTRACT_NUM,
+      </if>
+      <if test="needSend != null">
+        NEED_SEND,
+      </if>
+      <if test="shmtNbr != null">
+        SHMT_NBR,
+      </if>
+      <if test="rcvType != null">
+        RCV_TYPE,
+      </if>
+      <if test="innerOrderno != null">
+        INNER_ORDERNO,
+      </if>
+      <if test="rfRcv != null">
+        RF_RCV,
+      </if>
+      <if test="brandId != null">
+        BRAND_ID,
+      </if>
+      <if test="rcvState != null">
+        RCV_STATE,
+      </if>
+      <if test="isCrossTransfer != null">
+        IS_CROSS_TRANSFER,
+      </if>
+      <if test="isQltChecked != null">
+        IS_QLT_CHECKED,
+      </if>
+      <if test="planedRchTime != null">
+        PLANED_RCH_TIME,
+      </if>
+      <if test="actualRchTime != null">
+        ACTUAL_RCH_TIME,
+      </if>
+      <if test="actualRcvWarehId != null">
+        ACTUAL_RCV_WAREH_ID,
+      </if>
+        DOC_STATE,
+      <if test="createUser != null">
+        CREATE_USER,
+      </if>
+        CREATE_DATE,
+      <if test="lastModifiedUser != null">
+        LAST_MODIFIED_USER,
+      </if>
+        LAST_MODIFIED_DATE,
+      <if test="flag != null">
+        FLAG,
+      </if>
+      <if test="qtyType != null">
+        QTY_TYPE,
+      </if>
+      <if test="dealDiff != null">
+        DEAL_DIFF,
+      </if>
+      <if test="sfRvdCode != null">
+        SF_RVD_CODE,
+      </if>
+      <if test="oerpFlag != null">
+        OERP_FLAG,
+      </if>
+      <if test="efficient != null">
+        EFFICIENT,
+      </if>
+      <if test="dataSource != null">
+        DATA_SOURCE,
+      </if>
+      <if test="approved != null">
+        APPROVED,
+      </if>
+      <if test="oldGrnCode != null">
+        OLD_GRN_CODE,
+      </if>
+      <if test="checkedStatus != null">
+        CHECKED_STATUS,
+      </if>
+      <if test="checkedBatchno != null">
+        CHECKED_BATCHNO,
+      </if>
+      <if test="checkedUser != null">
+        CHECKED_USER,
+      </if>
+      <if test="checkedTime != null">
+        CHECKED_TIME,
+      </if>
+      <if test="isReceiptCheck != null">
+        IS_RECEIPT_CHECK,
+      </if>
+      <if test="isStruck != null">
+        IS_STRUCK,
+      </if>
+      <if test="struckReason != null">
+        STRUCK_REASON,
+      </if>
+      <if test="docRoot != null">
+        DOC_ROOT,
+      </if>
+      <if test="docRootInfo != null">
+        DOC_ROOT_INFO,
+      </if>
+      <if test="sapFlag != null">
+        SAP_FLAG,
+      </if>
+      <if test="sapTime != null">
+        SAP_TIME,
+      </if>
+      <if test="oerpTime != null">
+        OERP_TIME,
+      </if>
+      <if test="rootDocType != null">
+        ROOT_DOC_TYPE,
+      </if>
+      <if test="rootDocNum != null">
+        ROOT_DOC_NUM,
+      </if>
+      <if test="productCount != null">
+        PRODUCT_COUNT,
+      </if>
+      <if test="isChecked != null">
+        IS_CHECKED,
+      </if>
+      <if test="lockedStatus != null">
+        LOCKED_STATUS,
+      </if>
+      <if test="osDocCode != null">
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=DECIMAL},
+      <if test="unitId != null">
+        #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="grnNum != null">
+        #{grnNum,jdbcType=VARCHAR},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="rcptMode != null">
+        #{rcptMode,jdbcType=VARCHAR},
+      </if>
+      <if test="warehId != null">
+        #{warehId,jdbcType=DECIMAL},
+      </if>
+      <if test="oprId != null">
+        #{oprId,jdbcType=DECIMAL},
+      </if>
+      <if test="ctrlrId != null">
+        #{ctrlrId,jdbcType=DECIMAL},
+      </if>
+      <if test="dispUnitId != null">
+        #{dispUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="delivWarehId != null">
+        #{delivWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="srcDocType != null">
+        #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitId != null">
+        #{srcUnitId,jdbcType=DECIMAL},
+      </if>
+      <if test="srcDocNum != null">
+        #{srcDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null">
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="ttlQty != null">
+        #{ttlQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlVal != null">
+        #{ttlVal,jdbcType=DECIMAL},
+      </if>
+      <if test="taxRate != null">
+        #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="taxVal != null">
+        #{taxVal,jdbcType=DECIMAL},
+      </if>
+      <if test="psnVal != null">
+        #{psnVal,jdbcType=DECIMAL},
+      </if>
+      <if test="addtCost != null">
+        #{addtCost,jdbcType=DECIMAL},
+      </if>
+      <if test="cost != null">
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="rcptTime != null">
+        #{rcptTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paStrAt != null">
+        #{paStrAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paCompAt != null">
+        #{paCompAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costChg != null">
+        #{costChg,jdbcType=CHAR},
+      </if>
+      <if test="progress != null">
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="pdaProgress != null">
+        #{pdaProgress,jdbcType=VARCHAR},
+      </if>
+      <if test="efficientTime != null">
+        #{efficientTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costTime != null">
+        #{costTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessContractNum != null">
+        #{businessContractNum,jdbcType=VARCHAR},
+      </if>
+      <if test="needSend != null">
+        #{needSend,jdbcType=VARCHAR},
+      </if>
+      <if test="shmtNbr != null">
+        #{shmtNbr,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvType != null">
+        #{rcvType,jdbcType=VARCHAR},
+      </if>
+      <if test="innerOrderno != null">
+        #{innerOrderno,jdbcType=VARCHAR},
+      </if>
+      <if test="rfRcv != null">
+        #{rfRcv,jdbcType=CHAR},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvState != null">
+        #{rcvState,jdbcType=VARCHAR},
+      </if>
+      <if test="isCrossTransfer != null">
+        #{isCrossTransfer,jdbcType=CHAR},
+      </if>
+      <if test="isQltChecked != null">
+        #{isQltChecked,jdbcType=CHAR},
+      </if>
+      <if test="planedRchTime != null">
+        #{planedRchTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualRchTime != null">
+        #{actualRchTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualRcvWarehId != null">
+        #{actualRcvWarehId,jdbcType=DECIMAL},
+      </if>
+        #{docState,jdbcType=DECIMAL},
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="lastModifiedUser != null">
+        #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="flag != null">
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="qtyType != null">
+        #{qtyType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealDiff != null">
+        #{dealDiff,jdbcType=CHAR},
+      </if>
+      <if test="sfRvdCode != null">
+        #{sfRvdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="oerpFlag != null">
+        #{oerpFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="efficient != null">
+        #{efficient,jdbcType=CHAR},
+      </if>
+      <if test="dataSource != null">
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="approved != null">
+        #{approved,jdbcType=VARCHAR},
+      </if>
+      <if test="oldGrnCode != null">
+        #{oldGrnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedStatus != null">
+        #{checkedStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedBatchno != null">
+        #{checkedBatchno,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedUser != null">
+        #{checkedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="checkedTime != null">
+        #{checkedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isReceiptCheck != null">
+        #{isReceiptCheck,jdbcType=CHAR},
+      </if>
+      <if test="isStruck != null">
+        #{isStruck,jdbcType=CHAR},
+      </if>
+      <if test="struckReason != null">
+        #{struckReason,jdbcType=VARCHAR},
+      </if>
+      <if test="docRoot != null">
+        #{docRoot,jdbcType=VARCHAR},
+      </if>
+      <if test="docRootInfo != null">
+        #{docRootInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="sapFlag != null">
+        #{sapFlag,jdbcType=CHAR},
+      </if>
+      <if test="sapTime != null">
+        #{sapTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oerpTime != null">
+        #{oerpTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rootDocType != null">
+        #{rootDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="rootDocNum != null">
+        #{rootDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="productCount != null">
+        #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="isChecked != null">
+        #{isChecked,jdbcType=CHAR},
+      </if>
+      <if test="lockedStatus != null">
+        #{lockedStatus,jdbcType=CHAR},
+      </if>
+      <if test="osDocCode != null">
+        #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 保存入库单明细 -->
+  <insert id="saveDtl" parameterType="mb.erp.dr.soa.vo.SfGrnDtlVo" >
+    insert into SF_GRN_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ID,
+      <if test="sfGrnId != null" >
+        SF_GRN_ID,
+      </if>
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="quantity != null" >
+        QUANTITY,
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE,
+      </if>
+      <if test="unitAddtCost != null" >
+        UNIT_ADDT_COST,
+      </if>
+      <if test="unitCost != null" >
+        UNIT_COST,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="oldDiscRate != null" >
+        OLD_DISC_RATE,
+      </if>
+      <if test="preQty != null" >
+        PRE_QTY,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="money != null" >
+        MONEY,
+      </if>
+      <if test="isCostChecked != null" >
+        IS_COST_CHECKED,
+      </if>
+      <if test="rcptLocId != null" >
+        RCPT_LOC_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=DECIMAL},
+      <if test="sfGrnId != null" >
+        #{sfGrnId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="unitAddtCost != null" >
+        #{unitAddtCost,jdbcType=DECIMAL},
+      </if>
+      <if test="unitCost != null" >
+        #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="oldDiscRate != null" >
+        #{oldDiscRate,jdbcType=DECIMAL},
+      </if>
+      <if test="preQty != null" >
+        #{preQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="isCostChecked != null" >
+        #{isCostChecked,jdbcType=CHAR},
+      </if>
+      <if test="rcptLocId != null" >
+        #{rcptLocId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 验证入库单的状态 -->
+  <select id="selectProcess" resultType="java.lang.Integer" parameterType="mb.erp.dr.soa.vo.SfGrnVo" >
+    SELECT DOC_STATE
+    FROM SF_GRN
+    WHERE ID = #{id}
+  </select>
+  <!-- 更新入库单状态 -->
+  <update id="updateProcess" parameterType="mb.erp.dr.soa.vo.SfGrnVo" >
+    update SF_GRN
+    set 
+      DOC_STATE = #{docState}
+    where ID = #{id}
+    <if test="docStateList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="docStateList"  open="(" separator="or" close=")">               
+                DOC_STATE =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  
+   <!-- 设置需要传给sap标志 -->
+  <update id="updateSapFlag"  parameterType="mb.erp.dr.soa.vo.SfGrnVo" >
+    UPDATE  SF_GRN b SET SAP_FLAG=1 
+      WHERE EXISTS (SELECT 1 FROM SYS_CODE A WHERE A.CODE_CLASS='SAP_UNIT_TO' AND A.CODE=B.WAREH_ID)
+      AND UNIT_ID = #{unitId}  AND GRN_NUM =  #{grnNum}  AND NVL(SAP_FLAG,0)=0
+      AND EXISTS(SELECT 1 FROM SYS_CODE A WHERE A.CODE_CLASS='SAP_RCPT_MODE' AND A.CODE=B.RCPT_MODE);
+  </update>
+  
+  <!-- 根据到货通知单生成入库单 -->
+  <select id="genSfGrnByRvd" parameterType="java.lang.Integer" resultMap="grnMap">
+        SELECT G.ID,
+           G.UNIT_ID,
+           O1.CODE UNIT_CODE,
+           O1.NAME UNIT_NAME,
+           G.GRN_NUM,
+           G.DOC_DATE,
+           G.RCPT_MODE,
+           G.WAREH_ID,
+           O.CODE WAREH_CODE,
+           O.NAME WAREH_NAME,
+           W.BOX_ADOPTED,
+           W.LOC_ADOPTED,
+           G.OPR_ID,
+           USER_OPR.CODE OPR_CODE,
+           G.CTRLR_ID,
+           USER_CTR.CODE CTRLR_CODE,
+           U.NAME CTRLR_NAME,
+           U.CODE CTRLR_CODE,
+           G.DISP_UNIT_ID,
+           O4.CODE DISP_UNIT_CODE,
+           O4.NAME DISP_UNIT_NAME,
+           G.SRC_DOC_TYPE,
+           G.SRC_UNIT_ID,
+           O5.NAME SRC_UNIT_NAME,
+           O5.CODE SRC_UNIT_CODE,
+           G.DELIV_WAREH_ID,
+           O2.CODE DELIV_WAREH_CODE,
+           O2.NAME DELIV_WAREH_NAME,
+           G.SRC_DOC_NUM,
+           G.CURRENCY,
+           G.TTL_QTY,
+           ROUND(G.TTL_VAL,
+                 ((SELECT P.PARM_VAL
+                     FROM BF_SYS_PARAM P
+                    WHERE P.CODE = 'AMOUNT_PRECISION'))) AS TTL_VAL,
+           G.TAX_RATE,
+           ROUND(G.TAX_VAL,
+                 ((SELECT P.PARM_VAL
+                     FROM BF_SYS_PARAM P
+                    WHERE P.CODE = 'AMOUNT_PRECISION'))) AS TAX_VAL,
+           ROUND(G.PSN_VAL,
+                 ((SELECT P.PARM_VAL
+                     FROM BF_SYS_PARAM P
+                    WHERE P.CODE = 'AMOUNT_PRECISION'))) AS PSN_VAL,
+           ROUND(G.ADDT_COST,
+                 ((SELECT P.PARM_VAL
+                     FROM BF_SYS_PARAM P
+                    WHERE P.CODE = 'COST_PRECISION'))) AS ADDT_COST,
+           ROUND(G.COST,
+                 ((SELECT P.PARM_VAL
+                     FROM BF_SYS_PARAM P
+                    WHERE P.CODE = 'COST_PRECISION'))) AS COST,
+           G.RCPT_TIME,
+           G.PA_STR_AT,
+           G.PA_COMP_AT,
+           G.COST_CHG,
+           G.PROGRESS,
+           G.REMARK,
+           G.PDA_PROGRESS,
+           G.EFFICIENT_TIME,
+           G.COST_TIME,
+           G.BUSINESS_CONTRACT_NUM,
+           G.NEED_SEND,
+           G.SHMT_NBR,
+           G.RCV_TYPE,
+           G.INNER_ORDERNO,
+           G.RF_RCV,
+           G.BRAND_ID,
+           BRAND.CODE BRAND_CODE,
+           G.RCV_STATE,
+           G.IS_CROSS_TRANSFER,
+           G.IS_QLT_CHECKED,
+           G.PLANED_RCH_TIME,
+           G.ACTUAL_RCH_TIME,
+           G.ACTUAL_RCV_WAREH_ID,
+           O3.CODE ACTUAL_RCV_WAREH_CODE,
+           O3.NAME ACTUAL_RCV_WAREH_NAME,
+           G.DOC_STATE,
+           G.CREATE_USER,
+           G.CREATE_DATE,
+           G.LAST_MODIFIED_USER,
+           G.LAST_MODIFIED_DATE,
+           G.FLAG,
+           RVD.OGRN_CODE OLD_GRN_NUM,
+           G.QTY_TYPE,
+           G.DEAL_DIFF,
+           G.SF_RVD_CODE,
+           SR.CREATE_DATE AS RVD_CREATE_DATE,
+           NVL(G.CHECKED_STATUS, 'DC') AS CHECKED_STATUS,
+           G.CHECKED_BATCHNO,
+           G.CHECKED_USER,
+           G.CHECKED_TIME,
+           G.IS_RECEIPT_CHECK,
+           G.IS_STRUCK,
+           G.STRUCK_REASON,
+           G.COST_CHG AS COST_CHG_MARK,
+           G.DOC_ROOT,
+           G.DOC_ROOT_INFO,
+           G.SAP_FLAG,
+           G.SAP_TIME,
+           G.OERP_FLAG,
+           G.OERP_TIME,
+           G.ROOT_DOC_TYPE,
+           G.ROOT_DOC_NUM,
+           G.DATA_SOURCE,
+           G.APPROVED,
+           G.PRODUCT_COUNT,
+           G.IS_CHECKED
+      FROM SF_GRN G
+      LEFT JOIN BF_ORG O ON G.WAREH_ID = O.ID
+      LEFT JOIN BF_ORG O1 ON G.UNIT_ID = O1.ID
+      LEFT JOIN BF_USER USER_OPR ON G.OPR_ID = USER_OPR.ID
+      LEFT JOIN BF_USER USER_CTR ON G.CTRLR_ID = USER_CTR.ID
+      LEFT JOIN BF_ORG O2 ON G.DELIV_WAREH_ID = O2.ID
+      LEFT JOIN BF_ORG O3 ON G.ACTUAL_RCV_WAREH_ID = O3.ID
+      LEFT JOIN SF_WAREHOUSE W ON G.WAREH_ID = W.BF_ORG_ID
+      LEFT JOIN BF_USER U ON G.CTRLR_ID = U.ID
+      LEFT JOIN BF_ORG O4 ON G.DISP_UNIT_ID = O4.ID
+      LEFT JOIN BF_ORG O5 ON G.SRC_UNIT_ID = O5.ID
+      LEFT JOIN SF_RVD RVD ON G.SRC_DOC_NUM = RVD.CODE
+      LEFT JOIN BF_BRAND_GRP BRAND ON G.BRAND_ID = BRAND.ID
+     INNER JOIN SF_RVD SR ON G.SRC_DOC_TYPE = 'RVD'
+                         AND G.SRC_DOC_NUM = SR.CODE
+     WHERE SR.ID = #{sfRvdId,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 根据到货通知单生成入库单 -->
+  <insert id="insertByRVD" parameterType="mb.erp.dr.soa.vo.SfRvdVo">
+  	INSERT INTO SF_GRN
+	  (ID,
+	   UNIT_ID,
+	   GRN_NUM,
+	   DOC_DATE,
+	   RCPT_MODE,
+	   WAREH_ID,
+	   OPR_ID,
+	   DISP_UNIT_ID,
+	   DELIV_WAREH_ID,
+	   SRC_DOC_TYPE,
+	   SRC_UNIT_ID,
+	   SRC_DOC_NUM,
+	   CURRENCY,
+	   TTL_QTY,
+   	   TTL_VAL,
+	   TAX_RATE,
+	   TAX_VAL,
+	   PSN_VAL,
+	   COST,
+	   REMARK,
+	   RCV_TYPE,
+	   BRAND_ID,
+	   RCV_STATE,
+	   IS_QLT_CHECKED,
+	   ACTUAL_RCV_WAREH_ID,
+	   DOC_STATE,
+	   CREATE_USER,
+	   CREATE_DATE,
+	   LAST_MODIFIED_USER,
+	   LAST_MODIFIED_DATE,
+	   FLAG,
+	   QTY_TYPE,
+	   SF_RVD_CODE,
+	   CHECKED_STATUS,
+	   EFFICIENT,
+	   DATA_SOURCE,
+	   APPROVED,
+	   ROOT_DOC_TYPE,
+	   ROOT_DOC_NUM,
+	   RCPT_TIME,
+	   PRODUCT_COUNT)
+	  SELECT #{sfGrnId},
+	         D.UNIT_ID,
+	         fu_get_next_doc_code('GRN', 1),
+	         TRUNC(SYSDATE),
+	         D.RCPT_MODE,
+	         D.BF_ORG_RCV_WAREH_ID,
+	         (SELECT ID FROM BF_USER WHERE CODE = D.CREATE_USER) AS OPR_ID,
+	         DECODE(D.RCPT_MODE, 'TRAN', D.WAREH_ID, D.BF_ORG_UNIT_ID),
+	         DECODE(D.RCPT_MODE, 'TRAN', D.WAREH_ID, D.WAREH_ID),
+	         'RVD',
+	         D.BF_ORG_UNIT_ID,
+	         D.CODE,
+	         D.CURRENCY,
+	         D.TTL_QTY,
+	         D.TTL_VAL,
+	         D.TAX_RATE,
+	         D.TAX_VAL,
+	         D.PSN_VAL,
+	         0,
+	         D.REMARK,
+	         '',
+	         D.BRAND_ID,
+	         D.RCV_STATE,
+	         0,
+	         D.BF_ORG_RCV_WAREH_ID,
+	         1,
+	         D.CREATE_USER,
+	         SYSTIMESTAMP,
+	         D.LAST_MODIFIED_USER,
+	         SYSTIMESTAMP,
+	         '1',
+	         'DS',
+	         D.CODE,
+	         1,
+	         'F',
+	         '02',
+	         '01',
+	         D.ORIGIN_DOC_TYPE,
+	         D.ORIGIN_DOC_NUM,
+	         SYSDATE,
+	         D.PRODUCT_COUNT
+	    FROM SF_RVD D
+	   WHERE D.ID = #{id}
+  </insert>
+  
+  <!-- 根据到货通知单生成入库单明细 -->
+  <insert id="insertDtlByRVD" parameterType="mb.erp.dr.soa.vo.SfRvdVo">
+	INSERT INTO 
+	 SF_GRN_DTL 
+	 (ID, 
+	 SF_GRN_ID,
+	 PROD_ID,
+	 QUANTITY, 
+	 UNIT_PRICE, 
+	 DISC_RATE,
+	 UNIT_ADDT_COST, 
+	 UNIT_COST,
+	 OLD_DISC_RATE, 
+	 DELIV_QTY,
+	 MONEY,
+	 RCPT_LOC_ID
+	 ) 
+	SELECT
+	fu_get_next_identity('SF_GRN_DTL',1),
+	#{sfGrnId},
+	D.PROD_ID,
+	D.QUANTITY,
+	D.UNIT_PRICE,
+	D.DISC_RATE,
+	D.UNIT_ADDT_COST,
+	D.UNIT_COST,
+	D.OLD_DISC_RATE,
+	D.DELIV_QTY,
+	ROUND(NVL(D.QUANTITY,0) * NVL(D.UNIT_PRICE,0) * NVL(D.DISC_RATE,0) / 100,2),
+	D.RCPT_LOC_ID
+	FROM SF_RVD R
+	INNER JOIN SF_RVD_DTL D
+	  ON R.ID = D.SF_RVD_ID
+	WHERE R.ID = #{id}
+  </insert>
+  
+  <!-- 根据入库单明细更新总单的数量和金额 -->
+  <update id="updateByGrnDtl" parameterType="java.lang.Long">
+  		UPDATE SF_GRN G
+		SET (G.TTL_QTY,G.TTL_VAL,G.PRODUCT_COUNT,TAX_VAL)=
+		(
+		SELECT 
+		NVL(SUM(D.QUANTITY),0),NVL(SUM(D.MONEY),0),COUNT(1),
+		ROUND(NVL(SUM((D.UNIT_PRICE - D.UNIT_PRICE/((100+G.TAX_RATE)/100)) * D.QUANTITY*D.DISC_RATE/100),0),2)
+		
+		FROM SF_GRN_DTL D
+		WHERE D.SF_GRN_ID =#{sfGrnId}
+		)
+		WHERE G.ID =#{sfGrnId}
+  </update>
+  
+  <!-- 更新入库单总单单位成本-->
+  <update id="updateGrnCost" parameterType="mb.erp.dr.soa.vo.SfGrnVo" >
+    UPDATE SF_GRN A
+    <set>
+	    COST_CHG = #{costChg},
+		<if test="remark != null and remark == 'TBN'" >
+	        COST = #{cost},
+	    </if>
+	    <if test="remark != null and remark == 'IDT'" >
+	        COST = (SELECT NVL(ROUND(SUM(NVL(B.UNIT_COST,0) * NVL(B.QUANTITY,0)),4),0) AS COST
+			FROM SF_GRN_DTL B WHERE A.ID = B.SF_GRN_ID)
+	    </if>
+	</set>    
+	WHERE A.ID = #{id}
+  </update>
+  
+  <!-- 更新入库单明细 单位成本-->
+  <update id="updateGrnUnitCost" parameterType="mb.erp.dr.soa.vo.SfGrnVo" >
+    UPDATE SF_GRN_DTL A 
+	<set> 		
+		<if test="remark != null and remark == 'TBN'" >
+	        UNIT_COST = #{cost},
+	    </if>
+	    <if test="remark != null and remark == 'IDT'" >
+	       UNIT_COST = (SELECT CASE WHEN  B.TAX_RATE = 0 THEN 0 ELSE ROUND(A.UNIT_PRICE * A.DISC_RATE / (100 * B.TAX_RATE) * A.UNIT_ADDT_COST,4) END
+			FROM SF_GRN B WHERE A.SF_GRN_ID = B.ID)
+	    </if>
+	</set>    
+	WHERE A.SF_GRN_ID = #{id}
+  </update>
+  
+    <!-- 根据入库号获取所有需要核算的商品款 -->
+   <select id="getMarginProdNum" parameterType="java.lang.Long" resultMap="enMarginProdNumMap">
+      SELECT SUBSTR(P.PROD_NUM,0,TO_NUMBER(E.KEY_CODE)) AS PROD_NUM,
+       SUM(NVL(D.QUANTITY,0)) AS QUANTITY,
+       W.COST_GRP_ID AS COST_GRP_ID,
+       (SUM(NVL(D.UNIT_COST,0)*NVL(D.QUANTITY,0))) AS COST,
+       TO_CHAR(R.Doc_Date,'yyyyMM') AS YEAR_MONTH,
+       CASE WHEN EXISTS(
+                        SELECT 1 
+                        FROM FI_COST_BILL_RE B,FI_FSCL_MONTH M
+                        WHERE M.ID = B.FSCL_MONTH_ID 
+                          AND M.YEAR_VAL = TO_CHAR(R.DOC_DATE, 'yyyy') 
+                          AND M.MONTH_VAL = TO_CHAR(R.DOC_DATE, 'MM')
+                          AND B.COST_GRP_ID = W.COST_GRP_ID 
+                          AND B.PROD_CODE =SUBSTR(P.PROD_NUM,0,TO_NUMBER(E.KEY_CODE))  
+                          AND B.CANCELLED = 'F'
+                          AND B.AC_STATE = 1
+                       )
+            THEN 
+                      (
+                        SELECT B.UNIT_COST 
+                        FROM FI_COST_BILL_RE B,FI_FSCL_MONTH M
+                        WHERE M.ID = B.FSCL_MONTH_ID 
+                          AND M.YEAR_VAL = TO_CHAR(R.DOC_DATE, 'yyyy') 
+                          AND M.MONTH_VAL = TO_CHAR(R.DOC_DATE, 'MM')
+                          AND B.COST_GRP_ID = W.COST_GRP_ID 
+                          AND B.PROD_CODE =SUBSTR(P.PROD_NUM,0,TO_NUMBER(E.KEY_CODE))  
+                          AND B.CANCELLED = 'F'
+                          AND B.AC_STATE = 1
+                       )     
+       ELSE
+          0
+       END AS BILL_UNIT_COST
+FROM SF_GRN_DTL D
+INNER JOIN SF_GRN R
+  ON R.ID = D.SF_GRN_ID
+INNER JOIN SF_WAREHOUSE W
+  ON W.BF_ORG_ID = R.WAREH_ID
+INNER JOIN BF_PRODUCT  P
+  ON D.PROD_ID = P.ID
+INNER JOIN DR_ATP_DTL E  
+  ON E.AT_CODE = P.CALC_MARGIN
+INNER JOIN DR_ATP G
+  ON G.ID = E.DR_ATP_ID AND G.ATP_CODE='COST_MODE'
+WHERE R.ID =#{id}
+GROUP BY SUBSTR(P.PROD_NUM,0,to_number(E.KEY_CODE)),W.COST_GRP_ID,R.DOC_DATE
+   </select>
+   
+   <select id="getCurrentMonthTotal" parameterType="java.util.Map" resultMap="enMarginProdNumMap">
+    SELECT
+ SUM(NVL(D.UNIT_COST,0)*NVL(D.QUANTITY,0)) AS COST,
+ SUM(NVL(D.QUANTITY,0)) AS QUANTITY,
+ T.PROD_NUM,
+ T.COST_GRP_ID,
+ T.YearMonth AS YEAR_MONTH,
+ T.BillUnitCost AS BILL_UNIT_COST
+FROM SF_GRN_DTL D
+INNER JOIN SF_GRN G
+  ON G.ID = D.SF_GRN_ID
+INNER JOIN SF_WAREHOUSE W
+  ON W.BF_ORG_ID = G.WAREH_ID
+INNER JOIN BF_PRODUCT P
+  ON P.ID = D.PROD_ID
+INNER JOIN (SELECT 
+              FN_GETARRAYOFINDEX(COLUMN_VALUE,',',1) AS PROD_NUM,
+              FN_GETARRAYOFINDEX(COLUMN_VALUE,',',2) AS COST_GRP_ID,
+              FN_GETARRAYOFINDEX(COLUMN_VALUE,',',3) AS YearMonth,
+              FN_GETARRAYOFINDEX(COLUMN_VALUE,',',4) AS BillUnitCost
+            FROM TABLE(FN_SPLITSTR(#{sourceStr},';'))) T
+  ON T.PROD_NUM = SUBSTR(P.PROD_NUM,0,LENGTH(T.PROD_NUM)) AND T.COST_GRP_ID = W.COST_GRP_ID
+WHERE G.COST_CHG = 'T'
+  AND G.Efficient= 'T'
+  AND (G.DOC_DATE BETWEEN TRUNC(ADD_MONTHS(LAST_DAY(TO_DATE(T.YearMonth,'yyyyMM')) + 1, -1)) AND (TRUNC(LAST_DAY(TO_DATE(T.YearMonth,'yyyyMM')) + 1)-1/(24*60*60)))
+GROUP BY T.Prod_Num,T.COST_GRP_ID,T.YearMonth,T.BillUnitCost
+   </select>
+   
+   <!--  根据入库单判断成本组是否活动-->
+   <select id="getOpModeByGrn" parameterType="java.lang.Long" resultType="java.lang.String">
+  SELECT OP_MODE
+  FROM fi_cost_grp g
+ INNER JOIN SF_WAREHOUSE W
+  ON G.ID = W.COST_GRP_ID
+INNER JOIN SF_GRN R
+  ON R.WAREH_ID = W.BF_ORG_ID
+WHERE R.ID = #{id}
+   </select>
+   <!-- 根据入库单查询成本组ID -->
+     <select id="getCostGrpIdByGrn" parameterType="java.lang.Long" resultType="java.lang.Long">
+  SELECT g.Id
+  FROM fi_cost_grp g
+ INNER JOIN SF_WAREHOUSE W
+  ON G.ID = W.COST_GRP_ID
+INNER JOIN SF_GRN R
+  ON R.WAREH_ID = W.BF_ORG_ID
+WHERE R.ID = #{id}
+   </select>
+   
+    <!-- 更新入库单成本核算标志位 -->
+   <update id="updateCostCHG" parameterType="java.util.Map" >
+    update SF_GRN
+    set 
+      COST_CHG = #{costChg}
+    where ID = #{id}
+  </update>
+  
+     <!-- 获取成本核算方式 -->
+  <select id="getCalType" parameterType="java.lang.Long" resultType="java.lang.Integer">
+  SELECT E.CALTYPE FROM SF_WAREHOUSE D,
+              SF_GRN C,
+              FI_COST_GRP E 
+WHERE D.COST_GRP_ID=E.ID 
+  AND D.BF_ORG_ID=C.WAREH_ID 
+  AND C.ID= #{id}
+  </select>
+  
+  <!-- 判断入库仓是否参与成本核算 -->
+  <select  id="isCostAcount" parameterType="java.util.Map" resultType="java.lang.Integer">
+   SELECT 1 FROM FI_COST_GRP_RMODE C,
+              SF_WAREHOUSE D,
+              SF_GRN B,
+              FI_COST_GRP E 
+  WHERE B.RCPT_MODE=C.RMODE 
+  AND C.COST_GRP_ID=E.ID 
+  AND E.CALTYPE=#{calType}
+  AND C.COST_GRP_ID=D.COST_GRP_ID 
+  AND D.BF_ORG_ID=B.WAREH_ID
+  AND E.op_mode =1
+  AND B.ID = #{id}
+  </select>
+  
+  <!--更新入库单明细成本 -->
+  <update id="updateDetailUnitCost" parameterType="java.util.Map" >
+   UPDATE SF_GRN_DTL D
+   SET UNIT_COST = ( 
+    SELECT ROUND(NVL(D.UNIT_PRICE,0) * NVL(D.DISC_RATE,0) / (100 + NVL(G.TAX_RATE,0)) + NVL(D.UNIT_ADDT_COST,0), #{pricePrecision}) 
+     FROM SF_GRN G
+    WHERE G.ID = D.SF_GRN_ID ) 
+    WHERE D.SF_GRN_ID =#{id}
+  </update>
+  
+  <!-- 更新入库单成本 -->
+  <update id="updateCost" parameterType="java.util.Map" >
+    UPDATE SF_GRN A 
+    SET A.COST=
+    NVL((SELECT ROUND(SUM(ROUND(NVL(B.QUANTITY,0)*NVL(B.UNIT_COST,0),#{pricePrecision})),#{costPrecision})
+    FROM SF_GRN_DTL B 
+    WHERE B.SF_GRN_ID=A.ID),0)
+    WHERE A.ID=#{id}
+  </update>
+  
+   <!-- 根据入库单更新成本表 -->
+  <update id="updateFiGrpCostByGrn" parameterType="java.lang.Long" >
+    UPDATE FI_GRP_COST A  
+    SET (A.UNIT_COST,A.STOCK,A.MOVE_TTL_COST,OP_MODE)=
+   (SELECT 
+   NVL(F.Unit_Cost,0),
+   NVL(A.STOCK,0) + NVL(F.QUANTITY,0),
+   NVL(A.MOVE_TTL_COST,0) + NVL(F.Unit_Cost,0)*NVL(F.QUANTITY,0),
+   '0'
+ FROM SF_WAREHOUSE D,
+      SF_GRN C,
+      SF_GRN_DTL F,
+      FI_COST_GRP E 
+ WHERE D.COST_GRP_ID=E.ID 
+   AND E.CALTYPE='1' 
+   AND D.BF_ORG_ID=C.WAREH_ID 
+   AND F.SF_GRN_ID=C.ID 
+   AND F.PROD_ID=A.PROD_ID 
+   AND A.COST_GRP_ID=E.ID
+   AND C.ID=#{id}
+)
+WHERE EXISTS (SELECT 1 
+              FROM SF_WAREHOUSE D,
+                   SF_GRN C,
+                   SF_GRN_DTL F,
+                   FI_COST_GRP E 
+              WHERE D.COST_GRP_ID=E.ID 
+                AND E.CALTYPE='1' 
+                AND D.BF_ORG_ID=C.WAREH_ID 
+                AND F.SF_GRN_ID=C.ID 
+                AND F.PROD_ID=A.PROD_ID 
+                AND A.COST_GRP_ID=E.ID
+                AND C.ID=#{id}
+)
+  </update>
+  
+   <!-- 根据入库单插入成本表 -->
+  <insert id="insertFiGrpCostByGrn" parameterType="java.lang.Long" >
+       INSERT INTO FI_GRP_COST(ID,COST_GRP_ID,PROD_ID,UNIT_COST,STOCK,CALC_AT,INIT_UNIT_COST,INIT_STK,MOVE_TTL_COST,CALC_MARGIN,PROD_NUM,OP_MODE)
+SELECT FU_GET_NEXT_IDENTITY('FI_GRP_COST',1),
+       D.COST_GRP_ID,
+       F.PROD_ID, 
+       NVL(F.Unit_Cost,0),
+       NVL(F.QUANTITY,0),
+       C.DOC_DATE,
+       0,
+       0,
+       NVL(F.Unit_Cost,0)*NVL(F.QUANTITY,0),
+       P.CALC_MARGIN,
+       P.PROD_NUM,
+       0
+FROM SF_WAREHOUSE D,
+     SF_GRN C,
+     SF_GRN_DTL F,
+     BF_PRODUCT P
+WHERE D.BF_ORG_ID=C.WAREH_ID 
+  AND F.SF_GRN_ID=C.ID 
+  AND F.PROD_ID = P.ID
+  AND NOT EXISTS (SELECT 1 FROM FI_GRP_COST A WHERE A.PROD_ID=F.PROD_ID AND A.COST_GRP_ID=D.COST_GRP_ID)
+  AND C.ID=#{id}
+  </insert>
+  
+   <!-- 获取没有成本的商品 -->
+  <select  id="getProdNoCost" parameterType="java.lang.Long" resultType="java.lang.Long">
+    SELECT D.PROD_ID
+FROM SF_GRN_DTL D
+INNER JOIN SF_GRN G
+  ON D.SF_GRN_ID = G.ID
+INNER JOIN SF_WAREHOUSE W
+  ON G.WAREH_ID = W.BF_ORG_ID
+INNER JOIN BF_PRODUCT P
+  ON P.ID = D.PROD_ID 
+LEFT JOIN FI_GRP_COST C
+  ON C.PROD_ID = D.PROD_ID AND C.COST_GRP_ID = W.COST_GRP_ID
+WHERE D.SF_GRN_ID = #{id}
+  AND C.UNIT_COST IS NULL
+  </select>
+  
+    <!--更新入库单明细成本（成本组获取） -->
+  <update id="updateDetailUnitCostByGrpCost" parameterType="java.util.Map" >
+    UPDATE SF_GRN_DTL A 
+    SET A.UNIT_COST=
+    NVL((
+    SELECT ROUND(NVL(C.UNIT_COST,0), #{pricePrecision})
+    FROM FI_GRP_COST C,
+         SF_WAREHOUSE D,
+         SF_GRN G
+    WHERE C.COST_GRP_ID = D.COST_GRP_ID
+      AND C.PROD_ID=A.PROD_ID 
+      AND G.WAREH_ID = D.BF_ORG_ID
+      AND G.ID = A.SF_GRN_ID
+      AND ROWNUM = 1
+    ),0)
+    WHERE A.SF_GRN_ID= #{id}
+  </update>
+  
+  <!-- 更新成本表总数-->
+   <update id="updateGrpCostStockByGrn" parameterType="java.lang.Long" >
+UPDATE FI_GRP_COST A  
+SET (A.STOCK,A.MOVE_TTL_COST)=
+(SELECT 
+   NVL(A.STOCK,0) + NVL(F.QUANTITY,0),
+   NVL(F.Unit_Cost,0)*NVL(F.QUANTITY,0) + NVL(A.MOVE_TTL_COST,0),
+ FROM SF_WAREHOUSE D,
+      SF_GRN C,
+      SF_GRN_DTL F,
+      FI_COST_GRP E  
+ WHERE D.COST_GRP_ID=E.ID  
+   AND D.BF_ORG_ID=C.WAREH_ID 
+   AND F.SF_GRN_ID=C.ID 
+   AND F.PROD_ID=A.PROD_ID 
+   AND A.COST_GRP_ID=E.ID
+   AND C.ID=#{id}
+)
+WHERE EXISTS (SELECT 1 
+              FROM SF_WAREHOUSE D,
+                   SF_GRN C,
+                   SF_GRN_DTL F,
+                   FI_COST_GRP E 
+              WHERE D.COST_GRP_ID=E.ID 
+                AND D.BF_ORG_ID=C.WAREH_ID 
+                AND F.SF_GRN_ID=C.ID 
+                AND F.PROD_ID=A.PROD_ID 
+                AND A.COST_GRP_ID=E.ID
+                AND C.ID=#{id}
+)
+  </update>
+  
+   <!-- 更新成本表 -->
+   <update id="updateInitGrpCostStockByGrn" parameterType="java.util.Map" >
+UPDATE FI_GRP_COST A  
+SET (A.INIT_STK,A.INIT_UNIT_COST,A.STOCK,A.MOVE_TTL_COST,A.UNIT_COST,A.OP_MODE)=
+(SELECT 
+   NVL(A.STOCK,0),
+   NVL(A.UNIT_COST,0),
+   NVL(A.STOCK,0) + NVL(F.QUANTITY,0),
+   NVL(F.Unit_Cost,0)*NVL(F.QUANTITY,0) + NVL(A.MOVE_TTL_COST,0),
+  CASE 
+            WHEN (NVL(A.STOCK,0)+NVL(F.QUANTITY,0)) &lt;&gt; 0 
+            THEN  (NVL(A.STOCK,0)*NVL(A.UNIT_COST,0)+NVL(F.UNIT_COST,0)*NVL(F.QUANTITY,0))/(NVL(A.STOCK,0)+NVL(F.QUANTITY,0))
+            ELSE 0 
+   END ,
+   0
+ FROM 
+      SF_GRN C,
+      SF_GRN_DTL F
+ WHERE   F.SF_GRN_ID=C.ID 
+   AND F.PROD_ID=A.PROD_ID 
+   AND C.ID=#{grnId}
+)
+WHERE A.COST_GRP_ID=#{costGrpId}
+AND EXISTS (SELECT 1 
+            FROM 
+      SF_GRN C,
+      SF_GRN_DTL F
+ WHERE   F.SF_GRN_ID=C.ID 
+   AND F.PROD_ID=A.PROD_ID 
+   AND C.ID=#{grnId}
+)
+  </update>
+  
+    <!-- 添加库存成本(初始化) -->  
+   <insert id="insertFiGrpCostInitByGrn" parameterType="java.lang.Long" >
+INSERT INTO FI_GRP_COST(ID,COST_GRP_ID,PROD_ID,UNIT_COST,STOCK,CALC_AT,INIT_UNIT_COST,INIT_STK,MOVE_TTL_COST, Calc_Margin,Prod_Num,OP_MODE)
+SELECT FU_GET_NEXT_IDENTITY('FI_GRP_COST',1),
+       D.COST_GRP_ID,
+       F.PROD_ID, 
+       0,
+       0,
+       C.DOC_DATE,
+       0,
+       0,
+       0,
+       P.CALC_MARGIN,
+       P.PROD_NUM,
+       '0'
+FROM SF_GRN_DTL F,
+     SF_GRN C,
+     SF_WAREHOUSE D,
+     BF_PRODUCT P
+WHERE F.SF_GRN_ID=C.ID 
+  AND D.BF_ORG_ID=C.WAREH_ID 
+  AND P.ID = F.PROD_ID
+  AND NOT EXISTS (SELECT 1 FROM FI_GRP_COST A WHERE A.PROD_ID=F.PROD_ID AND A.COST_GRP_ID=D.COST_GRP_ID)
+  AND C.ID=#{id}
+   </insert>
+   
+</mapper>

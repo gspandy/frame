@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.ProdClsMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.ProdClsVo" >
+    <id column="PROD_PROP" property="prodProp" jdbcType="VARCHAR" />
+    <id column="PROD_SORT" property="prodSort" jdbcType="VARCHAR" />
+    <id column="PROD_STYLE" property="prodStyle" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="ABBREVIATION" property="abbreviation" jdbcType="VARCHAR" />
+    <result column="INPUT_CODE" property="inputCode" jdbcType="VARCHAR" />
+    <result column="ANLY_CODE" property="anlyCode" jdbcType="VARCHAR" />
+    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+    <result column="ADVANTAGE" property="advantage" jdbcType="VARCHAR" />
+    <result column="PICT_FILE" property="pictFile" jdbcType="VARCHAR" />
+    <result column="BASIC_UOM" property="basicUom" jdbcType="VARCHAR" />
+    <result column="MODEL" property="model" jdbcType="VARCHAR" />
+    <result column="ORIENTATION" property="orientation" jdbcType="CHAR" />
+    <result column="FOR_SEASON" property="forSeason" jdbcType="CHAR" />
+    <result column="KIND" property="kind" jdbcType="VARCHAR" />
+    <result column="IS_SPC_PROD" property="isSpcProd" jdbcType="CHAR" />
+    <result column="IN_CTRL" property="inCtrl" jdbcType="CHAR" />
+    <result column="FST_STK_DATE" property="fstStkDate" jdbcType="DATE" />
+    <result column="LAST_STK_DATE" property="lastStkDate" jdbcType="DATE" />
+    <result column="PROD_DATE" property="prodDate" jdbcType="DATE" />
+    <result column="ON_SALE_DATE" property="onSaleDate" jdbcType="DATE" />
+    <result column="UNIT_LEN" property="unitLen" jdbcType="DECIMAL" />
+    <result column="UNIT_WID" property="unitWid" jdbcType="DECIMAL" />
+    <result column="UNIT_HGT" property="unitHgt" jdbcType="DECIMAL" />
+    <result column="UNIT_VOL" property="unitVol" jdbcType="DECIMAL" />
+    <result column="UNIT_WGT" property="unitWgt" jdbcType="DECIMAL" />
+    <result column="IS_PRIVATE" property="isPrivate" jdbcType="CHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="MAIN_COLOR" property="mainColor" jdbcType="CHAR" />
+    <result column="PROD_YEAR" property="prodYear" jdbcType="DECIMAL" />
+    <result column="PROD_SEASON" property="prodSeason" jdbcType="VARCHAR" />
+    <result column="PROD_THEME" property="prodTheme" jdbcType="VARCHAR" />
+    <result column="DISP_AREA" property="dispArea" jdbcType="VARCHAR" />
+    <result column="PROD_CLASS" property="prodClass" jdbcType="VARCHAR" />
+    <result column="PROD_PARTM" property="prodPartm" jdbcType="VARCHAR" />
+    <result column="PROD_GROUP" property="prodGroup" jdbcType="VARCHAR" />
+    <result column="PROD_SUB_GROUP" property="prodSubGroup" jdbcType="VARCHAR" />
+    <result column="PROD_SORTS" property="prodSorts" jdbcType="VARCHAR" />
+    <result column="PROD_SHOP_MODEL" property="prodShopModel" jdbcType="VARCHAR" />
+    <result column="ON_BRAND_PRC" property="onBrandPrc" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="SERIES" property="series" jdbcType="VARCHAR" />
+    <result column="PLAN_BATCH" property="planBatch" jdbcType="VARCHAR" />
+    <result column="MODULE" property="module" jdbcType="VARCHAR" />
+    <result column="MOTIF" property="motif" jdbcType="VARCHAR" />
+    <result column="YEAR" property="year" jdbcType="VARCHAR" />
+    <result column="REMARK1" property="remark1" jdbcType="VARCHAR" />
+    <result column="REMARK2" property="remark2" jdbcType="VARCHAR" />
+    <result column="REMARK3" property="remark3" jdbcType="VARCHAR" />
+    <result column="PROD_CLS_ID" property="prodClsId" jdbcType="VARCHAR" />
+    <result column="PROD_CLS_NUM" property="prodClsNum" jdbcType="VARCHAR" />
+    <result column="BRAND_GRP_ID" property="brandGrpId" jdbcType="VARCHAR" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <result column="TIME_SIGN" property="timeSign" jdbcType="DATE" />
+    <result column="SAP_WRITE_FLAG" property="sapWriteFlag" jdbcType="CHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    <result column="FLAG" property="flag" jdbcType="VARCHAR" />
+    <result column="IS_PRESENT" property="isPresent" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PROD_PROP, PROD_SORT, PROD_STYLE, NAME, ABBREVIATION, INPUT_CODE, ANLY_CODE, DESCRIPTION, 
+    ADVANTAGE, PICT_FILE, BASIC_UOM, MODEL, ORIENTATION, FOR_SEASON, KIND, IS_SPC_PROD, 
+    IN_CTRL, FST_STK_DATE, LAST_STK_DATE, PROD_DATE, ON_SALE_DATE, UNIT_LEN, UNIT_WID, 
+    UNIT_HGT, UNIT_VOL, UNIT_WGT, IS_PRIVATE, STATUS, MAIN_COLOR, PROD_YEAR, PROD_SEASON, 
+    PROD_THEME, DISP_AREA, PROD_CLASS, PROD_PARTM, PROD_GROUP, PROD_SUB_GROUP, PROD_SORTS, 
+    PROD_SHOP_MODEL, ON_BRAND_PRC, REMARK, SERIES, PLAN_BATCH, MODULE, MOTIF, YEAR, REMARK1, 
+    REMARK2, REMARK3, PROD_CLS_ID, PROD_CLS_NUM, BRAND_GRP_ID, BRAND_ID, TIME_SIGN, SAP_WRITE_FLAG, 
+    UPDATE_TIME, FLAG, IS_PRESENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="mb.erp.dr.soa.old.vo.ProdClsVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.PROD_CLS
+    where PROD_PROP = #{prodProp,jdbcType=VARCHAR}
+      and PROD_SORT = #{prodSort,jdbcType=VARCHAR}
+      and PROD_STYLE = #{prodStyle,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据商品读取品牌 -->
+  <select id="selectBrandByProdID" parameterType="map"  resultType="string">
+    SELECT A.BRAND_ID
+	  FROM PROD_CLS A
+	 WHERE EXISTS (SELECT 1
+	          FROM PRODUCT B
+	         WHERE A.PROD_PROP = B.PROD_PROP
+	           AND A.PROD_SORT = B.PROD_SORT
+	           AND A.PROD_STYLE = B.PROD_STYLE
+	           AND B.PROD_ID = #{prod_id})
+  </select>
+  
+  <!-- 根据商品获取吊牌价格 -->
+  <select id="selectOnBrandPrice" parameterType="map"  resultType="java.lang.Double">
+     SELECT A.ON_BRAND_PRC
+	  FROM PROD_CLS A
+	 INNER JOIN PRODUCT B ON B.PROD_PROP = A.PROD_PROP
+	                     AND A.PROD_SORT = B.PROD_SORT
+	                     AND A.PROD_STYLE = B.PROD_STYLE
+	 WHERE B.PROD_STATE = 'A'
+	   AND B.PROD_ID = #{prod_id}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="mb.erp.dr.soa.old.vo.ProdClsVo" >
+    delete from MTSBW.PROD_CLS
+    where PROD_PROP = #{prodProp,jdbcType=VARCHAR}
+      and PROD_SORT = #{prodSort,jdbcType=VARCHAR}
+      and PROD_STYLE = #{prodStyle,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.old.vo.ProdClsVo" >
+    insert into MTSBW.PROD_CLS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prodProp != null and prodProp != ''" >
+        PROD_PROP,
+      </if>
+      <if test="prodSort != null and prodSort != ''" >
+        PROD_SORT,
+      </if>
+      <if test="prodStyle != null and prodStyle != ''" >
+        PROD_STYLE,
+      </if>
+      <if test="name != null and name != ''" >
+        NAME,
+      </if>
+      <if test="abbreviation != null and abbreviation != ''" >
+        ABBREVIATION,
+      </if>
+      <if test="inputCode != null and inputCode != ''" >
+        INPUT_CODE,
+      </if>
+      <if test="anlyCode != null and anlyCode != ''" >
+        ANLY_CODE,
+      </if>
+      <if test="description != null and description != ''" >
+        DESCRIPTION,
+      </if>
+      <if test="advantage != null and advantage != ''" >
+        ADVANTAGE,
+      </if>
+      <if test="pictFile != null and pictFile != ''" >
+        PICT_FILE,
+      </if>
+      <if test="basicUom != null and basicUom != ''" >
+        BASIC_UOM,
+      </if>
+      <if test="model != null and model != ''" >
+        MODEL,
+      </if>
+      <if test="orientation != null and orientation != ''" >
+        ORIENTATION,
+      </if>
+      <if test="forSeason != null and forSeason != ''" >
+        FOR_SEASON,
+      </if>
+      <if test="kind != null and kind != ''" >
+        KIND,
+      </if>
+      <if test="isSpcProd != null and isSpcProd != ''" >
+        IS_SPC_PROD,
+      </if>
+      <if test="inCtrl != null and inCtrl != ''" >
+        IN_CTRL,
+      </if>
+      <if test="fstStkDate != null and fstStkDate != ''" >
+        FST_STK_DATE,
+      </if>
+      <if test="lastStkDate != null and lastStkDate != ''" >
+        LAST_STK_DATE,
+      </if>
+      <if test="prodDate != null and prodDate != ''" >
+        PROD_DATE,
+      </if>
+      <if test="onSaleDate != null and onSaleDate != ''" >
+        ON_SALE_DATE,
+      </if>
+      <if test="unitLen != null and unitLen != ''" >
+        UNIT_LEN,
+      </if>
+      <if test="unitWid != null and unitWid != ''" >
+        UNIT_WID,
+      </if>
+      <if test="unitHgt != null and unitHgt != ''" >
+        UNIT_HGT,
+      </if>
+      <if test="unitVol != null and unitVol != ''" >
+        UNIT_VOL,
+      </if>
+      <if test="unitWgt != null and unitWgt != ''" >
+        UNIT_WGT,
+      </if>
+      <if test="isPrivate != null and isPrivate != ''" >
+        IS_PRIVATE,
+      </if>
+      <if test="status != null and status != ''" >
+        STATUS,
+      </if>
+      <if test="mainColor != null and mainColor != ''" >
+        MAIN_COLOR,
+      </if>
+      <if test="prodYear != null and prodYear != ''" >
+        PROD_YEAR,
+      </if>
+      <if test="prodSeason != null and prodSeason != ''" >
+        PROD_SEASON,
+      </if>
+      <if test="prodTheme != null and prodTheme != ''" >
+        PROD_THEME,
+      </if>
+      <if test="dispArea != null and dispArea != ''" >
+        DISP_AREA,
+      </if>
+      <if test="prodClass != null and prodClass != ''" >
+        PROD_CLASS,
+      </if>
+      <if test="prodPartm != null and prodPartm != ''" >
+        PROD_PARTM,
+      </if>
+      <if test="prodGroup != null and prodGroup != ''" >
+        PROD_GROUP,
+      </if>
+      <if test="prodSubGroup != null and prodSubGroup != ''" >
+        PROD_SUB_GROUP,
+      </if>
+      <if test="prodSorts != null and prodSorts != ''" >
+        PROD_SORTS,
+      </if>
+      <if test="prodShopModel != null and prodShopModel != ''" >
+        PROD_SHOP_MODEL,
+      </if>
+      <if test="onBrandPrc != null and onBrandPrc != ''" >
+        ON_BRAND_PRC,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="series != null and series != ''" >
+        SERIES,
+      </if>
+      <if test="planBatch != null and planBatch != ''" >
+        PLAN_BATCH,
+      </if>
+      <if test="module != null and module != ''" >
+        MODULE,
+      </if>
+      <if test="motif != null and motif != ''" >
+        MOTIF,
+      </if>
+      <if test="year != null and year != ''" >
+        YEAR,
+      </if>
+      <if test="remark1 != null and remark1 != ''" >
+        REMARK1,
+      </if>
+      <if test="remark2 != null and remark2 != ''" >
+        REMARK2,
+      </if>
+      <if test="remark3 != null and remark3 != ''" >
+        REMARK3,
+      </if>
+      <if test="prodClsId != null and prodClsId != ''" >
+        PROD_CLS_ID,
+      </if>
+      <if test="prodClsNum != null and prodClsNum != ''" >
+        PROD_CLS_NUM,
+      </if>
+      <if test="brandGrpId != null and brandGrpId != ''" >
+        BRAND_GRP_ID,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="timeSign != null and timeSign != ''" >
+        TIME_SIGN,
+      </if>
+      <if test="sapWriteFlag != null and sapWriteFlag != ''" >
+        SAP_WRITE_FLAG,
+      </if>
+      <if test="updateTime != null and updateTime != ''" >
+        UPDATE_TIME,
+      </if>
+      <if test="flag != null and flag != ''" >
+        FLAG,
+      </if>
+      <if test="isPresent != null and isPresent != ''" >
+        IS_PRESENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prodProp != null and prodProp != ''" >
+        #{prodProp,jdbcType=VARCHAR},
+      </if>
+      <if test="prodSort != null and prodSort != ''" >
+        #{prodSort,jdbcType=VARCHAR},
+      </if>
+      <if test="prodStyle != null and prodStyle != ''" >
+        #{prodStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null and name != ''" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="abbreviation != null and abbreviation != ''" >
+        #{abbreviation,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCode != null and inputCode != ''" >
+        #{inputCode,jdbcType=VARCHAR},
+      </if>
+      <if test="anlyCode != null and anlyCode != ''" >
+        #{anlyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null and description != ''" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="advantage != null and advantage != ''" >
+        #{advantage,jdbcType=VARCHAR},
+      </if>
+      <if test="pictFile != null and pictFile != ''" >
+        #{pictFile,jdbcType=VARCHAR},
+      </if>
+      <if test="basicUom != null and basicUom != ''" >
+        #{basicUom,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null and model != ''" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="orientation != null and orientation != ''" >
+        #{orientation,jdbcType=CHAR},
+      </if>
+      <if test="forSeason != null and forSeason != ''" >
+        #{forSeason,jdbcType=CHAR},
+      </if>
+      <if test="kind != null and kind != ''" >
+        #{kind,jdbcType=VARCHAR},
+      </if>
+      <if test="isSpcProd != null and isSpcProd != ''" >
+        #{isSpcProd,jdbcType=CHAR},
+      </if>
+      <if test="inCtrl != null and inCtrl != ''" >
+        #{inCtrl,jdbcType=CHAR},
+      </if>
+      <if test="fstStkDate != null and fstStkDate != ''" >
+        #{fstStkDate,jdbcType=DATE},
+      </if>
+      <if test="lastStkDate != null and lastStkDate != ''" >
+        #{lastStkDate,jdbcType=DATE},
+      </if>
+      <if test="prodDate != null and prodDate != ''" >
+        #{prodDate,jdbcType=DATE},
+      </if>
+      <if test="onSaleDate != null and onSaleDate != ''" >
+        #{onSaleDate,jdbcType=DATE},
+      </if>
+      <if test="unitLen != null and unitLen != ''" >
+        #{unitLen,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWid != null and unitWid != ''" >
+        #{unitWid,jdbcType=DECIMAL},
+      </if>
+      <if test="unitHgt != null and unitHgt != ''" >
+        #{unitHgt,jdbcType=DECIMAL},
+      </if>
+      <if test="unitVol != null and unitVol != ''" >
+        #{unitVol,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWgt != null and unitWgt != ''" >
+        #{unitWgt,jdbcType=DECIMAL},
+      </if>
+      <if test="isPrivate != null and isPrivate != ''" >
+        #{isPrivate,jdbcType=CHAR},
+      </if>
+      <if test="status != null and status != ''" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="mainColor != null and mainColor != ''" >
+        #{mainColor,jdbcType=CHAR},
+      </if>
+      <if test="prodYear != null and prodYear != ''" >
+        #{prodYear,jdbcType=DECIMAL},
+      </if>
+      <if test="prodSeason != null and prodSeason != ''" >
+        #{prodSeason,jdbcType=VARCHAR},
+      </if>
+      <if test="prodTheme != null and prodTheme != ''" >
+        #{prodTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="dispArea != null and dispArea != ''" >
+        #{dispArea,jdbcType=VARCHAR},
+      </if>
+      <if test="prodClass != null and prodClass != ''" >
+        #{prodClass,jdbcType=VARCHAR},
+      </if>
+      <if test="prodPartm != null and prodPartm != ''" >
+        #{prodPartm,jdbcType=VARCHAR},
+      </if>
+      <if test="prodGroup != null and prodGroup != ''" >
+        #{prodGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="prodSubGroup != null and prodSubGroup != ''" >
+        #{prodSubGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="prodSorts != null and prodSorts != ''" >
+        #{prodSorts,jdbcType=VARCHAR},
+      </if>
+      <if test="prodShopModel != null and prodShopModel != ''" >
+        #{prodShopModel,jdbcType=VARCHAR},
+      </if>
+      <if test="onBrandPrc != null and onBrandPrc != ''" >
+        #{onBrandPrc,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="series != null and series != ''" >
+        #{series,jdbcType=VARCHAR},
+      </if>
+      <if test="planBatch != null and planBatch != ''" >
+        #{planBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="module != null and module != ''" >
+        #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="motif != null and motif != ''" >
+        #{motif,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null and year != ''" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null and remark1 != ''" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null and remark2 != ''" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null and remark3 != ''" >
+        #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="prodClsId != null and prodClsId != ''" >
+        #{prodClsId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodClsNum != null and prodClsNum != ''" >
+        #{prodClsNum,jdbcType=VARCHAR},
+      </if>
+      <if test="brandGrpId != null and brandGrpId != ''" >
+        #{brandGrpId,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="timeSign != null and timeSign != ''" >
+        #{timeSign,jdbcType=DATE},
+      </if>
+      <if test="sapWriteFlag != null and sapWriteFlag != ''" >
+        #{sapWriteFlag,jdbcType=CHAR},
+      </if>
+      <if test="updateTime != null and updateTime != ''" >
+        #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="flag != null and flag != ''" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="isPresent != null and isPresent != ''" >
+        #{isPresent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.old.vo.ProdClsVo" >
+    update MTSBW.PROD_CLS
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="abbreviation != null" >
+        ABBREVIATION = #{abbreviation,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCode != null" >
+        INPUT_CODE = #{inputCode,jdbcType=VARCHAR},
+      </if>
+      <if test="anlyCode != null" >
+        ANLY_CODE = #{anlyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="advantage != null" >
+        ADVANTAGE = #{advantage,jdbcType=VARCHAR},
+      </if>
+      <if test="pictFile != null" >
+        PICT_FILE = #{pictFile,jdbcType=VARCHAR},
+      </if>
+      <if test="basicUom != null" >
+        BASIC_UOM = #{basicUom,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        MODEL = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="orientation != null" >
+        ORIENTATION = #{orientation,jdbcType=CHAR},
+      </if>
+      <if test="forSeason != null" >
+        FOR_SEASON = #{forSeason,jdbcType=CHAR},
+      </if>
+      <if test="kind != null" >
+        KIND = #{kind,jdbcType=VARCHAR},
+      </if>
+      <if test="isSpcProd != null" >
+        IS_SPC_PROD = #{isSpcProd,jdbcType=CHAR},
+      </if>
+      <if test="inCtrl != null" >
+        IN_CTRL = #{inCtrl,jdbcType=CHAR},
+      </if>
+      <if test="fstStkDate != null" >
+        FST_STK_DATE = #{fstStkDate,jdbcType=DATE},
+      </if>
+      <if test="lastStkDate != null" >
+        LAST_STK_DATE = #{lastStkDate,jdbcType=DATE},
+      </if>
+      <if test="prodDate != null" >
+        PROD_DATE = #{prodDate,jdbcType=DATE},
+      </if>
+      <if test="onSaleDate != null" >
+        ON_SALE_DATE = #{onSaleDate,jdbcType=DATE},
+      </if>
+      <if test="unitLen != null" >
+        UNIT_LEN = #{unitLen,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWid != null" >
+        UNIT_WID = #{unitWid,jdbcType=DECIMAL},
+      </if>
+      <if test="unitHgt != null" >
+        UNIT_HGT = #{unitHgt,jdbcType=DECIMAL},
+      </if>
+      <if test="unitVol != null" >
+        UNIT_VOL = #{unitVol,jdbcType=DECIMAL},
+      </if>
+      <if test="unitWgt != null" >
+        UNIT_WGT = #{unitWgt,jdbcType=DECIMAL},
+      </if>
+      <if test="isPrivate != null" >
+        IS_PRIVATE = #{isPrivate,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+      <if test="mainColor != null" >
+        MAIN_COLOR = #{mainColor,jdbcType=CHAR},
+      </if>
+      <if test="prodYear != null" >
+        PROD_YEAR = #{prodYear,jdbcType=DECIMAL},
+      </if>
+      <if test="prodSeason != null" >
+        PROD_SEASON = #{prodSeason,jdbcType=VARCHAR},
+      </if>
+      <if test="prodTheme != null" >
+        PROD_THEME = #{prodTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="dispArea != null" >
+        DISP_AREA = #{dispArea,jdbcType=VARCHAR},
+      </if>
+      <if test="prodClass != null" >
+        PROD_CLASS = #{prodClass,jdbcType=VARCHAR},
+      </if>
+      <if test="prodPartm != null" >
+        PROD_PARTM = #{prodPartm,jdbcType=VARCHAR},
+      </if>
+      <if test="prodGroup != null" >
+        PROD_GROUP = #{prodGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="prodSubGroup != null" >
+        PROD_SUB_GROUP = #{prodSubGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="prodSorts != null" >
+        PROD_SORTS = #{prodSorts,jdbcType=VARCHAR},
+      </if>
+      <if test="prodShopModel != null" >
+        PROD_SHOP_MODEL = #{prodShopModel,jdbcType=VARCHAR},
+      </if>
+      <if test="onBrandPrc != null" >
+        ON_BRAND_PRC = #{onBrandPrc,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="series != null" >
+        SERIES = #{series,jdbcType=VARCHAR},
+      </if>
+      <if test="planBatch != null" >
+        PLAN_BATCH = #{planBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="module != null" >
+        MODULE = #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="motif != null" >
+        MOTIF = #{motif,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null" >
+        YEAR = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        REMARK1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        REMARK2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        REMARK3 = #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="prodClsId != null" >
+        PROD_CLS_ID = #{prodClsId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodClsNum != null" >
+        PROD_CLS_NUM = #{prodClsNum,jdbcType=VARCHAR},
+      </if>
+      <if test="brandGrpId != null" >
+        BRAND_GRP_ID = #{brandGrpId,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="timeSign != null" >
+        TIME_SIGN = #{timeSign,jdbcType=DATE},
+      </if>
+      <if test="sapWriteFlag != null" >
+        SAP_WRITE_FLAG = #{sapWriteFlag,jdbcType=CHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="isPresent != null" >
+        IS_PRESENT = #{isPresent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PROD_PROP = #{prodProp,jdbcType=VARCHAR}
+      and PROD_SORT = #{prodSort,jdbcType=VARCHAR}
+      and PROD_STYLE = #{prodStyle,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.PrPrcListDtlMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.PrPrcListDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PR_PRN_ID" property="prPrnId" jdbcType="DECIMAL" />
+    <result column="UNIT_ID" property="unitId" jdbcType="DECIMAL" />
+    <result column="PRC_LST_TYPE" property="prcLstType" jdbcType="VARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="PRC_PLCY" property="prcPlcy" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+    <result column="OWNER_ID" property="ownerId" jdbcType="DECIMAL" />
+    <result column="EXEC_DATE" property="execDate" jdbcType="TIMESTAMP" />
+    <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR" />
+    <result column="PROD_COLOR_NUM" property="prodColorNum" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PR_PRN_ID, UNIT_ID, PRC_LST_TYPE, CURRENCY, PROD_ID, PRC_PLCY, PRICE, DISC_RATE, 
+    EFF_DATE, OWNER_ID, EXEC_DATE, PROD_TYPE, PROD_COLOR_NUM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from PR_PRC_LST_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectByPrddClsNum" resultMap="BaseResultMap" parameterType="map">
+	  	SELECT *
+		  FROM (SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND C.PROD_CLS_NUM = #{prod_cls_num}
+		        UNION
+		        SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               2 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND C.PROD_CLS_NUM = #{prod_cls_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		           AND C.PROD_CLS_NUM = #{prod_cls_num})
+		 ORDER BY DATASORT
+  </select>
+  
+  <select id="selectByProdIdUnitID" resultMap="BaseResultMap" parameterType="map">
+	  SELECT *
+		  FROM (SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               1 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GID'
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND C.PROD_NUM = #{prod_num}
+		        UNION
+		        SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               2 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GID'
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND C.PROD_NUM = #{prod_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GID'
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		           AND C.PROD_NUM = #{prod_num}
+		         UNION
+		        SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               1 || 2 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           <if test="prod_color_num != null and prod_color_num != ''" >
+		           		AND A.PROD_COLOR_NUM=#{prod_color_num}
+		           </if>
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND EXISTS (SELECT 1
+		                  FROM BF_PRODUCT P
+		                 WHERE P.PROD_NUM = #{prod_num}
+		                   AND C.ID = P.BF_PROD_CLS_ID)
+		        UNION
+		        SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               2 || 2 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		            AND A.PROD_TYPE = 'GCr'
+		           <if test="prod_color_num != null and prod_color_num != ''" >
+		           		AND A.PROD_COLOR_NUM=#{prod_color_num}
+		           </if>
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND EXISTS (SELECT 1
+		                  FROM BF_PRODUCT P
+		                 WHERE P.PROD_NUM = #{prod_num}
+		                   AND C.ID = P.BF_PROD_CLS_ID)
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 2 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           <if test="prod_color_num != null and prod_color_num != ''" >
+		           		AND A.PROD_COLOR_NUM=#{prod_color_num}
+		           </if>
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		           AND EXISTS (SELECT 1
+		                  FROM BF_PRODUCT P
+		                 WHERE P.PROD_NUM = #{prod_num}
+		                   AND C.ID = P.BF_PROD_CLS_ID)   
+		        UNION
+		        SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               1 || 3 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND EXISTS (SELECT 1
+		                  FROM BF_PRODUCT P
+		                 WHERE P.PROD_NUM = #{prod_num}
+		                   AND C.ID = P.BF_PROD_CLS_ID)
+		        UNION
+		        SELECT A.PRICE,
+		               A.DISC_RATE,
+		               A.PRC_PLCY,
+		               2 || 3 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND EXISTS (SELECT 1
+		                  FROM BF_PRODUCT P
+		                 WHERE P.PROD_NUM = #{prod_num}
+		                   AND C.ID = P.BF_PROD_CLS_ID)
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 3 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		           AND EXISTS (SELECT 1
+		                  FROM BF_PRODUCT P
+		                 WHERE P.PROD_NUM = #{prod_num}
+		                   AND C.ID = P.BF_PROD_CLS_ID))
+		 ORDER BY DATASORT
+  </select>
+  
+  <select id="selectByProdColorUnitID" resultMap="BaseResultMap" parameterType="map">
+		  SELECT *
+		  FROM (SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 1 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           AND A.PROD_COLOR_NUM = @PROD_COLOR_NUM
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND C.PROD_CLS_NUM=#{prod_cls_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 2 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           AND A.PROD_COLOR_NUM = #{prod_color_num}
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND C.PROD_CLS_NUM=#{prod_cls_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           AND A.PROD_COLOR_NUM = #{prod_color_num}
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		          AND C.PROD_CLS_NUM=#{prod_cls_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE, A.PRC_PLCY,1 || 2 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND C.PROD_CLS_NUM = #{prod_cls_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE, A.PRC_PLCY,2 || 2 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND C.PROD_CLS_NUM = #{prod_cls_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 2 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx'
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		           AND C.PROD_CLS_NUM = #{prod_cls_num})
+		 ORDER BY DATASORT
+  </select>
+  
+  <select id="priceBulkGetNewRetailPriceRate" resultMap="BaseResultMap" parameterType="map">
+  	     SELECT TT.PROD_ID, TT.PRICE, TT.DISC_RATE, TT.PRC_PLCY
+		  FROM (SELECT T.PROD_ID,
+		               T.PRICE,
+		               T.DISC_RATE,
+		               T.PRC_PLCY,
+		               ROW_NUMBER() OVER(PARTITION BY T.PROD_ID ORDER BY T.DATASORT) "RANK"
+		          FROM (SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       1 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                  LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.PROD_CLS_NUM =
+		                                                 B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'SHMK'
+		                   AND D.CODE = #{unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       2 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                  LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.PROD_CLS_NUM =
+		                                                 B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'AGMK'
+		                   AND D.CODE = #{ag_unit_id}
+		                
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       3 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.PROD_CLS_NUM =
+		                                                 B.BF_ORG_CODE
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'GNMK'
+		                   AND EXISTS (SELECT 1
+		                          FROM BF_ORG X
+		                         WHERE X.CODE = #{ag_unit_id}
+		                           AND X.OWNER_ID = A.UNIT_ID)) T) TT
+		 WHERE TT.RANK = 1
+  </select>
+  
+  <select id="priceBulkGetNewRetailPriceRateByProdNum" resultMap="BaseResultMap" parameterType="map">
+  	   SELECT TT.PROD_ID, TT.PRICE, TT.DISC_RATE, TT.PRC_PLCY
+		  FROM (SELECT T.PROD_ID,
+		               T.PRICE,
+		               T.DISC_RATE,
+		               T.PRC_PLCY,
+		               ROW_NUMBER() OVER(PARTITION BY T.PROD_ID ORDER BY T.DATASORT) "RANK"
+		          FROM (SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       1 || 1 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.PROD_NUM = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GID'
+		                   AND A.PRC_LST_TYPE = 'SHMK'
+		                   AND D.CODE = #{unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       2 || 1 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.PROD_NUM = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GID'
+		                   AND A.PRC_LST_TYPE = 'AGMK'
+		                   AND D.CODE = #{ag_unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       3 || 1 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.PROD_NUM = B.BF_ORG_CODE
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GID'
+		                   AND A.PRC_LST_TYPE = 'GNMK'
+		                   AND EXISTS (SELECT 1
+		                          FROM BF_ORG X
+		                         WHERE X.CODE = #{ag_unit_id}
+		                           AND X.OWNER_ID = A.UNIT_ID)
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       1 || 2 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.PROD_NUM = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GCr'
+		                   AND A.PROD_COLOR_NUM = SUBSTR(B.BF_ORG_CODE, 7, 2)
+		                   AND A.PRC_LST_TYPE = 'SHMK'
+		                   AND D.CODE = #{unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       2 || 2 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.PROD_NUM = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GCr'
+		                   AND A.PROD_COLOR_NUM = SUBSTR(B.BF_ORG_CODE, 7, 2)
+		                   AND A.PRC_LST_TYPE = 'AGMK'
+		                   AND D.CODE = #{ag_unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       3 || 2 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.PROD_NUM = B.BF_ORG_CODE
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GCr'
+		                   AND A.PROD_COLOR_NUM = SUBSTR(B.BF_ORG_CODE, 7, 2)
+		                   AND A.PRC_LST_TYPE = 'GNMK'
+		                   AND EXISTS (SELECT 1
+		                          FROM BF_ORG X
+		                         WHERE X.CODE = #{ag_unit_id}
+		                           AND X.OWNER_ID = A.UNIT_ID)
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       1 || 3 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.PROD_NUM = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'SHMK'
+		                   AND D.CODE = #{unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       2 || 3 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.PROD_NUM = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'AGMK'
+		                   AND D.CODE = #{ag_unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       3 || 3 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.PROD_NUM = B.BF_ORG_CODE
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'GNMK'
+		                   AND EXISTS (SELECT 1
+		                          FROM BF_ORG X
+		                         WHERE X.CODE = #{ag_unit_id}
+		                           AND X.OWNER_ID = A.UNIT_ID)) T) TT
+		 WHERE TT.RANK = 1
+  </select>
+  
+  <select id="selectByProdColorUnitID2" resultMap="BaseResultMap" parameterType="map">
+  		SELECT *
+		  FROM (SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 1 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND SUBSTR(C.PROD_CLS_NUM,1,6)|| NVL(A.PROD_COLOR_NUM, '') = #{prod_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 2 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND SUBSTR(C.PROD_CLS_NUM,1,6)|| NVL(A.PROD_COLOR_NUM, '') = #{prod_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE, A.PRC_PLCY,3 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		           AND SUBSTR(C.PROD_CLS_NUM,1,6)|| NVL(A.PROD_COLOR_NUM, '') = #{prod_num})
+		 ORDER BY DATASORT
+  </select>
+  
+  <select id="selectByProdColorUnitID3" resultMap="BaseResultMap" parameterType="map">
+  		SELECT *
+		  FROM (SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 1 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GID'
+		           AND A.PRC_LST_TYPE = 'SHMK'
+		           AND D.CODE = #{unit_id}
+		           AND C.PROD_NUM = #{prod_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 2 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		          LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GID'
+		           AND A.PRC_LST_TYPE = 'AGMK'
+		           AND D.CODE = #{ag_unit_id}
+		           AND C.PROD_NUM = #{prod_num}
+		        UNION
+		        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 1 AS DATASORT
+		          FROM PR_PRC_LST_DTL A
+		          LEFT JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		         WHERE A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GID'
+		           AND A.PRC_LST_TYPE = 'GNMK'
+		           AND EXISTS (SELECT 1
+		                  FROM BF_ORG X
+		                 WHERE X.CODE = #{ag_unit_id}
+		                   AND X.OWNER_ID = A.UNIT_ID)
+		           AND C.PROD_NUM = #{prod_num})
+		 ORDER BY DATASORT
+  </select>
+  
+  <select id="priceBulkGetNewRetailPriceRateByIntnlBc" resultMap="BaseResultMap" parameterType="map">
+  	   SELECT TT.PROD_ID, TT.PRICE, TT.DISC_RATE, TT.PRC_PLCY
+		  FROM (SELECT T.PROD_ID,
+		               T.PRICE,
+		               T.DISC_RATE,
+		               T.PRC_PLCY,
+		               ROW_NUMBER() OVER(PARTITION BY T.PROD_ID ORDER BY T.DATASORT) "RANK"
+		          FROM (SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       1 || 1 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.INTNL_BC = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GID'
+		                   AND A.PRC_LST_TYPE = 'SHMK'
+		                   AND D.CODE = #{unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       2 || 1 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.INTNL_BC = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GID'
+		                   AND A.PRC_LST_TYPE = 'AGMK'
+		                   AND D.CODE = #{ag_unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       3 || 1 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PRODUCT C ON A.PROD_ID = C.ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON C.INTNL_BC = B.BF_ORG_CODE
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GID'
+		                   AND A.PRC_LST_TYPE = 'GNMK'
+		                   AND EXISTS (SELECT 1
+		                          FROM BF_ORG X
+		                         WHERE X.CODE = #{ag_unit_id}
+		                           AND X.OWNER_ID = A.UNIT_ID)
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       1 || 2 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.INTNL_BC = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GCr'
+		                   AND A.PROD_COLOR_NUM = SUBSTR(B.BF_ORG_CODE, 7, 2)
+		                   AND A.PRC_LST_TYPE = 'SHMK'
+		                   AND D.CODE = #{unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       2 || 2 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.INTNL_BC = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GCr'
+		                   AND A.PROD_COLOR_NUM = SUBSTR(B.BF_ORG_CODE, 7, 2)
+		                   AND A.PRC_LST_TYPE = 'AGMK'
+		                   AND D.CODE = #{ag_unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       3 || 2 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.INTNL_BC = B.BF_ORG_CODE
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GCr'
+		                   AND A.PROD_COLOR_NUM = SUBSTR(B.BF_ORG_CODE, 7, 2)
+		                   AND A.PRC_LST_TYPE = 'GNMK'
+		                   AND EXISTS (SELECT 1
+		                          FROM BF_ORG X
+		                         WHERE X.CODE = #{ag_unit_id}
+		                           AND X.OWNER_ID = A.UNIT_ID)
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       1 || 3 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.INTNL_BC = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'SHMK'
+		                   AND D.CODE = #{unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       2 || 3 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.INTNL_BC = B.BF_ORG_CODE
+		                  LEFT JOIN BF_ORG D ON A.UNIT_ID = D.ID
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'AGMK'
+		                   AND D.CODE = #{ag_unit_id}
+		                UNION
+		                SELECT B.BF_ORG_CODE AS PROD_ID,
+		                       A.PRICE,
+		                       A.DISC_RATE,
+		                       A.PRC_PLCY,
+		                       3 || 3 AS DATASORT
+		                  FROM PR_PRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS C ON A.PROD_ID = C.ID
+		                 INNER JOIN BF_PRODUCT E ON C.ID = E.BF_PROD_CLS_ID
+		                 INNER JOIN TMP_BF_ORG_CODE B ON E.INTNL_BC = B.BF_ORG_CODE
+		                 WHERE A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx'
+		                   AND A.PRC_LST_TYPE = 'GNMK'
+		                   AND EXISTS (SELECT 1
+		                          FROM BF_ORG X
+		                         WHERE X.CODE = #{ag_unit_id}
+		                           AND X.OWNER_ID = A.UNIT_ID)) T) TT
+		 WHERE TT.RANK = 1
+  </select>
+  
+  <select id="selectProdNumByProdColorNum" resultType="java.lang.String" parameterType="map">
+  		SELECT A.PROD_NUM
+		  FROM BF_PRODUCT A
+		 WHERE SUBSTR(A.PROD_NUM, 1, 8) = #{prod_num}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from PR_PRC_LST_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.PrPrcListDtlVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into PR_PRC_LST_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prPrnId != null and prPrnId != ''" >
+        PR_PRN_ID,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        PRC_LST_TYPE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="prcPlcy != null and prcPlcy != ''" >
+        PRC_PLCY,
+      </if>
+      <if test="price != null and price != ''" >
+        PRICE,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="effDate != null and effDate != ''" >
+        EFF_DATE,
+      </if>
+      <if test="ownerId != null and ownerId != ''" >
+        OWNER_ID,
+      </if>
+      <if test="execDate != null and execDate != ''" >
+        EXEC_DATE,
+      </if>
+      <if test="prodType != null and prodType != ''" >
+        PROD_TYPE,
+      </if>
+      <if test="prodColorNum != null and prodColorNum != ''" >
+        PROD_COLOR_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prPrnId != null and prPrnId != ''" >
+        #{prPrnId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        #{prcLstType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcPlcy != null and prcPlcy != ''" >
+        #{prcPlcy,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null and price != ''" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="effDate != null and effDate != ''" >
+        #{effDate,jdbcType=DATE},
+      </if>
+      <if test="ownerId != null and ownerId != ''" >
+        #{ownerId,jdbcType=DECIMAL},
+      </if>
+      <if test="execDate != null and execDate != ''" >
+        #{execDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prodType != null and prodType != ''" >
+        #{prodType,jdbcType=VARCHAR},
+      </if>
+      <if test="prodColorNum != null and prodColorNum != ''" >
+        #{prodColorNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.PrPrcListDtlVo" >
+    update PR_PRC_LST_DTL
+    <set >
+      <if test="prPrnId != null" >
+        PR_PRN_ID = #{prPrnId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null" >
+        UNIT_ID = #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcLstType != null" >
+        PRC_LST_TYPE = #{prcLstType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcPlcy != null" >
+        PRC_PLCY = #{prcPlcy,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="effDate != null" >
+        EFF_DATE = #{effDate,jdbcType=DATE},
+      </if>
+      <if test="ownerId != null" >
+        OWNER_ID = #{ownerId,jdbcType=DECIMAL},
+      </if>
+      <if test="execDate != null" >
+        EXEC_DATE = #{execDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="prodType != null" >
+        PROD_TYPE = #{prodType,jdbcType=VARCHAR},
+      </if>
+      <if test="prodColorNum != null" >
+        PROD_COLOR_NUM = #{prodColorNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

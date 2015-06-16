@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.center.dao.TradesDtlEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.TradesDtlEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="trades_id" property="tradesId" jdbcType="BIGINT" />
+    <result column="doc_num" property="docNum" jdbcType="VARCHAR" />
+    <result column="goods_owner" property="goodsOwner" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="disrate" property="disrate" jdbcType="DECIMAL" />
+    <result column="intax_amount" property="intaxAmount" jdbcType="DECIMAL" />
+    <result column="goods_income" property="goodsIncome" jdbcType="DECIMAL" />
+    <result column="goods_saletax" property="goodsSaletax" jdbcType="DECIMAL" />
+    <result column="goods_saletaxamount" property="goodsSaletaxamount" jdbcType="DECIMAL" />
+    <result column="goods_saletax_scale" property="goodsSaletaxScale" jdbcType="DECIMAL" />
+    <result column="service_income" property="serviceIncome" jdbcType="DECIMAL" />
+    <result column="service_saletax" property="serviceSaletax" jdbcType="DECIMAL" />
+    <result column="service_saletaxamount" property="serviceSaletaxamount" jdbcType="DECIMAL" />
+    <result column="service_saletax_scale" property="serviceSaletaxScale" jdbcType="DECIMAL" />
+    <result column="tax3_income" property="tax3Income" jdbcType="DECIMAL" />
+    <result column="tax3_saletax" property="tax3Saletax" jdbcType="DECIMAL" />
+    <result column="tax3_saletaxamount" property="tax3Saletaxamount" jdbcType="DECIMAL" />
+    <result column="tax3_saletax_scale" property="tax3SaletaxScale" jdbcType="DECIMAL" />
+    <result column="cost_perunit" property="costPerunit" jdbcType="DECIMAL" />
+    <result column="cost_amount" property="costAmount" jdbcType="DECIMAL" />
+    <result column="dis_amount" property="disAmount" jdbcType="DECIMAL" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, trades_id, doc_num, goods_owner, goods_code, quantity, price, disrate, intax_amount, 
+    goods_income, goods_saletax, goods_saletaxamount, goods_saletax_scale, service_income, 
+    service_saletax, service_saletaxamount, service_saletax_scale, tax3_income, tax3_saletax, 
+    tax3_saletaxamount, tax3_saletax_scale, cost_perunit, cost_amount, dis_amount, remarks, 
+    create_oper, create_time, modify_oper, modify_time, isvalid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades_dtl
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from trades_dtl
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="mb.mba.core.entity.TradesDtlEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into trades_dtl (trades_id, doc_num, goods_owner, 
+      goods_code, quantity, price, 
+      disrate, intax_amount, goods_income, 
+      goods_saletax, goods_saletaxamount, goods_saletax_scale, 
+      service_income, service_saletax, service_saletaxamount, 
+      service_saletax_scale, tax3_income, tax3_saletax, 
+      tax3_saletaxamount, tax3_saletax_scale, cost_perunit, 
+      cost_amount, dis_amount, remarks, 
+      create_oper, create_time, modify_oper, 
+      modify_time, isvalid)
+    values (#{tradesId,jdbcType=BIGINT}, #{docNum,jdbcType=VARCHAR}, #{goodsOwner,jdbcType=VARCHAR}, 
+      #{goodsCode,jdbcType=VARCHAR}, #{quantity,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, 
+      #{disrate,jdbcType=DECIMAL}, #{intaxAmount,jdbcType=DECIMAL}, #{goodsIncome,jdbcType=DECIMAL}, 
+      #{goodsSaletax,jdbcType=DECIMAL}, #{goodsSaletaxamount,jdbcType=DECIMAL}, #{goodsSaletaxScale,jdbcType=DECIMAL}, 
+      #{serviceIncome,jdbcType=DECIMAL}, #{serviceSaletax,jdbcType=DECIMAL}, #{serviceSaletaxamount,jdbcType=DECIMAL}, 
+      #{serviceSaletaxScale,jdbcType=DECIMAL}, #{tax3Income,jdbcType=DECIMAL}, #{tax3Saletax,jdbcType=DECIMAL}, 
+      #{tax3Saletaxamount,jdbcType=DECIMAL}, #{tax3SaletaxScale,jdbcType=DECIMAL}, #{costPerunit,jdbcType=DECIMAL}, 
+      #{costAmount,jdbcType=DECIMAL}, #{disAmount,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR}, 
+      #{createOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyOper,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{isvalid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="mb.mba.core.entity.TradesDtlEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into trades_dtl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tradesId != null" >
+        trades_id,
+      </if>
+      <if test="docNum != null" >
+        doc_num,
+      </if>
+      <if test="goodsOwner != null" >
+        goods_owner,
+      </if>
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="disrate != null" >
+        disrate,
+      </if>
+      <if test="intaxAmount != null" >
+        intax_amount,
+      </if>
+      <if test="goodsIncome != null" >
+        goods_income,
+      </if>
+      <if test="goodsSaletax != null" >
+        goods_saletax,
+      </if>
+      <if test="goodsSaletaxamount != null" >
+        goods_saletaxamount,
+      </if>
+      <if test="goodsSaletaxScale != null" >
+        goods_saletax_scale,
+      </if>
+      <if test="serviceIncome != null" >
+        service_income,
+      </if>
+      <if test="serviceSaletax != null" >
+        service_saletax,
+      </if>
+      <if test="serviceSaletaxamount != null" >
+        service_saletaxamount,
+      </if>
+      <if test="serviceSaletaxScale != null" >
+        service_saletax_scale,
+      </if>
+      <if test="tax3Income != null" >
+        tax3_income,
+      </if>
+      <if test="tax3Saletax != null" >
+        tax3_saletax,
+      </if>
+      <if test="tax3Saletaxamount != null" >
+        tax3_saletaxamount,
+      </if>
+      <if test="tax3SaletaxScale != null" >
+        tax3_saletax_scale,
+      </if>
+      <if test="costPerunit != null" >
+        cost_perunit,
+      </if>
+      <if test="costAmount != null" >
+        cost_amount,
+      </if>
+      <if test="disAmount != null" >
+        dis_amount,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="createOper != null" >
+        create_oper,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="isvalid != null" >
+        isvalid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tradesId != null" >
+        #{tradesId,jdbcType=BIGINT},
+      </if>
+      <if test="docNum != null" >
+        #{docNum,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsOwner != null" >
+        #{goodsOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="disrate != null" >
+        #{disrate,jdbcType=DECIMAL},
+      </if>
+      <if test="intaxAmount != null" >
+        #{intaxAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsIncome != null" >
+        #{goodsIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSaletax != null" >
+        #{goodsSaletax,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSaletaxamount != null" >
+        #{goodsSaletaxamount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSaletaxScale != null" >
+        #{goodsSaletaxScale,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceIncome != null" >
+        #{serviceIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceSaletax != null" >
+        #{serviceSaletax,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceSaletaxamount != null" >
+        #{serviceSaletaxamount,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceSaletaxScale != null" >
+        #{serviceSaletaxScale,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Income != null" >
+        #{tax3Income,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Saletax != null" >
+        #{tax3Saletax,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Saletaxamount != null" >
+        #{tax3Saletaxamount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3SaletaxScale != null" >
+        #{tax3SaletaxScale,jdbcType=DECIMAL},
+      </if>
+      <if test="costPerunit != null" >
+        #{costPerunit,jdbcType=DECIMAL},
+      </if>
+      <if test="costAmount != null" >
+        #{costAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="disAmount != null" >
+        #{disAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createOper != null" >
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.mba.core.entity.TradesDtlEntity" >
+    update trades_dtl
+    <set >
+      <if test="tradesId != null" >
+        trades_id = #{tradesId,jdbcType=BIGINT},
+      </if>
+      <if test="docNum != null" >
+        doc_num = #{docNum,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsOwner != null" >
+        goods_owner = #{goodsOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=BIGINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="disrate != null" >
+        disrate = #{disrate,jdbcType=DECIMAL},
+      </if>
+      <if test="intaxAmount != null" >
+        intax_amount = #{intaxAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsIncome != null" >
+        goods_income = #{goodsIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSaletax != null" >
+        goods_saletax = #{goodsSaletax,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSaletaxamount != null" >
+        goods_saletaxamount = #{goodsSaletaxamount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsSaletaxScale != null" >
+        goods_saletax_scale = #{goodsSaletaxScale,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceIncome != null" >
+        service_income = #{serviceIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceSaletax != null" >
+        service_saletax = #{serviceSaletax,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceSaletaxamount != null" >
+        service_saletaxamount = #{serviceSaletaxamount,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceSaletaxScale != null" >
+        service_saletax_scale = #{serviceSaletaxScale,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Income != null" >
+        tax3_income = #{tax3Income,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Saletax != null" >
+        tax3_saletax = #{tax3Saletax,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Saletaxamount != null" >
+        tax3_saletaxamount = #{tax3Saletaxamount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3SaletaxScale != null" >
+        tax3_saletax_scale = #{tax3SaletaxScale,jdbcType=DECIMAL},
+      </if>
+      <if test="costPerunit != null" >
+        cost_perunit = #{costPerunit,jdbcType=DECIMAL},
+      </if>
+      <if test="costAmount != null" >
+        cost_amount = #{costAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="disAmount != null" >
+        dis_amount = #{disAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createOper != null" >
+        create_oper = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isvalid != null" >
+        isvalid = #{isvalid,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mb.mba.core.entity.TradesDtlEntity" >
+    update trades_dtl
+    set trades_id = #{tradesId,jdbcType=BIGINT},
+      doc_num = #{docNum,jdbcType=VARCHAR},
+      goods_owner = #{goodsOwner,jdbcType=VARCHAR},
+      goods_code = #{goodsCode,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      disrate = #{disrate,jdbcType=DECIMAL},
+      intax_amount = #{intaxAmount,jdbcType=DECIMAL},
+      goods_income = #{goodsIncome,jdbcType=DECIMAL},
+      goods_saletax = #{goodsSaletax,jdbcType=DECIMAL},
+      goods_saletaxamount = #{goodsSaletaxamount,jdbcType=DECIMAL},
+      goods_saletax_scale = #{goodsSaletaxScale,jdbcType=DECIMAL},
+      service_income = #{serviceIncome,jdbcType=DECIMAL},
+      service_saletax = #{serviceSaletax,jdbcType=DECIMAL},
+      service_saletaxamount = #{serviceSaletaxamount,jdbcType=DECIMAL},
+      service_saletax_scale = #{serviceSaletaxScale,jdbcType=DECIMAL},
+      tax3_income = #{tax3Income,jdbcType=DECIMAL},
+      tax3_saletax = #{tax3Saletax,jdbcType=DECIMAL},
+      tax3_saletaxamount = #{tax3Saletaxamount,jdbcType=DECIMAL},
+      tax3_saletax_scale = #{tax3SaletaxScale,jdbcType=DECIMAL},
+      cost_perunit = #{costPerunit,jdbcType=DECIMAL},
+      cost_amount = #{costAmount,jdbcType=DECIMAL},
+      dis_amount = #{disAmount,jdbcType=DECIMAL},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_oper = #{createOper,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      isvalid = #{isvalid,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="bathinsert" parameterType="java.util.List" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into trades_dtl (trades_id, doc_num, goods_owner, 
+      goods_code, quantity, price, 
+      disrate, intax_amount, goods_income, 
+      goods_saletax, goods_saletaxamount, goods_saletax_scale, 
+      service_income, service_saletax, service_saletaxamount, 
+      service_saletax_scale, tax3_income, tax3_saletax, 
+      tax3_saletaxamount, tax3_saletax_scale, cost_perunit, 
+      cost_amount, dis_amount, remarks, 
+      create_oper, create_time, mod_oper, 
+      mod_time, isvalid)
+    values 
+    <foreach collection="records" item="item" index="index" separator="," >  
+     (#{item.tradesId,jdbcType=BIGINT}, #{item.docNum,jdbcType=VARCHAR}, #{item.goodsOwner,jdbcType=VARCHAR}, 
+      #{item.goodsCode,jdbcType=VARCHAR}, #{item.quantity,jdbcType=BIGINT}, #{item.price,jdbcType=DECIMAL}, 
+      #{item.disrate,jdbcType=DECIMAL}, #{item.intaxAmount,jdbcType=DECIMAL}, #{item.goodsIncome,jdbcType=DECIMAL}, 
+      #{item.goodsSaletax,jdbcType=DECIMAL}, #{item.goodsSaletaxamount,jdbcType=DECIMAL}, #{item.goodsSaletaxScale,jdbcType=DECIMAL}, 
+      #{item.serviceIncome,jdbcType=DECIMAL}, #{item.serviceSaletax,jdbcType=DECIMAL}, #{item.serviceSaletaxamount,jdbcType=DECIMAL}, 
+      #{item.serviceSaletaxScale,jdbcType=DECIMAL}, #{item.tax3Income,jdbcType=DECIMAL}, #{item.tax3Saletax,jdbcType=DECIMAL}, 
+      #{item.tax3Saletaxamount,jdbcType=DECIMAL}, #{item.tax3SaletaxScale,jdbcType=DECIMAL}, #{item.costPerunit,jdbcType=DECIMAL}, 
+      #{item.costAmount,jdbcType=DECIMAL}, #{item.disAmount,jdbcType=DECIMAL}, #{item.remarks,jdbcType=VARCHAR}, 
+      #{item.createOper,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.modifyOper,jdbcType=VARCHAR}, 
+      #{item.modifyTime,jdbcType=TIMESTAMP}, #{item.isvalid,jdbcType=CHAR})
+      </foreach>
+  </insert>
+  <select id="queryTradesDtlList" resultMap="BaseResultMap" parameterType="mb.mba.core.entity.TradesEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades_dtl
+     where 1=1 
+   <if test="id != null" >
+    trades_id = #{id,jdbcType=BIGINT}
+    </if> 
+    <if test="docNum != null" >
+     and doc_num=#{docNum,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryTradesDtlListCount" resultType="int" parameterType="mb.mba.core.entity.TradesEntity" >
+    select count(1)
+    from trades_dtl
+     where 1=1 
+   <if test="id != null" >
+    trades_id = #{id,jdbcType=BIGINT}
+    </if> 
+    <if test="docNum != null" >
+     and doc_num=#{docNum,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfIdtAllocDtlMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.SfIdtAllocDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SF_IDT_ID" property="sfIdtId" jdbcType="DECIMAL" />
+    <result column="WAREH_ID" property="warehId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="OH_ALLOC_QTY" property="ohAllocQty" jdbcType="DECIMAL" />
+    <result column="ALLOC_QTY" property="allocQty" jdbcType="DECIMAL" />
+    <result column="ACT_QTY" property="actQty" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ALLOC_DATE" property="allocDate" jdbcType="TIMESTAMP" />
+    <result column="RCV_QTY" property="rcvQty" jdbcType="DECIMAL" />
+    <result column="DOC_STATE" property="docState" jdbcType="DECIMAL" />
+    <result column="SF_GDN_CODE" property="sfGdnCode" jdbcType="VARCHAR" />
+    <result column="SF_GRN_CODE" property="sfGrnCode" jdbcType="VARCHAR" />
+    <result column="SF_DGN_CODE" property="sfDgnCode" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="PROGRESS" property="progress" jdbcType="VARCHAR" />
+    <result column="ALLOC_TIME" property="allocTime" jdbcType="TIMESTAMP" />
+    <result column="GDN_TIME" property="gdnTime" jdbcType="TIMESTAMP" />
+    <result column="GRN_TIME" property="grnTime" jdbcType="TIMESTAMP" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <result column="DIST_QTY" property="distQty" jdbcType="DECIMAL" />
+    <result column="PRE_DIST_QTY" property="preDistQty" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SF_IDT_ID, WAREH_ID, PROD_ID, OH_ALLOC_QTY, ALLOC_QTY, ACT_QTY, REMARK, ALLOC_DATE, 
+    RCV_QTY, DOC_STATE, SF_GDN_CODE, SF_GRN_CODE, SF_DGN_CODE, DATA_SOURCE, PROGRESS, 
+    ALLOC_TIME, GDN_TIME, GRN_TIME, ORDER_ID, UNIT_ID, DIST_QTY, PRE_DIST_QTY
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from SF_IDT_ALLOC_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from SF_IDT_ALLOC_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <select id="selectIdtAllocDtl" resultMap="BaseResultMap" parameterType="map" >
+    select *
+    from SF_IDT_ALLOC_DTL
+    where SF_IDT_ID = #{sfIdtId}
+  </select>
+
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.SfIdtAllocDtlVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into SF_IDT_ALLOC_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sfIdtId != null and sfIdtId != ''" >
+        SF_IDT_ID,
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        WAREH_ID,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="ohAllocQty != null and ohAllocQty != ''" >
+        OH_ALLOC_QTY,
+      </if>
+      <if test="allocQty != null and allocQty != ''" >
+        ALLOC_QTY,
+      </if>
+      <if test="actQty != null and actQty != ''" >
+        ACT_QTY,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="allocDate != null and allocDate != ''" >
+        ALLOC_DATE,
+      </if>
+      <if test="rcvQty != null and rcvQty != ''" >
+        RCV_QTY,
+      </if>
+      <if test="docState != null and docState != ''" >
+        DOC_STATE,
+      </if>
+      <if test="sfGdnCode != null and sfGdnCode != ''" >
+        SF_GDN_CODE,
+      </if>
+      <if test="sfGrnCode != null and sfGrnCode != ''" >
+        SF_GRN_CODE,
+      </if>
+      <if test="sfDgnCode != null and sfDgnCode != ''" >
+        SF_DGN_CODE,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="allocTime != null and allocTime != ''" >
+        ALLOC_TIME,
+      </if>
+      <if test="gdnTime != null and gdnTime != ''" >
+        GDN_TIME,
+      </if>
+      <if test="grnTime != null and grnTime != ''" >
+        GRN_TIME,
+      </if>
+      <if test="orderId != null and orderId != ''" >
+        ORDER_ID,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="distQty != null and distQty != ''" >
+        DIST_QTY,
+      </if>
+      <if test="preDistQty != null and preDistQty != ''" >
+        PRE_DIST_QTY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sfIdtId != null and sfIdtId != ''" >
+        #{sfIdtId,jdbcType=DECIMAL},
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        #{warehId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="ohAllocQty != null and ohAllocQty != ''" >
+        #{ohAllocQty,jdbcType=DECIMAL},
+      </if>
+      <if test="allocQty != null and allocQty != ''" >
+        #{allocQty,jdbcType=DECIMAL},
+      </if>
+      <if test="actQty != null and actQty != ''" >
+        #{actQty,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="allocDate != null and allocDate != ''" >
+        #{allocDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rcvQty != null and rcvQty != ''" >
+        #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="docState != null and docState != ''" >
+        #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="sfGdnCode != null and sfGdnCode != ''" >
+        #{sfGdnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sfGrnCode != null and sfGrnCode != ''" >
+        #{sfGrnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sfDgnCode != null and sfDgnCode != ''" >
+        #{sfDgnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null and progress != ''" >
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="allocTime != null and allocTime != ''" >
+        #{allocTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gdnTime != null and gdnTime != ''" >
+        #{gdnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grnTime != null and grnTime != ''" >
+        #{grnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null and orderId != ''" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="distQty != null and distQty != ''" >
+        #{distQty,jdbcType=DECIMAL},
+      </if>
+      <if test="preDistQty != null and preDistQty != ''" >
+        #{preDistQty,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.SfIdtAllocDtlVo" >
+    update SF_IDT_ALLOC_DTL
+    <set >
+      <if test="sfIdtId != null" >
+        SF_IDT_ID = #{sfIdtId,jdbcType=DECIMAL},
+      </if>
+      <if test="warehId != null" >
+        WAREH_ID = #{warehId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="ohAllocQty != null" >
+        OH_ALLOC_QTY = #{ohAllocQty,jdbcType=DECIMAL},
+      </if>
+      <if test="allocQty != null" >
+        ALLOC_QTY = #{allocQty,jdbcType=DECIMAL},
+      </if>
+      <if test="actQty != null" >
+        ACT_QTY = #{actQty,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="allocDate != null" >
+        ALLOC_DATE = #{allocDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY = #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="docState != null" >
+        DOC_STATE = #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="sfGdnCode != null" >
+        SF_GDN_CODE = #{sfGdnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sfGrnCode != null" >
+        SF_GRN_CODE = #{sfGrnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sfDgnCode != null" >
+        SF_DGN_CODE = #{sfDgnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null" >
+        PROGRESS = #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="allocTime != null" >
+        ALLOC_TIME = #{allocTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gdnTime != null" >
+        GDN_TIME = #{gdnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grnTime != null" >
+        GRN_TIME = #{grnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null" >
+        ORDER_ID = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null" >
+        UNIT_ID = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="distQty != null" >
+        DIST_QTY = #{distQty,jdbcType=DECIMAL},
+      </if>
+      <if test="preDistQty != null" >
+        PRE_DIST_QTY = #{preDistQty,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <!-- 新增现货订单分配明细已配货 -->
+  <insert id="saveIdtAllocDtl" parameterType="map">
+  	INSERT INTO SF_IDT_ALLOC_DTL
+	  (ID,
+	   SF_IDT_ID,
+	   WAREH_ID,
+	   PROD_ID,
+	   OH_ALLOC_QTY,
+	   ALLOC_QTY,
+	   ACT_QTY,
+	   REMARK,
+	   ALLOC_DATE,   
+	   SF_DGN_CODE,
+	   DOC_STATE,
+	   DATA_SOURCE)
+	  SELECT FU_GET_NEXT_IDENTITY('SF_IDT_ALLOC_DTL', 1) AS ID,
+	         A.ID AS SF_IDT_ID,
+	         #{wareh_id},
+	         B.PROD_ID,
+	         0 AS OH_ALLOC_QTY,
+	         B.ORDER_QTY AS ALLOC_QTY,
+	         0 AS ACT_QTY,
+	         B.REMARK,
+	         SYSTIMESTAMP,
+	         #{sf_dgn_code},
+	         #{data_source_alloc},
+	         #{data_source}
+	    FROM SF_IDT A
+	   INNER JOIN SF_IDT_DTL B ON A.ID = B.SF_IDT_ID
+	   WHERE A.ID = #{sf_idt_id}
+  </insert>
+  
+  <!-- 更新订单分配明细（记录出库单号、出库数量和修改进度为收货中） -->
+  <update id="updateAllocDtlRP" parameterType="map">
+  	UPDATE SF_IDT_ALLOC_DTL D
+	   SET (D.SF_GDN_CODE , D.ACT_QTY, D.DOC_STATE, D.GDN_TIME) 
+	   = (SELECT A.SRC_DOC_NUM,
+              B.DELIV_QTY,
+              #{doc_state},
+              A.DOC_DATE
+         FROM SF_RVD A
+        INNER JOIN SF_RVD_DTL B ON A.ID = B.SF_RVD_ID
+        WHERE D.WAREH_ID = A.WAREH_ID
+          AND D.PROD_ID = B.PROD_ID
+          AND A.ID = #{sf_rvd_id})
+	 WHERE D.SF_IDT_ID = #{sf_idt_id}
+  </update>
+  
+  
+   <!-- 根据交货单更新订单分配明细 -->
+  <update id="updateAllocDtlByDgn" parameterType="map">
+	  	UPDATE SF_IDT_ALLOC_DTL T
+		SET (T.DOC_STATE,T.SF_DGN_CODE) = 
+		    (SELECT 131072, D.CODE 
+		     FROM SF_DGN D WHERE D.ID = #{id})
+		WHERE T.SF_IDT_ID = #{sf_idt_id} AND T.SF_DGN_CODE IS NULL
+		AND EXISTS(
+		  SELECT 1
+		  FROM SF_DGN A
+		  INNER JOIN SF_DGN_DTL B ON B.SF_DGN_ID = A.ID
+		  WHERE A.ID = #{id} AND T.WAREH_ID = A.WAREH_ID AND T.PROD_ID = B.PROD_ID
+		)
+  </update>
+  
+  <!-- 根据交货单添加分配明细 -->
+  <insert id="saveIdtAllocDtlByDgn" parameterType="map">
+		INSERT INTO 
+		 SF_IDT_ALLOC_DTL 
+		 (ID, 
+		 SF_IDT_ID,
+		 WAREH_ID,
+		 PROD_ID,
+		 ALLOC_QTY, 
+		 ACT_QTY,
+		 RCV_QTY,
+		 Sf_Dgn_Code, 
+		 DOC_STATE,
+		 PROGRESS
+		 ) 
+		SELECT 
+		FU_GET_NEXT_IDENTITY('SF_IDT_ALLOC_DTL',1),
+		#{sf_idt_id},
+		G.WAREH_ID,
+		D.PROD_ID,
+		0,
+		0,
+		0,
+		G.code,
+		131072,
+		'DP'
+		FROM SF_DGN G
+		INNER JOIN SF_DGN_DTL D ON D.SF_DGN_ID=G.ID
+		WHERE G.ID=#{id}
+		  AND NOT EXISTS(
+		      SELECT 1
+		      FROM SF_IDT_ALLOC_DTL A
+		      WHERE A.SF_IDT_ID = #{sf_idt_id}
+		        AND A.WAREH_ID = G.WAREH_ID
+		        AND A.PROD_ID = D.PROD_ID
+		        AND A.SF_DGN_CODE = G.CODE
+		  )
+  </insert>
+  
+  <!-- 根据交货单更新订单分配明细进度为已配货 -->
+  <update id="updateAllocDtlByDgnToAD" parameterType="map">
+	  UPDATE SF_IDT_ALLOC_DTL D
+	SET (D.ALLOC_QTY,D.ALLOC_DATE,D.DOC_STATE,D.PROGRESS) = 
+	    (SELECT T.QUANTITY,SYSDATE,65536,'DC'
+	     FROM SF_DGN G
+	     INNER JOIN SF_DGN_DTL T ON T.SF_DGN_ID=G.ID
+	     WHERE T.SF_DGN_ID= #{id}
+	       AND T.PROD_ID = D.PROD_ID
+	       AND D.Sf_Dgn_Code = G.Code
+	                 )
+	WHERE D.SF_IDT_ID = #{sf_idt_id}
+	  AND D.DOC_STATE = 131072
+	  AND EXISTS(SELECT 1
+	             FROM SF_DGN S
+	             WHERE S.Code = D.Sf_Dgn_Code
+	               AND S.ID = #{id})
+  </update>
+  
+  <!-- 根据交货单更新订单分配明细进度为已配货 -->
+  <update id="updateAllocDtlByAdnToAD" parameterType="map">
+	  UPDATE SF_IDT_ALLOC_DTL D
+		SET 
+		D.ALLOC_QTY = #{alloc_qty},
+		D.ALLOC_DATE = SYSDATE,
+		D.DOC_STATE = 65536,
+		D.PROGRESS = 'DC'
+		WHERE D.SF_IDT_ID = #{sf_idt_id}
+		  AND D.DOC_STATE = 131072
+		  AND D.PROD_ID = #{prod_id}
+  </update>
+  
+  <!-- 更新现货单分配明细为发货中 -->
+  <update id="updateAllocDtlToDG" parameterType="map">
+		UPDATE SF_IDT_ALLOC_DTL D
+		<set> 
+		D.DOC_STATE = 262144,
+		    D.PROGRESS = 'SP'
+		WHERE D.SF_IDT_ID =#{sf_idt_id}
+		  <if test="sf_dgn_code != null  and sf_dgn_code != ''" >
+	        AND D.SF_DGN_CODE = #{sf_dgn_code}
+	      </if>
+		  AND (D.DOC_STATE =65536 OR D.DOC_STATE = 262144)
+	    </set>
+  </update>
+  
+  <!-- 更新现货单分配明细为已发货 -->
+  <update id="updateAllocDtlToDD" parameterType="map">
+		UPDATE SF_IDT_ALLOC_DTL D
+		SET (D.DOC_STATE,D.PROGRESS,D.ACT_QTY,D.SF_GDN_CODE,D.GDN_TIME)=
+		    (SELECT 196608,'SC',T.QUANTITY,G.CODE,SYSDATE
+		     FROM SF_GDN_DTL T
+		     INNER JOIN SF_GDN G ON G.ID =T.SF_GDN_ID
+		     WHERE T.PROD_ID = D.PROD_ID
+		       AND G.ID = #{sf_gdn_id})
+		WHERE D.SF_IDT_ID = #{sf_idt_id}
+		  AND D.DOC_STATE =262144
+		  AND D.SF_DGN_CODE = #{sf_dgn_code}
+  </update>
+  
+  <!-- 根据老ERP出库单更新现货单分配明细为已发货 -->
+  <update id="updateAllocDtlByGdnToDD" parameterType="map">
+		UPDATE SF_IDT_ALLOC_DTL D
+		SET 
+		D.DOC_STATE = 196608,
+		D.PROGRESS = 'SC',
+		D.ACT_QTY = #{act_qty},
+		D.SF_GDN_CODE = #{gdn_code},
+		D.SF_DGN_CODE = #{adn_code},
+		D.GDN_TIME = SYSDATE
+		WHERE D.SF_IDT_ID = #{sf_idt_id}
+		  AND D.DOC_STATE =262144
+		  AND D.PROD_ID = #{prod_id}
+  </update>
+  
+  <!-- 更新现货单分配明细为收货中 -->
+  <update id="updateAllocDtlToRG" parameterType="map">
+	  UPDATE SF_IDT_ALLOC_DTL D
+	SET D.DOC_STATE = 393216,
+	    D.PROGRESS = 'RP'
+	WHERE D.SF_IDT_ID =#{sf_idt_id}
+	  AND (D.DOC_STATE =196608 OR D.DOC_STATE = 393216)
+	  AND D.SF_GDN_CODE = #{sf_gdn_code}
+  </update>
+  
+  <!-- 更新现货单分配明细为已收货 -->
+  <update id="updateAllocDtlToRD" parameterType="map">
+	 UPDATE SF_IDT_ALLOC_DTL D
+	SET (D.DOC_STATE,D.PROGRESS,D.SF_GRN_CODE,D.RCV_QTY,D.GRN_TIME) = 
+	    (SELECT 327680,'RC',G.GRN_NUM,GD.QUANTITY,SYSDATE
+	     FROM SF_GRN_DTL GD
+	     INNER JOIN SF_GRN G ON GD.SF_GRN_ID = G.ID
+	     WHERE GD.PROD_ID = D.PROD_ID
+	       AND G.ID = #{sf_grn_id})
+	WHERE D.SF_IDT_ID =#{sf_idt_id}
+	  AND D.DOC_STATE =393216
+	  AND D.SF_GDN_CODE = #{sf_gdn_code}
+  </update>
+</mapper>

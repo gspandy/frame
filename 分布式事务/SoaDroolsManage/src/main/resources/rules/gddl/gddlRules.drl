@@ -1,0 +1,19 @@
+package mb.erp.dr.o2o.drools.rules.gdn
+ 
+import mb.erp.dr.soa.old.vo.GdnVo;
+import mb.erp.dr.soa.old.service.wareh.WarehService;
+import mb.erp.dr.soa.bean.WarehBean;
+ 
+rule "出库冲单规则-是否需要增加库存"
+    when
+        $gdn : GdnVo( controlStatus matches "^1.*")
+        $warehService : WarehService()
+    then
+        // System.out.println( "出库冲单规则-是否需要增加库存: getTbnNum:"+$gdn.getGdnNum()+" getWarehId:"+$gdn.getWarehId());
+        WarehBean warehBean = new WarehBean();
+        warehBean.setUnitId($gdn.getUnitId()); 
+        warehBean.setGdnNum($gdn.getGdnNum());
+        warehBean.setWarehId($gdn.getWarehId());
+        $warehService.increaseQtyByGDN(warehBean);
+end
+

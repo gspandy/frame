@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.PoPrcListDtlMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.PoPrcListDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="VENDEE_ID" property="vendeeId" jdbcType="DECIMAL" />
+    <result column="VENDER_ID" property="venderId" jdbcType="DECIMAL" />
+    <result column="PRC_LST_TYPE" property="prcLstType" jdbcType="VARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, VENDEE_ID, VENDER_ID, PRC_LST_TYPE, CURRENCY, PROD_ID, PRICE, CREATE_DATE, LAST_MODIFIED_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from PO_PRC_LST_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="priceUdfacePoPrcLstDtlGetByID" resultMap="BaseResultMap" parameterType="map">
+		SELECT PRICE,
+		       ID,
+		       VENDEE_ID,
+		       VENDER_ID,
+		       PRC_LST_TYPE,
+		       CURRENCY,
+		       PROD_ID,       
+		       CREATE_DATE,
+		       LAST_MODIFIED_DATE
+		  FROM PO_PRC_LST_DTL A
+		 WHERE A.PRC_LST_TYPE = #{prc_lst_type}
+		   AND A.CURRENCY = #{currency}
+		   AND A.VENDEE_ID = #{vendee_id}
+		   AND A.VENDER_ID = #{vender_id}
+		   AND A.PROD_ID = #{prod_id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from PO_PRC_LST_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.PoPrcListDtlVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into PO_PRC_LST_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null and vendeeId != ''" >
+        VENDEE_ID,
+      </if>
+      <if test="venderId != null and venderId != ''" >
+        VENDER_ID,
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        PRC_LST_TYPE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="price != null and price != ''" >
+        PRICE,
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        CREATE_DATE,
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        LAST_MODIFIED_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null and vendeeId != ''" >
+        #{vendeeId,jdbcType=DECIMAL},
+      </if>
+      <if test="venderId != null and venderId != ''" >
+        #{venderId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        #{prcLstType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null and price != ''" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.PoPrcListDtlVo" >
+    update PO_PRC_LST_DTL
+    <set >
+      <if test="vendeeId != null" >
+        VENDEE_ID = #{vendeeId,jdbcType=DECIMAL},
+      </if>
+      <if test="venderId != null" >
+        VENDER_ID = #{venderId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcLstType != null" >
+        PRC_LST_TYPE = #{prcLstType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedDate != null" >
+        LAST_MODIFIED_DATE = #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

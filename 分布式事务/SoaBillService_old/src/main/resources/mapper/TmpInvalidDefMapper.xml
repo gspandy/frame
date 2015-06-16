@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.TmpInvalidDefMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.TmpInvalidDefVo" >
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="ACTION" property="action" jdbcType="VARCHAR" />
+    <result column="FLG" property="flg" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 验证订单规则 -->
+  <select id="selectInvalid" parameterType="mb.erp.dr.soa.old.vo.TmpInvalidDefVo"  resultMap="BaseResultMap">
+		SELECT * FROM (SELECT A.CODE,A.TYPE,A.ACTION,
+						CASE A.ACTION
+		                 WHEN 'EXT' THEN
+		                  CASE
+		                    WHEN B.PROD_ID IS NULL THEN
+		                     0
+		                    ELSE
+		                     1
+		                  END
+		                 WHEN 'STA' THEN
+		                  CASE
+		                    WHEN B.PROD_STATE = 'A' THEN
+		                     1
+		                    ELSE
+		                     0
+		                  END
+		                 ELSE
+		                  0
+		               END FLG
+		          FROM TMP_INVALID_DEF A
+		          LEFT OUTER JOIN PRODUCT B <!--商品表-->
+		            ON (A.CODE = B.PROD_ID)
+		         WHERE A.TYPE = 'GOODS'
+		        UNION ALL
+		        SELECT A.CODE, A.TYPE,A.ACTION,
+		               CASE A.ACTION
+		                 WHEN 'EXT' THEN
+		                  CASE
+		                    WHEN B.UNIT_ID IS NULL THEN
+		                     0
+		                    ELSE
+		                     1
+		                  END
+		                 WHEN 'STA' THEN
+		                  CASE
+		                    WHEN C.STATUS = 'A' THEN
+		                     1
+		                    ELSE
+		                     0
+		                  END
+		                 ELSE
+		                  0
+		               END FLG
+		          FROM TMP_INVALID_DEF A
+		          LEFT OUTER JOIN SYS_UNIT B
+		            ON (A.CODE = B.UNIT_ID) <!--组织表-->
+		          LEFT OUTER JOIN SYS_UNIT_CLSF C
+		            ON (C.UNIT_ID = B.UNIT_ID) <!--组织类型表-->
+		         WHERE A.TYPE = 'UNIT'
+		        UNION ALL
+		        SELECT A.CODE,A.TYPE,A.ACTION,
+		               CASE A.ACTION
+		                 WHEN 'EXT' THEN
+		                  CASE
+		                    WHEN B.BRAND_ID IS NULL THEN
+		                     0
+		                    ELSE
+		                     1
+		                  END
+		                 ELSE
+		                  0
+		               END FLG
+		          FROM TMP_INVALID_DEF A
+		          LEFT OUTER JOIN SYS_BRAND B
+		            ON (A.CODE = B.BRAND_ID) <!--品牌表-->
+		         WHERE A.TYPE = 'BRAND')
+		 WHERE FLG = '0'
+
+  </select>
+  
+  <insert id="save" parameterType="java.util.List" >
+    insert into TMP_INVALID_DEF (CODE, TYPE, ACTION)
+    <foreach collection="list" item="item" index="index"  separator="UNION ALL" > 
+      SELECT 
+        #{item.code,jdbcType=VARCHAR},
+        #{item.type,jdbcType=VARCHAR},
+        #{item.action,jdbcType=VARCHAR}
+      from dual 
+    </foreach> 
+  </insert>
+  
+  <!-- 向临时表 TMP_PRODUCT_NUM 插入数据 -->
+  <insert id="saveTempProductNum" parameterType="java.util.List" >
+    insert into TMP_PRODUCT_NUM (PROD_NUM)
+    <foreach collection="list" item="item" index="index"  separator="UNION ALL" > 
+      SELECT 
+        #{item,jdbcType=VARCHAR}
+      from dual 
+    </foreach> 
+  </insert>
+  <select id="selectTempProductNum" parameterType="java.lang.String" resultType="java.util.List">
+   select * from TMP_PRODUCT_NUM t where t.PROD_NUM=#{prodNum}
+  </select>
+  <insert id="insert" parameterType="mb.erp.dr.soa.old.vo.TmpInvalidDefVo" >
+    insert into TMP_INVALID_DEF
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null and code != ''" >
+        CODE,
+      </if>
+      <if test="type != null and type != ''" >
+        TYPE,
+      </if>
+      <if test="action != null and action != ''" >
+        ACTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null and code != ''" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null and type != ''" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null and action != ''" >
+        #{action,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

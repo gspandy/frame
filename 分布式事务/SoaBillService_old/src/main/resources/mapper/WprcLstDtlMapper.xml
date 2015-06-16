@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.WprcLstDtlMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.WprcLstDtlVo" >
+    <id column="UID_COL" jdbcType="VARBINARY" property="uidCol" />
+    <result column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <result column="PRC_LST_TYPE" property="prcLstType" jdbcType="CHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="PROD_PROP" property="prodProp" jdbcType="CHAR" />
+    <result column="PROD_SORT" property="prodSort" jdbcType="CHAR" />
+    <result column="PROD_STYLE" property="prodStyle" jdbcType="CHAR" />
+    <result column="COLOR" property="color" jdbcType="CHAR" />
+    <result column="EDITION" property="edition" jdbcType="CHAR" />
+    <result column="SPEC" property="spec" jdbcType="CHAR" />
+    <result column="PRC_PLCY" property="prcPlcy" jdbcType="CHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <result column="WUNIT_ID" property="wunitId" jdbcType="VARCHAR" />
+    <result column="PRN_NUM" property="prnNum" jdbcType="VARCHAR" />
+    <result column="EXEC_DATE" property="execDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    UNIT_ID, PRC_LST_TYPE, CURRENCY, PROD_ID, PROD_PROP, PROD_SORT, PROD_STYLE, 
+    COLOR, EDITION, SPEC, PRC_PLCY, PRICE, DISC_RATE, EFF_DATE, BRAND_ID, WUNIT_ID, PRN_NUM, 
+    EXEC_DATE
+  </sql>
+  
+  <select id="selectSettlementPriceRateByProdClsNum" resultMap="BaseResultMap" parameterType="map">
+  	 SELECT 
+		 A.PRICE,
+		 A.DISC_RATE,
+		 A.PRC_PLCY
+		 FROM 
+		 WPRC_LST_DTL A INNER JOIN PROD_CLS B
+		  ON NVL(A.PROD_PROP,B.PROD_PROP)=B.PROD_PROP 
+		  AND NVL(A.PROD_SORT,B.PROD_SORT)=B.PROD_SORT
+		  AND NVL(A.PROD_STYLE,B.PROD_STYLE)=B.PROD_STYLE 
+		  WHERE B.PROD_PROP = #{prod_prop}
+				  AND B.PROD_SORT = #{prod_sort}
+				  AND B.PROD_STYLE = #{prod_style}
+				  AND A.PROD_ID = #{prod_id}
+				  AND (A.PRC_LST_TYPE='AGWS' OR A.PRC_LST_TYPE='GNWS')
+				  AND A.CURRENCY = #{currency}
+				  AND A.UNIT_ID = #{unit_id}
+				  AND NVL(TRIM(A.WUNIT_ID),#{wunit_id}) = #{wunit_id}  
+				  ORDER BY DECODE(A.PRC_LST_TYPE,'AGWS',1,'GNWS',2)
+  </select>
+  
+ <select id="selectSettlementPriceRateByProdId" resultMap="BaseResultMap" parameterType="map">
+	 SELECT *
+	  FROM (SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 1 AS DATASORT
+	          FROM WPRC_LST_DTL A
+	         WHERE A.PROD_ID = #{prod_id}
+	           AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+	           AND A.CURRENCY = #{currency}
+	           AND A.UNIT_ID = #{unit_id}
+	           AND (A.WUNIT_ID IS NULL OR A.WUNIT_ID = #{wunit_id})
+	        UNION
+	        SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 2 AS DATASORT
+	          FROM WPRC_LST_DTL A
+	         INNER JOIN PROD_CLS B ON NVL(A.PROD_PROP, B.PROD_PROP) =
+	                                  B.PROD_PROP
+	                              AND NVL(A.PROD_SORT, B.PROD_SORT) =
+	                                  B.PROD_SORT
+	                              AND NVL(A.PROD_STYLE, B.PROD_STYLE) =
+	                                  B.PROD_STYLE
+	         WHERE EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND P.COLOR = A.COLOR)
+	           AND LENGTH(A.PROD_ID) = 8
+	           AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+	           AND A.CURRENCY = #{currency}
+	           AND A.UNIT_ID = #{unit_id}
+	           AND (A.WUNIT_ID IS NULL OR A.WUNIT_ID = #{wunit_id})
+	        UNION
+	        SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 3 AS DATASORT
+	          FROM WPRC_LST_DTL A
+	         INNER JOIN PROD_CLS B ON NVL(A.PROD_PROP, B.PROD_PROP) =
+	                                  B.PROD_PROP
+	                              AND NVL(A.PROD_SORT, B.PROD_SORT) =
+	                                  B.PROD_SORT
+	                              AND NVL(A.PROD_STYLE, B.PROD_STYLE) =
+	                                  B.PROD_STYLE
+	         WHERE EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE)
+	           AND LENGTH(A.PROD_ID) = 6
+	           AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+	           AND A.CURRENCY = #{currency}
+	           AND A.UNIT_ID = #{unit_id}
+	           AND (A.WUNIT_ID IS NULL OR A.WUNIT_ID = #{wunit_id}))
+	 ORDER BY DATASORT
+  </select>
+  
+  <select id="bulkGetSettlePriceOld" resultMap="BaseResultMap" parameterType="map">
+	 <![CDATA[
+	 SELECT TTT.PROD_ID, TTT.PRICE, TTT.DISC_RATE, TTT.PRC_PLCY
+	  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY TT.PROD_ID ORDER BY TT.DATASORT) RN,
+	               TT.PROD_ID,
+	               TT.PRICE,
+	               TT.DISC_RATE,
+	               TT.PRC_PLCY
+	          FROM (SELECT A.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 1 AS DATASORT
+	                  FROM WPRC_LST_DTL A
+	                 WHERE LENGTH(A.PROD_ID) = 11
+	                   AND EXISTS
+	                 (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE A.PROD_ID = T.PROD_NUM)
+	                   AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.UNIT_ID = #{unit_id}
+	                   AND (A.WUNIT_ID IS NULL OR A.WUNIT_ID = #{wunit_id})
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 2 AS DATASORT
+	                  FROM WPRC_LST_DTL A
+	                 INNER JOIN PROD_CLS B ON NVL(A.PROD_PROP, B.PROD_PROP) =
+	                                          B.PROD_PROP
+	                                      AND NVL(A.PROD_SORT, B.PROD_SORT) =
+	                                          B.PROD_SORT
+	                                      AND NVL(A.PROD_STYLE, B.PROD_STYLE) =
+	                                          B.PROD_STYLE
+	                 INNER JOIN PRODUCT P ON (B.PROD_PROP = P.PROD_PROP AND
+	                                         B.PROD_SORT = P.PROD_SORT AND
+	                                         B.PROD_STYLE = P.PROD_STYLE AND
+	                                         P.COLOR = A.COLOR)
+	                 WHERE EXISTS
+	                 (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE P.PROD_ID = T.PROD_NUM)
+	                   AND LENGTH(A.PROD_ID) = 8
+	                   AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.UNIT_ID = #{unit_id}
+	                   AND (A.WUNIT_ID IS NULL OR A.WUNIT_ID = #{wunit_id})
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 3 AS DATASORT
+	                  FROM WPRC_LST_DTL A
+	                 INNER JOIN PROD_CLS B ON NVL(A.PROD_PROP, B.PROD_PROP) =
+	                                          B.PROD_PROP
+	                                      AND NVL(A.PROD_SORT, B.PROD_SORT) =
+	                                          B.PROD_SORT
+	                                      AND NVL(A.PROD_STYLE, B.PROD_STYLE) =
+	                                          B.PROD_STYLE
+	                 INNER JOIN PRODUCT P ON (B.PROD_PROP = P.PROD_PROP AND
+	                                         B.PROD_SORT = P.PROD_SORT AND
+	                                         B.PROD_STYLE = P.PROD_STYLE)
+	                 WHERE EXISTS
+	                 (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE P.PROD_ID = T.PROD_NUM)
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.UNIT_ID = #{unit_id}
+	                   AND (A.WUNIT_ID IS NULL OR A.WUNIT_ID = #{wunit_id})) TT
+	         ORDER BY TT.PROD_ID) TTT
+	 WHERE TTT.RN = 1
+	]]>
+  </select>
+  
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.old.vo.WprcLstDtlVo" >
+    insert into MTSBW.WPRC_LST_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        PRC_LST_TYPE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="prodProp != null and prodProp != ''" >
+        PROD_PROP,
+      </if>
+      <if test="prodSort != null and prodSort != ''" >
+        PROD_SORT,
+      </if>
+      <if test="prodStyle != null and prodStyle != ''" >
+        PROD_STYLE,
+      </if>
+      <if test="color != null and color != ''" >
+        COLOR,
+      </if>
+      <if test="edition != null and edition != ''" >
+        EDITION,
+      </if>
+      <if test="spec != null and spec != ''" >
+        SPEC,
+      </if>
+      <if test="prcPlcy != null and prcPlcy != ''" >
+        PRC_PLCY,
+      </if>
+      <if test="price != null and price != ''" >
+        PRICE,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="effDate != null and effDate != ''" >
+        EFF_DATE,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="wunitId != null and wunitId != ''" >
+        WUNIT_ID,
+      </if>
+      <if test="prnNum != null and prnNum != ''" >
+        PRN_NUM,
+      </if>
+      <if test="execDate != null and execDate != ''" >
+        EXEC_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        #{prcLstType,jdbcType=CHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodProp != null and prodProp != ''" >
+        #{prodProp,jdbcType=CHAR},
+      </if>
+      <if test="prodSort != null and prodSort != ''" >
+        #{prodSort,jdbcType=CHAR},
+      </if>
+      <if test="prodStyle != null and prodStyle != ''" >
+        #{prodStyle,jdbcType=CHAR},
+      </if>
+      <if test="color != null and color != ''" >
+        #{color,jdbcType=CHAR},
+      </if>
+      <if test="edition != null and edition != ''" >
+        #{edition,jdbcType=CHAR},
+      </if>
+      <if test="spec != null and spec != ''" >
+        #{spec,jdbcType=CHAR},
+      </if>
+      <if test="prcPlcy != null and prcPlcy != ''" >
+        #{prcPlcy,jdbcType=CHAR},
+      </if>
+      <if test="price != null and price != ''" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="effDate != null and effDate != ''" >
+        #{effDate,jdbcType=DATE},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="wunitId != null and wunitId != ''" >
+        #{wunitId,jdbcType=VARCHAR},
+      </if>
+      <if test="prnNum != null and prnNum != ''" >
+        #{prnNum,jdbcType=VARCHAR},
+      </if>
+      <if test="execDate != null and execDate != ''" >
+        #{execDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.old.vo.WprcLstDtlVo" >
+    update MTSBW.WPRC_LST_DTL
+    <set >
+      <if test="unitId != null" >
+        UNIT_ID = #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="prcLstType != null" >
+        PRC_LST_TYPE = #{prcLstType,jdbcType=CHAR},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodProp != null" >
+        PROD_PROP = #{prodProp,jdbcType=CHAR},
+      </if>
+      <if test="prodSort != null" >
+        PROD_SORT = #{prodSort,jdbcType=CHAR},
+      </if>
+      <if test="prodStyle != null" >
+        PROD_STYLE = #{prodStyle,jdbcType=CHAR},
+      </if>
+      <if test="color != null" >
+        COLOR = #{color,jdbcType=CHAR},
+      </if>
+      <if test="edition != null" >
+        EDITION = #{edition,jdbcType=CHAR},
+      </if>
+      <if test="spec != null" >
+        SPEC = #{spec,jdbcType=CHAR},
+      </if>
+      <if test="prcPlcy != null" >
+        PRC_PLCY = #{prcPlcy,jdbcType=CHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="effDate != null" >
+        EFF_DATE = #{effDate,jdbcType=DATE},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="wunitId != null" >
+        WUNIT_ID = #{wunitId,jdbcType=VARCHAR},
+      </if>
+      <if test="prnNum != null" >
+        PRN_NUM = #{prnNum,jdbcType=VARCHAR},
+      </if>
+      <if test="execDate != null" >
+        EXEC_DATE = #{execDate,jdbcType=DATE},
+      </if>
+    </set>
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.AgentBrandRateListMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.AgentBrandRateListVo" >
+    <id column="AGENT_ID" property="agentId" jdbcType="VARCHAR" />
+    <id column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <id column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <id column="TYPE_CODE" property="typeCode" jdbcType="VARCHAR" />
+    <result column="ABR_NUM" property="abrNum" jdbcType="VARCHAR" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="MARKUP_RATE" property="markupRate" jdbcType="DECIMAL" />
+    <result column="CR_RATE_FML" property="crRateFml" jdbcType="VARCHAR" />
+    <result column="CR_PR_MTHD" property="crPrMthd" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE" />
+    <result column="REMARK1" property="remark1" jdbcType="VARCHAR" />
+    <result column="REMARK2" property="remark2" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="WprcLstDtlMap" type="mb.erp.dr.soa.old.vo.WprcLstDtlVo" >
+    <id column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <result column="PRC_LST_TYPE" property="prcLstType" jdbcType="CHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="PROD_PROP" property="prodProp" jdbcType="CHAR" />
+    <result column="PROD_SORT" property="prodSort" jdbcType="CHAR" />
+    <result column="PROD_STYLE" property="prodStyle" jdbcType="CHAR" />
+    <result column="COLOR" property="color" jdbcType="CHAR" />
+    <result column="EDITION" property="edition" jdbcType="CHAR" />
+    <result column="SPEC" property="spec" jdbcType="CHAR" />
+    <result column="PRC_PLCY" property="prcPlcy" jdbcType="CHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <result column="WUNIT_ID" property="wunitId" jdbcType="VARCHAR" />
+    <result column="PRN_NUM" property="prnNum" jdbcType="VARCHAR" />
+    <result column="EXEC_DATE" property="execDate" jdbcType="DATE" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    AGENT_ID, UNIT_ID, BRAND_ID, TYPE_CODE, ABR_NUM, DISC_RATE, MARKUP_RATE, CR_RATE_FML, 
+    CR_PR_MTHD, CREATE_USER, CREATE_DATE, UPDATE_USER, UPDATE_DATE, REMARK1, REMARK2
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="mb.erp.dr.soa.old.vo.AgentBrandRateListVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.AGENT_BRAND_RATE_LIST
+    where AGENT_ID = #{agentId,jdbcType=VARCHAR}
+      and UNIT_ID = #{unitId,jdbcType=VARCHAR}
+      and BRAND_ID = #{brandId,jdbcType=VARCHAR}
+      and TYPE_CODE = #{typeCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectObjectByProdCls" resultType="java.lang.Double" parameterType="map">
+  	<![CDATA[
+  	SELECT A.DISC_RATE
+	  FROM AGENT_BRAND_RATE_LIST A
+	 WHERE EXISTS (SELECT 1
+	          FROM PROD_CLS B
+	         WHERE B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND B.BRAND_ID = A.BRAND_ID)
+	   		   AND TYPE_CODE <> 'MR'
+			   AND AGENT_ID = #{agent_id}
+			   AND UNIT_ID = #{unit_id}
+	]]>
+  </select>
+  
+  <!-- 根据商品编码获取老ERP代理商折率 -->
+  <select id="selectObject" resultType="java.lang.Double" parameterType="java.util.Map">
+    <![CDATA[
+	SELECT A.DISC_RATE
+	  FROM AGENT_BRAND_RATE_LIST A
+	 WHERE EXISTS (SELECT 1
+	          FROM PROD_CLS B
+	         INNER JOIN PRODUCT C ON B.PROD_PROP = C.PROD_PROP
+	                             AND B.PROD_SORT = C.PROD_SORT
+	                             AND B.PROD_STYLE = C.PROD_STYLE
+	         WHERE B.BRAND_ID = A.BRAND_ID
+	           AND C.PROD_STATE = 'A'
+	           AND C.PROD_ID = #{prod_id})
+			   AND TYPE_CODE <> 'MR'
+			   AND AGENT_ID = #{agent_id}
+			   AND UNIT_ID = #{unit_id}
+	   ]]>
+  </select>
+  
+  <select id="bulkGetAgentBrandRateOld" resultMap="WprcLstDtlMap" parameterType="map">
+    <![CDATA[
+	SELECT A.DISC_RATE, C.PROD_ID
+	  FROM AGENT_BRAND_RATE_LIST A
+	 INNER JOIN PROD_CLS B ON B.BRAND_ID = A.BRAND_ID
+	 INNER JOIN PRODUCT C ON B.PROD_PROP = C.PROD_PROP
+	                     AND B.PROD_SORT = C.PROD_SORT
+	                     AND B.PROD_STYLE = C.PROD_STYLE
+	 WHERE C.PROD_STATE = 'A'
+	   AND EXISTS
+	 (SELECT 1 FROM TMP_PRODUCT_NUM T WHERE C.PROD_ID = T.PROD_NUM)
+	   AND TYPE_CODE <> 'MR'
+	   AND AGENT_ID = #{agent_id}
+	   AND UNIT_ID = #{unit_id}
+	   ]]>
+  </select>
+  
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.old.vo.AgentBrandRateListVo" >
+    insert into MTSBW.AGENT_BRAND_RATE_LIST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="agentId != null and agentId != ''" >
+        AGENT_ID,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="typeCode != null and typeCode != ''" >
+        TYPE_CODE,
+      </if>
+      <if test="abrNum != null and abrNum != ''" >
+        ABR_NUM,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="markupRate != null and markupRate != ''" >
+        MARKUP_RATE,
+      </if>
+      <if test="crRateFml != null and crRateFml != ''" >
+        CR_RATE_FML,
+      </if>
+      <if test="crPrMthd != null and crPrMthd != ''" >
+        CR_PR_MTHD,
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        CREATE_USER,
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        CREATE_DATE,
+      </if>
+      <if test="updateUser != null and updateUser != ''" >
+        UPDATE_USER,
+      </if>
+      <if test="updateDate != null and updateDate != ''" >
+        UPDATE_DATE,
+      </if>
+      <if test="remark1 != null and remark1 != ''" >
+        REMARK1,
+      </if>
+      <if test="remark2 != null and remark2 != ''" >
+        REMARK2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="agentId != null and agentId != ''" >
+        #{agentId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null and typeCode != ''" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="abrNum != null and abrNum != ''" >
+        #{abrNum,jdbcType=VARCHAR},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="markupRate != null and markupRate != ''" >
+        #{markupRate,jdbcType=DECIMAL},
+      </if>
+      <if test="crRateFml != null and crRateFml != ''" >
+        #{crRateFml,jdbcType=VARCHAR},
+      </if>
+      <if test="crPrMthd != null and crPrMthd != ''" >
+        #{crPrMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="updateUser != null and updateUser != ''" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null and updateDate != ''" >
+        #{updateDate,jdbcType=DATE},
+      </if>
+      <if test="remark1 != null and remark1 != ''" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null and remark2 != ''" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.old.vo.AgentBrandRateListVo" >
+    update MTSBW.AGENT_BRAND_RATE_LIST
+    <set >
+      <if test="abrNum != null" >
+        ABR_NUM = #{abrNum,jdbcType=VARCHAR},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="markupRate != null" >
+        MARKUP_RATE = #{markupRate,jdbcType=DECIMAL},
+      </if>
+      <if test="crRateFml != null" >
+        CR_RATE_FML = #{crRateFml,jdbcType=VARCHAR},
+      </if>
+      <if test="crPrMthd != null" >
+        CR_PR_MTHD = #{crPrMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        UPDATE_DATE = #{updateDate,jdbcType=DATE},
+      </if>
+      <if test="remark1 != null" >
+        REMARK1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        REMARK2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AGENT_ID = #{agentId,jdbcType=VARCHAR}
+      and UNIT_ID = #{unitId,jdbcType=VARCHAR}
+      and BRAND_ID = #{brandId,jdbcType=VARCHAR}
+      and TYPE_CODE = #{typeCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

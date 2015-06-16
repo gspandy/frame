@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.dao.ShipperMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.InventoryEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="wareh_code" property="warehCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="bath_info" property="bathInfo" jdbcType="VARCHAR" />
+    <result column="inventory_quantity" property="inventoryQuantity" jdbcType="DECIMAL" />
+    <result column="allo_ontheway" property="alloOntheway" jdbcType="DECIMAL" />
+    <result column="purch_ontheway" property="purchOntheway" jdbcType="DECIMAL" />
+    <result column="inventory_place" property="inventoryPlace" jdbcType="VARCHAR" />
+    <result column="acwareh_code" property="acwarehCode" jdbcType="VARCHAR" />
+    <result column="acwareh_name" property="acwarehName" jdbcType="VARCHAR" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, wareh_code, goods_code, bath_info, inventory_quantity, allo_ontheway, purch_ontheway, 
+    inventory_place, acwareh_code, acwareh_name, isvalid, create_oper, create_time, modify_oper, 
+    modify_time, remarks
+  </sql>
+  
+   <select id="findPage" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from inventory
+    where isvalid='1'
+    <if test="warehCode != null" >
+      and wareh_code = #{warehCode,jdbcType=VARCHAR}
+    </if>
+    <if test="goodsCode != null" >
+      and goods_code = #{goodsCode,jdbcType=VARCHAR}
+    </if>  
+      <if test="bathInfo != null" >
+      and bath_info = #{bathInfo,jdbcType=VARCHAR}
+     </if>
+      <if test="inventoryPlace != null" >
+      and inventory_place = #{inventoryPlace,jdbcType=VARCHAR}
+      </if>
+      <if test="acwarehCode != null" >
+      and acwareh_code = #{acwarehCode,jdbcType=VARCHAR}
+      </if>
+  </select>
+</mapper>

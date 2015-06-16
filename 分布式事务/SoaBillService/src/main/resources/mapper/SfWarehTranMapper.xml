@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfWarehTranMapper" >
+  
+  <resultMap id="sfWarehCommitedTranMap" type="mb.erp.dr.soa.vo.SfWarehCommitedTranVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="WAREH_ID" property="warehId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="TRAN_DATE" property="tranDate" jdbcType="DATE" />
+    <result column="TRAN_TIME" property="tranTime" jdbcType="DATE" />
+    <result column="DOC_TYPE" property="docType" jdbcType="CHAR" />
+    <result column="DOC_CODE" property="docCode" jdbcType="VARCHAR" />
+    <result column="TRAN_QTY" property="tranQty" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <!-- 在购库存VO映射 -->
+   <resultMap id="sfWarehOrderTranMap" type="mb.erp.dr.soa.vo.SfWarehOrderTranVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="WAREH_ID" property="warehId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="TRAN_DATE" property="tranDate" jdbcType="DATE" />
+    <result column="TRAN_TIME" property="tranTime" jdbcType="DATE" />
+    <result column="DOC_TYPE" property="docType" jdbcType="CHAR" />
+    <result column="DOC_CODE" property="docCode" jdbcType="VARCHAR" />
+    <result column="TRAN_QTY" property="tranQty" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <!-- 在途库存VO映射 -->
+   <resultMap id="sfWarehTransitTranMap" type="mb.erp.dr.soa.vo.SfWarehTransitTranVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="WAREH_ID" property="warehId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="TRAN_DATE" property="tranDate" jdbcType="DATE" />
+    <result column="TRAN_TIME" property="tranTime" jdbcType="DATE" />
+    <result column="DOC_TYPE" property="docType" jdbcType="CHAR" />
+    <result column="DOC_CODE" property="docCode" jdbcType="VARCHAR" />
+    <result column="TRAN_QTY" property="tranQty" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+  </resultMap>
+      
+  <select id="searchCommitTranInfo" resultMap="sfWarehCommitedTranMap" parameterType="mb.erp.dr.soa.bean.NewOrderSearchBean" >
+    select 
+        ID, WAREH_ID, PROD_ID, TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_CODE, TRAN_QTY, BALANCE
+    from SF_WAREH_COMMITED_TRAN
+    where WAREH_ID = #{warehId}
+            AND DOC_TYPE=#{docType}
+            AND  DOC_CODE = #{docNum}
+  </select>
+  
+      <!-- ====================添加仓库事务======================================== -->
+      <!--添加仓库商品事务 GRN-->
+      <insert id="insertSfWarehTranByGrn" parameterType="java.util.Map">
+		INSERT INTO SF_WAREH_TRAN(ID,BF_ORG_ID, PROD_ID,TRAN_DATE,TRAN_TIME, DOC_TYPE,DOC_NUM,TRAN_QTY, BALANCE,STK_ON_HAND,QTY_ON_ORDER,QTY_IN_TRANSIT,QTY_COMMITTED,QTY_IN_DOUBT,CUR_COST,TRAN_COST)
+		SELECT
+		fu_get_next_identity('SF_WAREH_TRAN',1),
+		g.WAREH_ID ,
+		d.prod_id,
+		TRUNC(g.DOC_DATE),
+		SYSDATE,
+		'GRN',
+		g.GRN_NUM,
+		CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+		NVL(s.stk_on_hand,0),
+		NVL(s.stk_on_hand,0),
+		0, 
+		0, 
+		0, 
+		0,
+		s.cur_cost,
+		NVL(d.unit_cost,0)*NVL(d.QUANTITY,0)
+		FROM SF_GRN g
+		INNER JOIN SF_GRN_DTL d
+		ON g.Id = d.Sf_Grn_Id
+		LEFT JOIN SF_WAREH_PROD s
+		ON s.bf_org_id = g.wareh_id AND s.Bf_Product_Id = d.prod_id
+		WHERE g.Id = #{grnId,jdbcType=DECIMAL}
+      </insert>
+      
+      <!--添加仓库商品事务 GDN-->
+      <insert id="insertSfWarehTranByGdn" parameterType="java.util.Map">
+		INSERT INTO SF_WAREH_TRAN(ID,BF_ORG_ID, PROD_ID,TRAN_DATE,TRAN_TIME, DOC_TYPE,DOC_NUM,TRAN_QTY, BALANCE,STK_ON_HAND,QTY_ON_ORDER,QTY_IN_TRANSIT,QTY_COMMITTED,QTY_IN_DOUBT,CUR_COST,Tran_Cost)
+		SELECT
+		fu_get_next_identity('SF_WAREH_TRAN',1),
+		g.bf_org_wareh_id,
+		d.prod_id,
+		TRUNC(g.DOC_DATE),
+		SYSDATE,
+		'GDN',
+		g.CODE,
+		CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+		NVL(s.stk_on_hand,0),
+		NVL(s.stk_on_hand,0),
+		0, 
+		0, 
+		0, 
+		0,
+		s.cur_cost,
+		NVL(d.unit_cost,0)*NVL(d.QUANTITY,0)
+		FROM SF_GDN g
+		INNER JOIN SF_GDN_DTL d
+		ON g.Id = d.Sf_Gdn_Id
+		LEFT JOIN SF_WAREH_PROD s
+		ON s.bf_org_id = g.bf_org_wareh_id and s.Bf_Product_Id = d.prod_id
+		WHERE g.Id = #{gdnId,jdbcType=DECIMAL}
+      </insert>
+        
+        <!-- ====================添加货位事务======================================== -->
+        <!-- 添加货位商品事务 - 根据入库单 -->
+       <insert id="insertSfLocTranByGrn" parameterType="java.util.Map">
+			INSERT INTO SF_LOC_TRAN(ID,BF_ORG_ID, LOC_CODE,PROD_ID,TRAN_DATE,TRAN_TIME, DOC_TYPE,DOC_NUM,TRAN_QTY, BALANCE,stk_on_hand)
+			SELECT
+			fu_get_next_identity('SF_LOC_TRAN',1),
+			g.WAREH_ID ,
+			(SELECT CODE FROM SF_WAREHOUSE_LOC WHERE ID = NVL(D.RCPT_LOC_ID,#{locId,jdbcType=DECIMAL})),
+			d.prod_id,
+			TRUNC(g.DOC_DATE),
+			SYSDATE,
+			#{docType,jdbcType=VARCHAR},
+			g.GRN_NUM,
+			CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+			(select s.stk_on_hand from SF_STK_DTL s where s.sf_warehouse_loc_id =NVL(D.RCPT_LOC_ID,#{locId,jdbcType=DECIMAL}) and s.bf_org_id = g.wareh_id and s.Prod_Id = d.prod_id),
+			(select s.stk_on_hand from SF_STK_DTL s where s.sf_warehouse_loc_id =NVL(D.RCPT_LOC_ID,#{locId,jdbcType=DECIMAL}) and s.bf_org_id = g.wareh_id and s.Prod_Id = d.prod_id)
+			FROM SF_GRN g
+			INNER JOIN SF_GRN_DTL d
+			ON g.Id = d.Sf_Grn_Id
+			WHERE g.Id = #{grnId,jdbcType=DECIMAL}      
+       </insert>
+       
+       <!-- 添加货位商品事务 - 根据出库单 -->
+       <insert id="insertSfLocTranByGdn" parameterType="java.util.Map">
+			INSERT INTO SF_LOC_TRAN(ID,BF_ORG_ID, LOC_CODE,PROD_ID,TRAN_DATE,TRAN_TIME, DOC_TYPE,DOC_NUM,TRAN_QTY, BALANCE,stk_on_hand)
+			SELECT
+			fu_get_next_identity('SF_LOC_TRAN',1),
+			g.bf_org_wareh_id ,
+			(SELECT CODE FROM SF_WAREHOUSE_LOC WHERE ID = NVL(D.LOC_ID,#{locId,jdbcType=DECIMAL}) AND ROWNUM =1),
+			d.prod_id,
+			TRUNC(g.DOC_DATE),
+			SYSDATE,
+			#{docType,jdbcType=VARCHAR},
+			g.CODE,
+			CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+			(select s.stk_on_hand from SF_STK_DTL s where s.sf_warehouse_loc_id =NVL(D.LOC_ID,#{locId,jdbcType=DECIMAL}) and s.bf_org_id = g.bf_org_wareh_id and s.prod_id = d.prod_id),
+			(select s.stk_on_hand from SF_STK_DTL s where s.sf_warehouse_loc_id =NVL(D.LOC_ID,#{locId,jdbcType=DECIMAL}) and s.bf_org_id = g.bf_org_wareh_id and s.prod_id = d.prod_id)
+			FROM SF_GDN g
+			INNER JOIN SF_GDN_DTL d
+			ON g.Id = d.Sf_Gdn_Id
+			WHERE g.Id = #{gdnId,jdbcType=DECIMAL}       
+       </insert>
+       
+       <!-- ====================添加已分配库存事务======================================== -->
+      <!--添加已分配库存事务 DGN-->
+      <insert id="insertSfWarehCommitedTranByDgn" parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_COMMITED_TRAN(ID, WAREH_ID, PROD_ID, TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_CODE, TRAN_QTY, BALANCE)
+        SELECT
+        fu_get_next_identity('SF_WAREH_COMMITED_TRAN',1),
+        g.WAREH_ID ,
+        d.prod_id,
+        TRUNC(g.DOC_DATE),
+        SYSDATE,
+        'DGN',
+        g.CODE,
+        CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+        NVL(s.STK_ON_HAND,0)
+        FROM SF_DGN g
+        INNER JOIN SF_DGN_DTL d
+        ON g.Id = d.Sf_DGN_Id
+        LEFT JOIN SF_WAREH_PROD s
+        ON s.bf_org_id = g.wareh_id AND s.Bf_Product_Id = d.prod_id
+        WHERE g.Id = #{dgnId,jdbcType=DECIMAL}
+      </insert>
+      
+        <!--添加在购库存事务 DGN-->
+      <insert id="insertSfWarehOrderTranByDgn" parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_ORDER_TRAN(ID, WAREH_ID, PROD_ID, TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_CODE, TRAN_QTY, BALANCE)
+        SELECT
+        fu_get_next_identity('SF_WAREH_ORDER_TRAN',1),
+        g.BF_ORG_RCV_WAREH_ID,
+        d.prod_id,
+        TRUNC(g.DOC_DATE),
+        SYSDATE,
+        'DGN',
+        g.CODE,
+        CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+        NVL(s.STK_ON_HAND,0)
+        FROM SF_DGN g
+        INNER JOIN SF_DGN_DTL d
+        ON g.Id = d.Sf_DGN_Id
+        LEFT JOIN SF_WAREH_PROD s
+        ON s.bf_org_id = g.bf_org_rcv_wareh_id AND s.Bf_Product_Id = d.prod_id
+        WHERE g.Id = #{dgnId,jdbcType=DECIMAL}
+      </insert>
+      
+       <select id="searchOrderTranInfo" resultMap="sfWarehOrderTranMap" parameterType="mb.erp.dr.soa.bean.NewOrderSearchBean" >
+    select 
+        ID, WAREH_ID, PROD_ID, TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_CODE, TRAN_QTY, BALANCE
+    from SF_WAREH_ORDER_TRAN
+    where WAREH_ID = #{warehId}
+            AND DOC_TYPE=#{docType}
+            AND  DOC_CODE = #{docNum}
+  </select>
+      
+      <!--添加在途库存事务 GDN-->
+      <insert id="insertSfWarehTransitTranByGdn" parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_TRANSIT_TRAN(ID, WAREH_ID, PROD_ID, TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_CODE, TRAN_QTY, BALANCE)
+        SELECT
+        fu_get_next_identity('SF_WAREH_TRANSIT_TRAN',1),
+        g.BF_ORG_RCV_WAREH_ID,
+        d.prod_id,
+        TRUNC(g.DOC_DATE),
+        SYSDATE,
+        'GDN',
+        g.CODE,
+        CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+        NVL(s.STK_ON_HAND,0)
+        FROM SF_GDN g
+        INNER JOIN SF_GDN_DTL d
+        ON g.Id = d.Sf_GDN_Id
+        LEFT JOIN SF_WAREH_PROD s
+        ON s.bf_org_id = g.bf_org_rcv_wareh_id AND s.Bf_Product_Id = d.prod_id
+        WHERE g.Id = #{gdnId,jdbcType=DECIMAL}
+      </insert>
+      
+      <!--添加在途库存事务 GRN-->
+      <insert id="insertSfWarehTransitTranByGrn" parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_TRANSIT_TRAN(ID, WAREH_ID, PROD_ID, TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_CODE, TRAN_QTY, BALANCE)
+        SELECT
+        fu_get_next_identity('SF_WAREH_TRANSIT_TRAN',1),
+        g.WAREH_ID,
+        d.prod_id,
+        TRUNC(g.DOC_DATE),
+        SYSDATE,
+        'GRN',
+        g.GRN_NUM,
+        CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+        NVL(s.STK_ON_HAND,0)
+        FROM SF_GRN g
+        INNER JOIN SF_GRN_DTL d
+        ON g.Id = d.Sf_GRN_Id
+        LEFT JOIN SF_WAREH_PROD s
+        ON s.bf_org_id = g.WAREH_ID AND s.Bf_Product_Id = d.prod_id
+        WHERE g.Id = #{grnId,jdbcType=DECIMAL}
+      </insert>
+      
+       <select id="searchTransitTranInfo" resultMap="sfWarehTransitTranMap" parameterType="mb.erp.dr.soa.bean.NewOrderSearchBean" >
+    select 
+        ID, WAREH_ID, PROD_ID, TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_CODE, TRAN_QTY, BALANCE
+    from SF_WAREH_TRANSIT_TRAN
+    where WAREH_ID = #{warehId}
+            AND DOC_TYPE=#{docType}
+            AND  DOC_CODE = (SELECT SRC_DOC_NUM FROM SF_RVD T WHERE T.CODE = (SELECT SRC_DOC_NUM FROM SF_GRN G where G.GRN_NUM = #{docNum}))
+  </select>
+</mapper>

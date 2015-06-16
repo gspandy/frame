@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.PrAgentRateListMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.PrAgentRateListVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="AGENT_ID" property="agentId" jdbcType="DECIMAL" />
+    <result column="UNIT_ID" property="unitId" jdbcType="DECIMAL" />
+    <result column="PROD_LAYER_ID" property="prodLayerId" jdbcType="DECIMAL" />
+    <result column="TYPE_CODE" property="typeCode" jdbcType="VARCHAR" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="MARKUP_RATE" property="markupRate" jdbcType="DECIMAL" />
+    <result column="CR_RATE_FML" property="crRateFml" jdbcType="VARCHAR" />
+    <result column="CR_PR_MTHD" property="crPrMthd" jdbcType="VARCHAR" />
+    <result column="DOC_STATE" property="docState" jdbcType="DECIMAL" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LAST_MODIFIED_USER" property="lastModifiedUser" jdbcType="VARCHAR" />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR" />
+    <result column="LIST_TYPE" property="listType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="PrWprcListDtlMap" type="mb.erp.dr.soa.vo.PrWprcListDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PR_PRN_ID" property="prPrnId" jdbcType="DECIMAL" />
+    <result column="UNIT_ID" property="unitId" jdbcType="DECIMAL" />
+    <result column="PRC_LST_TYPE" property="prcLstType" jdbcType="VARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR" />
+    <result column="PRC_PLCY" property="prcPlcy" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+    <result column="OWNER_ID" property="ownerId" jdbcType="DECIMAL" />
+    <result column="EXEC_DATE" property="execDate" jdbcType="TIMESTAMP" />
+    <result column="BIZ_TYPE" property="bizType" jdbcType="VARCHAR" />
+    <result column="PROD_COLOR_NUM" property="prodColorNum" jdbcType="VARCHAR" />
+    <result column="PROD_NUM" property ="prodNum" jdbcType ="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, AGENT_ID, UNIT_ID, PROD_LAYER_ID, TYPE_CODE, CODE, DISC_RATE, MARKUP_RATE, CR_RATE_FML, 
+    CR_PR_MTHD, DOC_STATE, CREATE_USER, CREATE_DATE, LAST_MODIFIED_USER, LAST_MODIFIED_DATE, 
+    REMARK, PROD_TYPE, LIST_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from PR_AGENT_RATE_LIST
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <select id="selectAgentRateByProdCls" resultType="java.lang.Double" parameterType="map">
+	  	SELECT A.DISC_RATE
+		  FROM PR_AGENT_RATE_LIST A
+		 INNER JOIN BF_ORG O1 ON A.AGENT_ID = O1.ID
+		 INNER JOIN BF_ORG O2 ON A.UNIT_ID = O2.ID
+		 WHERE EXISTS (SELECT 1
+		          FROM BF_PROD_CLS PC        
+		         WHERE PC.PROD_STATUS = 'A'
+		           AND PC.BF_BRAND_ID = A.PROD_LAYER_ID
+		           AND PC.PROD_CLS_NUM = #{prod_cls_num})
+		   AND A.TYPE_CODE = 'DR'
+		   AND A.LIST_TYPE = 'BRAND'
+		   AND O1.CODE = #{agent_id}
+		   AND O2.CODE = #{unit_id}
+  </select>
+  
+  <select id="selectAgentRateByProdID" resultType="java.lang.Double" parameterType="map">
+	  	SELECT A.DISC_RATE
+		  FROM PR_AGENT_RATE_LIST A
+		 INNER JOIN BF_ORG O1 ON A.AGENT_ID = O1.ID
+		 INNER JOIN BF_ORG O2 ON A.UNIT_ID = O2.ID
+		 WHERE EXISTS (SELECT 1
+		          FROM BF_PROD_CLS PC
+		         INNER JOIN BF_PRODUCT P ON PC.ID = P.BF_PROD_CLS_ID
+		                                AND P.PROD_STATUS = 'A'
+		         WHERE PC.BF_BRAND_ID = A.PROD_LAYER_ID
+		           AND P.PROD_NUM = #{prod_id})
+		   AND A.TYPE_CODE = 'DR'
+		   AND A.LIST_TYPE = 'BRAND'
+		   AND O1.CODE = #{agent_id}
+		   AND O2.CODE = #{unit_id}
+  </select>
+  
+  <select id="bulkGetAgentBrandRateByProdID" resultMap="PrWprcListDtlMap" parameterType="map">
+    <![CDATA[
+		SELECT P.PROD_NUM, A.DISC_RATE
+		  FROM PR_AGENT_RATE_LIST A
+		 INNER JOIN BF_ORG O1 ON A.AGENT_ID = O1.ID
+		 INNER JOIN BF_ORG O2 ON A.UNIT_ID = O2.ID
+		 INNER JOIN BF_PROD_CLS PC ON PC.BF_BRAND_ID = A.PROD_LAYER_ID
+		 INNER JOIN BF_PRODUCT P ON (PC.ID = P.BF_PROD_CLS_ID)
+		 WHERE EXISTS
+		 (SELECT 1 FROM TMP_BF_ORG_CODE T WHERE P.PROD_NUM = T.BF_ORG_CODE)
+		   AND P.PROD_STATUS = 'A'
+		   AND A.TYPE_CODE = 'DR'
+		   AND A.LIST_TYPE = 'BRAND'
+		   AND O1.CODE = #{agent_id}
+   		   AND O2.CODE = #{unit_id}
+	   ]]>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from PR_AGENT_RATE_LIST
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.PrAgentRateListVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into PR_AGENT_RATE_LIST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="agentId != null and agentId != ''" >
+        AGENT_ID,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="prodLayerId != null and prodLayerId != ''" >
+        PROD_LAYER_ID,
+      </if>
+      <if test="typeCode != null and typeCode != ''" >
+        TYPE_CODE,
+      </if>
+      <if test="code != null and code != ''" >
+        CODE,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="markupRate != null and markupRate != ''" >
+        MARKUP_RATE,
+      </if>
+      <if test="crRateFml != null and crRateFml != ''" >
+        CR_RATE_FML,
+      </if>
+      <if test="crPrMthd != null and crPrMthd != ''" >
+        CR_PR_MTHD,
+      </if>
+      <if test="docState != null and docState != ''" >
+        DOC_STATE,
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        CREATE_USER,
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        CREATE_DATE,
+      </if>
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        LAST_MODIFIED_USER,
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        LAST_MODIFIED_DATE,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="prodType != null and prodType != ''" >
+        PROD_TYPE,
+      </if>
+      <if test="listType != null and listType != ''" >
+        LIST_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="agentId != null and agentId != ''" >
+        #{agentId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodLayerId != null and prodLayerId != ''" >
+        #{prodLayerId,jdbcType=DECIMAL},
+      </if>
+      <if test="typeCode != null and typeCode != ''" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null and code != ''" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="markupRate != null and markupRate != ''" >
+        #{markupRate,jdbcType=DECIMAL},
+      </if>
+      <if test="crRateFml != null and crRateFml != ''" >
+        #{crRateFml,jdbcType=VARCHAR},
+      </if>
+      <if test="crPrMthd != null and crPrMthd != ''" >
+        #{crPrMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="docState != null and docState != ''" >
+        #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="prodType != null and prodType != ''" >
+        #{prodType,jdbcType=VARCHAR},
+      </if>
+      <if test="listType != null and listType != ''" >
+        #{listType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.PrAgentRateListVo" >
+    update PR_AGENT_RATE_LIST
+    <set >
+      <if test="agentId != null" >
+        AGENT_ID = #{agentId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null" >
+        UNIT_ID = #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodLayerId != null" >
+        PROD_LAYER_ID = #{prodLayerId,jdbcType=DECIMAL},
+      </if>
+      <if test="typeCode != null" >
+        TYPE_CODE = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="markupRate != null" >
+        MARKUP_RATE = #{markupRate,jdbcType=DECIMAL},
+      </if>
+      <if test="crRateFml != null" >
+        CR_RATE_FML = #{crRateFml,jdbcType=VARCHAR},
+      </if>
+      <if test="crPrMthd != null" >
+        CR_PR_MTHD = #{crPrMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="docState != null" >
+        DOC_STATE = #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedUser != null" >
+        LAST_MODIFIED_USER = #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null" >
+        LAST_MODIFIED_DATE = #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="prodType != null" >
+        PROD_TYPE = #{prodType,jdbcType=VARCHAR},
+      </if>
+      <if test="listType != null" >
+        LIST_TYPE = #{listType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

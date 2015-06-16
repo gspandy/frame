@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.center.dao.InventoryEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.InventoryEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="wareh_code" property="warehCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="bath_info" property="bathInfo" jdbcType="VARCHAR" />
+    <result column="inventory_quantity" property="inventoryQuantity" jdbcType="DECIMAL" />
+    <result column="allo_ontheway" property="alloOntheway" jdbcType="DECIMAL" />
+    <result column="purch_ontheway" property="purchOntheway" jdbcType="DECIMAL" />
+    <result column="inventory_place" property="inventoryPlace" jdbcType="VARCHAR" />
+    <result column="acwareh_code" property="acwarehCode" jdbcType="VARCHAR" />
+    <result column="acwareh_name" property="acwarehName" jdbcType="VARCHAR" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, wareh_code, goods_code, bath_info, inventory_quantity, allo_ontheway, purch_ontheway, 
+    inventory_place, acwareh_code, acwareh_name, isvalid, create_oper, create_time, modify_oper, 
+    modify_time, remarks
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from inventory
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from inventory
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="mb.mba.core.entity.InventoryEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into inventory (wareh_code, goods_code, bath_info, 
+      inventory_quantity, allo_ontheway, purch_ontheway, 
+      inventory_place, acwareh_code, acwareh_name, 
+      isvalid, create_oper, create_time, 
+      modify_oper, modify_time, remarks
+      )
+    values (#{warehCode,jdbcType=VARCHAR}, #{goodsCode,jdbcType=VARCHAR}, #{bathInfo,jdbcType=VARCHAR}, 
+      #{inventoryQuantity,jdbcType=DECIMAL}, #{alloOntheway,jdbcType=DECIMAL}, #{purchOntheway,jdbcType=DECIMAL}, 
+      #{inventoryPlace,jdbcType=VARCHAR}, #{acwarehCode,jdbcType=VARCHAR}, #{acwarehName,jdbcType=VARCHAR}, 
+      #{isvalid,jdbcType=CHAR}, #{createOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyOper,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="mb.mba.core.entity.InventoryEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into inventory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="warehCode != null" >
+        wareh_code,
+      </if>
+      <if test="goodsCode != null" >
+        goods_code,
+      </if>
+      <if test="bathInfo != null" >
+        bath_info,
+      </if>
+      <if test="inventoryQuantity != null" >
+        inventory_quantity,
+      </if>
+      <if test="alloOntheway != null" >
+        allo_ontheway,
+      </if>
+      <if test="purchOntheway != null" >
+        purch_ontheway,
+      </if>
+      <if test="inventoryPlace != null" >
+        inventory_place,
+      </if>
+      <if test="acwarehCode != null" >
+        acwareh_code,
+      </if>
+      <if test="acwarehName != null" >
+        acwareh_name,
+      </if>
+      <if test="isvalid != null" >
+        isvalid,
+      </if>
+      <if test="createOper != null" >
+        create_oper,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="warehCode != null" >
+        #{warehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bathInfo != null" >
+        #{bathInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="inventoryQuantity != null" >
+        #{inventoryQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="alloOntheway != null" >
+        #{alloOntheway,jdbcType=DECIMAL},
+      </if>
+      <if test="purchOntheway != null" >
+        #{purchOntheway,jdbcType=DECIMAL},
+      </if>
+      <if test="inventoryPlace != null" >
+        #{inventoryPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="acwarehCode != null" >
+        #{acwarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="acwarehName != null" >
+        #{acwarehName,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.mba.core.entity.InventoryEntity" >
+    update inventory
+    <set >
+      <if test="warehCode != null" >
+        wareh_code = #{warehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bathInfo != null" >
+        bath_info = #{bathInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="inventoryQuantity != null" >
+        inventory_quantity = #{inventoryQuantity,jdbcType=DECIMAL},
+      </if>
+      <if test="alloOntheway != null" >
+        allo_ontheway = #{alloOntheway,jdbcType=DECIMAL},
+      </if>
+      <if test="purchOntheway != null" >
+        purch_ontheway = #{purchOntheway,jdbcType=DECIMAL},
+      </if>
+      <if test="inventoryPlace != null" >
+        inventory_place = #{inventoryPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="acwarehCode != null" >
+        acwareh_code = #{acwarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="acwarehName != null" >
+        acwareh_name = #{acwarehName,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        isvalid = #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        create_oper = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mb.mba.core.entity.InventoryEntity" >
+    update inventory
+    set wareh_code = #{warehCode,jdbcType=VARCHAR},
+      goods_code = #{goodsCode,jdbcType=VARCHAR},
+      bath_info = #{bathInfo,jdbcType=VARCHAR},
+      inventory_quantity = #{inventoryQuantity,jdbcType=DECIMAL},
+      allo_ontheway = #{alloOntheway,jdbcType=DECIMAL},
+      purch_ontheway = #{purchOntheway,jdbcType=DECIMAL},
+      inventory_place = #{inventoryPlace,jdbcType=VARCHAR},
+      acwareh_code = #{acwarehCode,jdbcType=VARCHAR},
+      acwareh_name = #{acwarehName,jdbcType=VARCHAR},
+      isvalid = #{isvalid,jdbcType=CHAR},
+      create_oper = #{createOper,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateInventoryValue" parameterType="mb.mba.core.bean.InventoryHelper" >
+    update inventory
+    <set >
+      <if test="bathInfo != null" >
+        bath_info = #{bathInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="inventoryQuantity != null" >
+        inventory_quantity = inventory_quantity + #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="alloOntheway != null" >
+        allo_ontheway = allo_ontheway + #{alloOntheway,jdbcType=DECIMAL},
+      </if>
+      <if test="purchOntheway != null" >
+        purch_ontheway = purch_ontheway + #{purchOntheway,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where 1=1 and isvalid='1'
+     <if test="id != null" >
+      and id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="warehCode != null" >
+      and wareh_code = #{warehCode,jdbcType=VARCHAR}
+    </if>
+    <if test="goodsCode != null" >
+      and goods_code = #{goodsCode,jdbcType=VARCHAR}
+    </if>  
+      <if test="bathInfo != null" >
+      and bath_info = #{bathInfo,jdbcType=VARCHAR}
+     </if>
+      <if test="inventoryPlace != null" >
+      and inventory_place = #{inventoryPlace,jdbcType=VARCHAR}
+      </if>
+      <if test="acwarehCode != null" >
+      and acwareh_code = #{acwarehCode,jdbcType=VARCHAR}
+      </if>
+  </update>
+  
+   <select id="queryInventory" resultMap="BaseResultMap" parameterType="mb.mba.core.bean.InventoryHelper" >
+    select 
+    <include refid="Base_Column_List" />
+    from inventory
+    where 1=1 and isvalid='1'
+    <if test="warehCode != null" >
+      and wareh_code = #{warehCode,jdbcType=VARCHAR}
+    </if>
+    <if test="goodsCode != null" >
+      and goods_code = #{goodsCode,jdbcType=VARCHAR}
+    </if>  
+      <if test="bathInfo != null" >
+      and bath_info = #{bathInfo,jdbcType=VARCHAR}
+     </if>
+      <if test="inventoryPlace != null" >
+      and inventory_place = #{inventoryPlace,jdbcType=VARCHAR}
+      </if>
+      <if test="acwarehCode != null" >
+      and acwareh_code = #{acwarehCode,jdbcType=VARCHAR}
+      </if>
+  </select>
+</mapper>

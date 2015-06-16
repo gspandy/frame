@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfWarehProdMapper" >
+  <resultMap id="sfWarehProdMap" type="mb.erp.dr.soa.vo.SfWarehProdVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="BF_ORG_ID" property="bfOrgId" jdbcType="DECIMAL" />
+    <result column="BF_PRODUCT_ID" property="bfProductId" jdbcType="DECIMAL" />
+    <result column="STK_ON_HAND" property="stkOnHand" jdbcType="DECIMAL" />
+    <result column="QTY_ON_ORDER" property="qtyOnOrder" jdbcType="DECIMAL" />
+    <result column="QTY_IN_TRANSIT" property="qtyInTransit" jdbcType="DECIMAL" />
+    <result column="QTY_COMMITTED" property="qtyCommitted" jdbcType="DECIMAL" />
+    <result column="QTY_IN_DOUBT" property="qtyInDoubt" jdbcType="DECIMAL" />
+    <result column="STK_PUBLISHED" property="stkPublished" jdbcType="DECIMAL" />
+    <result column="MIN_STK" property="minStk" jdbcType="DECIMAL" />
+    <result column="MAX_STK" property="maxStk" jdbcType="DECIMAL" />
+    <result column="ALERT_MIN_STK" property="alertMinStk" jdbcType="DECIMAL" />
+    <result column="ALERT_MAX_STK" property="alertMaxStk" jdbcType="DECIMAL" />
+    <result column="MIN_AD_STK" property="minAdStk" jdbcType="DECIMAL" />
+    <result column="MAX_AD_STK" property="maxAdStk" jdbcType="DECIMAL" />
+    <result column="SF_WAREHOUSE_LOC_ID" property="sfWarehouseLocId" jdbcType="DECIMAL" />
+    <result column="STD_LOC_CAP" property="stdLocCap" jdbcType="DECIMAL" />
+    <result column="STK_JUST_TIME" property="stkJustTime" jdbcType="DECIMAL" />
+    <result column="QTY_CUR_COMM" property="qtyCurComm" jdbcType="DECIMAL" />
+    <result column="QTY_FUC_COMM" property="qtyFucComm" jdbcType="DECIMAL" />
+    <result column="QTY_TYPE" property="qtyType" jdbcType="VARCHAR" />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+    <result column="QTY_ON_LOCK" property="qtyOnLock" jdbcType="DECIMAL" />
+    <result column="IN_RCV_STK" property="inRcvStk" jdbcType="DECIMAL" />
+    <result column="RESERVED_COMMITTED_QTY" property="reservedCommittedQty" jdbcType="DECIMAL" />
+    <result column="QTY_IN_TRANSIT_AG" property="qtyInTransitAg" jdbcType="DECIMAL" />
+    <result column="CUR_COST" property="curCost" jdbcType="DECIMAL" />
+    <result column="LOCK_STOCKIN" property="lockStockin" jdbcType="DECIMAL" />
+    <result column="RESERVED_QTY" property="reservedQty" jdbcType="DECIMAL" />
+    <result column="STOCKIN_FREE" property="stockinFree" jdbcType="DECIMAL" />
+    <result column="LOCKED_QTY" property="lockedQty" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="sfWarehProd_List" >
+    ID, BF_ORG_ID, BF_PRODUCT_ID, STK_ON_HAND, QTY_ON_ORDER, QTY_IN_TRANSIT, QTY_COMMITTED, 
+    QTY_IN_DOUBT, STK_PUBLISHED, MIN_STK, MAX_STK, ALERT_MIN_STK, ALERT_MAX_STK, MIN_AD_STK, 
+    MAX_AD_STK, SF_WAREHOUSE_LOC_ID, STD_LOC_CAP, STK_JUST_TIME, QTY_CUR_COMM, QTY_FUC_COMM, 
+    QTY_TYPE, LAST_MODIFIED_DATE, QTY_ON_LOCK, IN_RCV_STK, RESERVED_COMMITTED_QTY, QTY_IN_TRANSIT_AG, 
+    CUR_COST, LOCK_STOCKIN, RESERVED_QTY, STOCKIN_FREE, LOCKED_QTY
+  </sql>
+  <select id="selectById" resultMap="sfWarehProdMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="sfWarehProd_List" />
+    from SF_WAREH_PROD
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 更新在途库存 -->
+    <update id="updateQtyInTransit" parameterType="java.util.Map">
+        UPDATE SF_WAREH_PROD S
+          SET QTY_IN_TRANSIT = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(QTY_IN_TRANSIT,0) + (SELECT 
+                                                                                CASE WHEN 
+                                                                                    (g.SRC_UNIT_ID &lt;> g.UNIT_ID AND
+                                                                                    EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                                          WHERE (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.UNIT_ID)
+                                                                                          OR  (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.UNIT_ID)))
+                                                                                THEN
+                                                                                     0
+                                                                                ELSE NVL(d.DELIV_QTY,0) 
+                                                                                END
+                                                                                FROM SF_RVD g
+                                                                                INNER JOIN SF_RVD_DTL d
+                                                                                ON g.id = d.sf_rvd_id
+                                                                                WHERE g.id = #{rvdId,jdbcType=DECIMAL}
+                                                                                  AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                                                  AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               ELSE NVL(QTY_IN_TRANSIT,0) - (SELECT 
+                                                            CASE WHEN 
+                                                                (g.SRC_UNIT_ID &lt;> g.UNIT_ID AND
+                                                                EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                      WHERE (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.UNIT_ID)
+                                                                      OR  (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.UNIT_ID)))
+                                                            THEN
+                                                                0
+                                                            ELSE NVL(d.DELIV_QTY,0)  END
+                                                            FROM SF_RVD g
+                                                            INNER JOIN SF_RVD_DTL d
+                                                            ON g.id = d.sf_rvd_id 
+                                                            WHERE g.id = #{rvdId,jdbcType=DECIMAL}
+                                                              AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                              AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               END,
+                 QTY_IN_TRANSIT_AG = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(QTY_IN_TRANSIT_AG,0) + (SELECT 
+                                                                                CASE WHEN 
+                                                                                    (g.SRC_UNIT_ID &lt;> g.UNIT_ID AND
+                                                                                    EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                                          WHERE (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.UNIT_ID)
+                                                                                          OR  (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.UNIT_ID)))
+                                                                                THEN
+                                                                                    NVL(d.DELIV_QTY,0)
+                                                                                ELSE  0 END
+                                                                                FROM SF_RVD g
+                                                                                INNER JOIN SF_RVD_DTL d
+                                                                                ON g.id = d.sf_rvd_id
+                                                                                WHERE g.id = #{rvdId,jdbcType=DECIMAL}
+                                                                                  AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                                                  AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               ELSE NVL(QTY_IN_TRANSIT_AG,0) - (SELECT 
+                                                            CASE WHEN 
+                                                                (g.SRC_UNIT_ID &lt;> g.UNIT_ID AND
+                                                                EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                      WHERE (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.UNIT_ID)
+                                                                      OR  (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.UNIT_ID)))
+                                                            THEN
+                                                                NVL(d.DELIV_QTY,0)
+                                                            ELSE 0  END
+                                                            FROM SF_RVD g
+                                                            INNER JOIN SF_RVD_DTL d
+                                                            ON g.id = d.sf_rvd_id 
+                                                            WHERE g.id = #{rvdId,jdbcType=DECIMAL}
+                                                              AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                              AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               END,              
+                LAST_MODIFIED_DATE = sysdate
+          WHERE EXISTS(
+          SELECT 
+          1
+          FROM SF_RVD g
+          INNER JOIN SF_RVD_DTL d
+          ON g.id = d.sf_rvd_id 
+          WHERE g.id = #{rvdId,jdbcType=DECIMAL}
+            AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+            AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </update>
+    
+    <!-- 插入在途库存 -->
+    <insert id="insertQtyInTransit" parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_PROD(ID,BF_ORG_ID, BF_PRODUCT_ID,QTY_IN_TRANSIT,STK_ON_HAND, QTY_ON_ORDER,QTY_IN_DOUBT,STK_PUBLISHED,QTY_COMMITTED,QTY_IN_TRANSIT_AG,LAST_MODIFIED_DATE)
+        SELECT 
+        fu_get_next_identity('SF_WAREH_PROD',1),
+        g.bf_org_rcv_wareh_id,
+        d.PROD_ID,
+        CASE WHEN 
+          (g.SRC_UNIT_ID &lt;> g.UNIT_ID AND
+          EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                WHERE (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.UNIT_ID)
+                OR  (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.UNIT_ID)))
+        THEN
+           0 
+        ELSE CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.DELIV_QTY ELSE 0-NVL(d.DELIV_QTY,0) END
+        END,
+        0,0,0,0,0,
+        CASE WHEN 
+          (g.SRC_UNIT_ID &lt;> g.UNIT_ID AND
+          EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                WHERE (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.UNIT_ID)
+                OR  (R.BF_ORG_ID_OWNER=g.SRC_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.UNIT_ID)))
+        THEN
+           CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.DELIV_QTY ELSE 0-NVL(d.DELIV_QTY,0) END 
+        ELSE 
+           0
+        END,
+        SYSDATE
+        FROM SF_RVD g
+        INNER JOIN SF_RVD_DTL d
+        ON g.id = d.sf_rvd_id 
+        WHERE g.id = #{rvdId,jdbcType=DECIMAL}
+        AND NOT EXISTS(SELECT 1 FROM SF_WAREH_PROD S 
+                       WHERE S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                         AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </insert>
+
+    <!-- 根据出库单更新在途库存 -->
+    <update id="updateQtyInTransitByGdn" parameterType="java.util.Map">
+          UPDATE SF_WAREH_PROD S
+          SET QTY_IN_TRANSIT = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(QTY_IN_TRANSIT,0) + (SELECT 
+                                                                                CASE WHEN 
+                                                                                    (g.bf_org_rcv_unit_id &lt;> g.bf_org_unit_id AND
+                                                                                    EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                                          WHERE (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)
+                                                                                          OR  (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)))
+                                                                                THEN
+                                                                                     0
+                                                                                ELSE NVL(d.Quantity,0) 
+                                                                                END
+                                                                                FROM SF_GDN g
+                                                                                INNER JOIN SF_GDN_DTL d
+                                                                                ON g.id =d.sf_gdn_id
+                                                                                WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+                                                                                  AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                                                  AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               ELSE NVL(QTY_IN_TRANSIT,0) - (SELECT 
+                                                            CASE WHEN 
+                                                                (g.bf_org_rcv_unit_id &lt;> g.bf_org_unit_id AND
+                                                                EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                      WHERE (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)
+                                                                      OR  (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)))
+                                                            THEN
+                                                                0
+                                                            ELSE NVL(d.Quantity,0)  END
+                                                            FROM SF_GDN g
+                                                            INNER JOIN SF_GDN_DTL d
+                                                            ON g.id = d.sf_gdn_id
+                                                            WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+                                                              AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                              AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               END,
+                 QTY_IN_TRANSIT_AG = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(QTY_IN_TRANSIT_AG,0) + (SELECT 
+                                                                                CASE WHEN 
+                                                                                    (g.bf_org_rcv_unit_id &lt;> g.bf_org_unit_id AND
+                                                                                    EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                                          WHERE (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)
+                                                                                          OR  (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)))
+                                                                                THEN
+                                                                                    NVL(d.Quantity,0)
+                                                                                ELSE  0 END
+                                                                                FROM SF_GDN g
+                                                                                INNER JOIN SF_GDN_DTL d
+                                                                                ON g.id = d.sf_gdn_id
+                                                                                WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+                                                                                  AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                                                  AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               ELSE NVL(QTY_IN_TRANSIT_AG,0) - (SELECT 
+                                                            CASE WHEN 
+                                                                (g.bf_org_rcv_unit_id &lt;> g.bf_org_unit_id AND
+                                                                EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                                                                      WHERE (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)
+                                                                      OR  (R.BF_ORG_ID_OWNER=g.bf_org_unit_id AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.bf_org_rcv_unit_id)))
+                                                            THEN
+                                                                NVL(d.Quantity,0)
+                                                            ELSE 0  END
+                                                            FROM SF_GDN g
+                                                            INNER JOIN SF_GDN_DTL d
+                                                            ON g.id = d.sf_gdn_id
+                                                            WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+                                                              AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                                                              AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               END,              
+                LAST_MODIFIED_DATE = sysdate
+          WHERE EXISTS(
+          SELECT 
+          1
+          FROM SF_GDN g
+          INNER JOIN SF_GDN_DTL d
+          ON g.id = d.sf_gdn_id
+          WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+            AND S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+            AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </update>
+
+    <!-- 根据出库单插入在途库存 -->
+    <insert id="insertQtyInTransitByGdn" parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_PROD(ID,BF_ORG_ID, BF_PRODUCT_ID,QTY_IN_TRANSIT,STK_ON_HAND, QTY_ON_ORDER,QTY_IN_DOUBT,STK_PUBLISHED,QTY_COMMITTED,QTY_IN_TRANSIT_AG,LAST_MODIFIED_DATE)
+        SELECT 
+        fu_get_next_identity('SF_WAREH_PROD',1),
+        g.bf_org_rcv_wareh_id,
+        d.PROD_ID,
+        CASE WHEN 
+          (g.BF_ORG_RCV_UNIT_ID &lt;> g.BF_ORG_UNIT_ID AND
+          EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                WHERE (R.BF_ORG_ID_OWNER=g.BF_ORG_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.BF_ORG_RCV_UNIT_ID)
+                OR  (R.BF_ORG_ID_OWNER=g.BF_ORG_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.BF_ORG_RCV_UNIT_ID)))
+        THEN
+           0 
+        ELSE CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(d.QUANTITY,0) ELSE 0-NVL(d.QUANTITY,0) END
+        END,
+        0,0,0,0,0,
+        CASE WHEN 
+          (g.BF_ORG_RCV_UNIT_ID &lt;> g.BF_ORG_UNIT_ID AND
+          EXISTS(SELECT * FROM  BF_CUS_RELATIONSHIP R 
+                WHERE (R.BF_ORG_ID_OWNER=g.BF_ORG_UNIT_ID AND R.RLT_CODE='AG' AND R.BF_ORG_ID_CUS=g.BF_ORG_RCV_UNIT_ID)
+                OR  (R.BF_ORG_ID_OWNER=g.BF_ORG_UNIT_ID AND R.RLT_CODE='VD' AND R.BF_ORG_ID_CUS=g.BF_ORG_RCV_UNIT_ID)))
+        THEN
+           CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END 
+        ELSE 
+           0
+        END,
+        SYSDATE
+        FROM SF_GDN g
+        INNER JOIN SF_GDN_DTL d
+        ON g.id = d.Sf_Gdn_Id
+        WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+        AND NOT EXISTS(SELECT 1 FROM SF_WAREH_PROD S 
+                       WHERE S.BF_ORG_ID = g.bf_org_rcv_wareh_id 
+                         AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </insert>
+    
+    <!-- 实际库存 出库 Insert_STK_ON_HAND_SF_GDN-->
+    <insert id="insertStkOnHandSfGdn"  parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_PROD(ID,BF_ORG_ID, BF_PRODUCT_ID,STK_ON_HAND, QTY_ON_ORDER,QTY_IN_TRANSIT,QTY_IN_DOUBT,STK_PUBLISHED,QTY_COMMITTED)
+		SELECT 
+		fu_get_next_identity('SF_WAREH_PROD',1),
+		g.bf_org_wareh_id ,
+		d.PROD_ID,
+		CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+		0,0,0,0,0
+		FROM SF_GDN g
+		INNER JOIN SF_GDN_DTL d
+		ON g.id = d.Sf_Gdn_Id 
+		WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		AND NOT EXISTS(SELECT 1 FROM SF_WAREH_PROD S 
+		               WHERE S.BF_ORG_ID = g.bf_org_wareh_id 
+		                 AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </insert>
+    
+    <!-- 实际库存 出库 Update_STK_ON_HAND_SF_GDN-->
+    <update id="updateStkOnHandSfGdn"  parameterType="java.util.Map">
+        UPDATE SF_WAREH_PROD S
+		  SET STK_ON_HAND = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(STK_ON_HAND,0) + (SELECT 
+		                                                                        NVL(d.QUANTITY,0) 
+		                                                                        FROM SF_GDN g
+		                                                                        INNER JOIN SF_GDN_DTL d
+		                                                                        ON g.id = d.Sf_Gdn_Id 
+		                                                                        WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		                                                                          AND S.BF_ORG_ID = g.bf_org_wareh_id 
+		                                                                          AND S.BF_PRODUCT_ID = d.PROD_ID)
+		                       ELSE NVL(STK_ON_HAND,0) - (SELECT 
+		                                                    NVL(d.QUANTITY,0) 
+		                                                    FROM SF_GDN g
+		                                                    INNER JOIN SF_GDN_DTL d
+		                                                    ON g.id = d.Sf_Gdn_Id 
+		                                                    WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		                                                      AND S.BF_ORG_ID = g.bf_org_wareh_id 
+		                                                      AND S.BF_PRODUCT_ID = d.PROD_ID)
+		                       END
+		       ,LAST_MODIFIED_DATE = sysdate
+		  WHERE EXISTS(
+		  SELECT 
+		  1
+		  FROM SF_GDN g
+		  INNER JOIN SF_GDN_DTL d
+		  ON g.id = d.Sf_Gdn_Id 
+		  WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		    AND S.BF_ORG_ID = g.bf_org_wareh_id 
+		    AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </update>
+
+    <!-- 商品库存 Update_SF_WAREH_PROD_SF_GDN -->
+    <update id="updateSfWarehProdSfGdn"  parameterType="java.util.Map">
+        UPDATE SF_WAREH_PROD W
+		SET W.CUR_COST =NVL(W.CUR_COST,0) + NVL((
+		    SELECT  
+		       CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN 
+		         NVL(d.UNIT_COST,0) *NVL(d.quantity,0)
+		       ELSE 
+		         0-(NVL(d.UNIT_COST,0) *NVL(d.quantity,0))
+		       END
+		    FROM SF_WAREHOUSE h,
+		         SF_GDN G,
+		         SF_GDN_DTL d
+		    WHERE G.BF_ORG_WAREH_ID = h.BF_ORG_ID
+		      AND G.ID = d.sf_gdn_id
+		      AND W.BF_ORG_ID = G.BF_ORG_WAREH_ID
+		      AND W.BF_PRODUCT_ID = d.prod_id
+		      AND ROWNUM = 1
+		      AND g.id =#{gdnId,jdbcType=DECIMAL}
+		),0)
+		WHERE  EXISTS(
+		SELECT 1 
+		FROM SF_GDN g
+		INNER JOIN SF_GDN_DTL d
+		ON g.id = d.SF_GDN_ID 
+		WHERE g.BF_ORG_WAREH_ID = W.BF_ORG_ID
+		  AND d.prod_id = w.bf_product_id
+		  AND g.id =#{gdnId,jdbcType=DECIMAL})
+    </update>
+    
+    <!-- 实际库存 入库 Insert_STK_ON_HAND_SF_GRN-->
+    <insert id="insertStkOnHandSfGrn"  parameterType="java.util.Map">
+       INSERT INTO SF_WAREH_PROD(ID,BF_ORG_ID, BF_PRODUCT_ID,STK_ON_HAND, QTY_ON_ORDER,QTY_IN_TRANSIT,QTY_IN_DOUBT,STK_PUBLISHED,QTY_COMMITTED)
+		SELECT 
+		fu_get_next_identity('SF_WAREH_PROD',1),
+		g.WAREH_ID ,
+		d.PROD_ID,
+		CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+		0,0,0,0,0
+		FROM SF_GRN g
+		INNER JOIN SF_GRN_DTL d
+		ON g.id = d.SF_GRN_ID 
+		WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		AND NOT EXISTS(SELECT 1 FROM SF_WAREH_PROD S 
+		               WHERE S.BF_ORG_ID = g.WAREH_ID 
+		                 AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </insert>
+    
+    <!-- 实际库存 入库 Update_STK_ON_HAND_SF_GRN-->
+    <update id="updateStkOnHandSfGrn"  parameterType="java.util.Map">
+       UPDATE SF_WAREH_PROD S
+		  SET STK_ON_HAND = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(STK_ON_HAND,0) + (SELECT 
+		                                                                        NVL(d.QUANTITY,0) 
+		                                                                        FROM SF_GRN g
+		                                                                        INNER JOIN SF_GRN_DTL d
+		                                                                        ON g.id = d.SF_GRN_ID 
+		                                                                        WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		                                                                          AND S.BF_ORG_ID = g.Wareh_Id 
+		                                                                          AND S.BF_PRODUCT_ID = d.PROD_ID)
+		                       ELSE NVL(STK_ON_HAND,0) - (SELECT 
+		                                                    NVL(d.QUANTITY,0) 
+		                                                    FROM SF_GRN g
+		                                                    INNER JOIN SF_GRN_DTL d
+		                                                    ON g.id = d.SF_GRN_ID 
+		                                                    WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		                                                      AND S.BF_ORG_ID = g.Wareh_Id 
+		                                                      AND S.BF_PRODUCT_ID = d.PROD_ID)
+		                       END
+		        ,LAST_MODIFIED_DATE = sysdate
+		  WHERE EXISTS(
+		  SELECT 
+		  1
+		  FROM SF_GRN g
+		  INNER JOIN SF_GRN_DTL d
+		  ON g.id = d.SF_GRN_ID 
+		  WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		    AND S.BF_ORG_ID = g.Wareh_Id 
+		    AND S.BF_PRODUCT_ID = d.PROD_ID)
+    </update>
+
+    <!-- 商品库存 Update_SF_WAREH_PROD_SF_GRN -->
+    <update id="updateSfWarehProdSfGrn"  parameterType="java.util.Map">
+        UPDATE SF_WAREH_PROD W
+		SET W.CUR_COST =NVL(W.CUR_COST,0) +  NVL((
+		    SELECT  
+		       CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN 
+		         NVL(d.UNIT_COST,0) *NVL(d.quantity,0)
+		       ELSE 
+		         0-(NVL(d.UNIT_COST,0) *NVL(d.quantity,0))
+		       END
+		    FROM SF_WAREHOUSE h,
+		         SF_GRN G,
+		         SF_GRN_DTL d
+		    WHERE G.WAREH_ID = h.BF_ORG_ID
+		      AND G.ID = d.sf_grn_id
+		      AND W.BF_ORG_ID = G.WAREH_ID
+		      AND W.BF_PRODUCT_ID = d.prod_id
+		      AND ROWNUM = 1
+		      AND g.id =#{grnId,jdbcType=DECIMAL}
+		),0)
+		WHERE  EXISTS(
+		SELECT 1 
+		FROM SF_GRN g
+		INNER JOIN SF_GRN_DTL d
+		ON g.id = d.SF_GRN_ID 
+		WHERE g.wareh_id = W.BF_ORG_ID
+		  AND d.prod_id = w.bf_product_id
+		  AND g.id =#{grnId,jdbcType=DECIMAL})
+    </update>
+    
+    <!-- 添加库位数量 出库单 -->
+    <insert id="insertLocByGdn" parameterType="java.util.Map">
+		INSERT INTO SF_STK_DTL(ID,BF_ORG_ID,PROD_ID,SF_WAREHOUSE_LOC_ID,STK_ON_HAND,LAST_MODIFIED_DATE,EXPD_QTY,ALLOC_QTY)
+		SELECT
+		  fu_get_next_identity('SF_STK_DTL',1),
+		g.bf_org_wareh_id ,
+		d.PROD_ID,
+		NVL(D.LOC_ID,#{sfWarehouseLocId,jdbcType=DECIMAL}),
+		CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+		SYSDATE,
+		0,0
+		FROM SF_GDN g
+		INNER JOIN SF_GDN_DTL d
+		ON g.id = d.SF_GDN_ID 
+		WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		AND NOT EXISTS(SELECT 1 FROM SF_STK_DTL S 
+		               WHERE S.BF_ORG_ID = g.bf_org_wareh_id 
+		                 AND S.PROD_ID = d.PROD_ID
+		                 AND S.SF_WAREHOUSE_LOC_ID = NVL(D.LOC_ID,#{sfWarehouseLocId,jdbcType=DECIMAL})
+		                 )
+    </insert>
+    
+    <!-- 更新库位数量 出库单 -->
+    <update id="updateLocByGdn" parameterType="java.util.Map">
+		UPDATE SF_STK_DTL S
+		  SET STK_ON_HAND = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(STK_ON_HAND,0) + (SELECT 
+		                                                                        NVL(d.QUANTITY,0) 
+		                                                                        FROM SF_GDN g
+		                                                                        INNER JOIN SF_GDN_DTL d
+		                                                                        ON g.id = d.SF_GDN_ID 
+		                                                                        WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		                                                                          AND S.BF_ORG_ID = g.bf_org_wareh_id 
+		                                                                          AND S.PROD_ID = d.PROD_ID)
+		                       ELSE NVL(STK_ON_HAND,0) - (SELECT 
+		                                                    NVL(d.QUANTITY,0) 
+		                                                    FROM SF_GDN g
+		                                                    INNER JOIN SF_GDN_DTL d
+		                                                    ON g.id = d.SF_GDN_ID 
+		                                                    WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		                                                      AND S.BF_ORG_ID = g.bf_org_wareh_id 
+		                                                      AND S.PROD_ID = d.PROD_ID)
+		                       END
+		        ,LAST_MODIFIED_DATE = sysdate
+		  WHERE EXISTS(
+		  SELECT 
+		  1
+		  FROM SF_GDN g
+		  INNER JOIN SF_GDN_DTL d
+		  ON g.id = d.SF_GDN_ID 
+		  WHERE g.id = #{gdnId,jdbcType=DECIMAL}
+		    AND S.BF_ORG_ID = g.bf_org_wareh_id 
+		    AND S.PROD_ID = d.PROD_ID
+		    AND S.SF_WAREHOUSE_LOC_ID = NVL(D.LOC_ID,#{sfWarehouseLocId,jdbcType=DECIMAL}))    
+    </update>
+    
+    <!-- 添加库位数量 入库单 -->
+    <insert id="insertLocByGrn" parameterType="java.util.Map">
+		INSERT INTO SF_STK_DTL(ID,BF_ORG_ID,PROD_ID,SF_WAREHOUSE_LOC_ID,STK_ON_HAND,LAST_MODIFIED_DATE,EXPD_QTY,ALLOC_QTY)
+		SELECT
+		  fu_get_next_identity('SF_STK_DTL',1),
+		g.WAREH_ID ,
+		d.PROD_ID,
+		NVL(D.RCPT_LOC_ID,#{sfWarehouseLocId,jdbcType=DECIMAL}),
+		CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+		SYSDATE,
+		0,0
+		FROM SF_GRN g
+		INNER JOIN SF_GRN_DTL d
+		ON g.id = d.SF_GRN_ID 
+		WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		AND NOT EXISTS(SELECT 1 FROM SF_STK_DTL S 
+		               WHERE S.BF_ORG_ID = g.WAREH_ID 
+		                 AND S.PROD_ID = d.PROD_ID
+		                 AND S.SF_WAREHOUSE_LOC_ID = NVL(D.RCPT_LOC_ID,#{sfWarehouseLocId,jdbcType=DECIMAL})
+		                 )    
+    </insert>
+    
+    <!-- 更新库位数量 入库单 -->
+    <update id="updateLocByGrn" parameterType="java.util.Map">
+		UPDATE SF_STK_DTL S
+		  SET STK_ON_HAND = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(STK_ON_HAND,0) + (SELECT 
+		                                                                        NVL(d.QUANTITY,0) 
+		                                                                        FROM SF_GRN g
+		                                                                        INNER JOIN SF_GRN_DTL d
+		                                                                        ON g.id = d.SF_GRN_ID 
+		                                                                        WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		                                                                          AND S.BF_ORG_ID = g.Wareh_Id 
+		                                                                          AND S.PROD_ID = d.PROD_ID)
+		                       ELSE NVL(STK_ON_HAND,0) - (SELECT 
+		                                                    NVL(d.QUANTITY,0) 
+		                                                    FROM SF_GRN g
+		                                                    INNER JOIN SF_GRN_DTL d
+		                                                    ON g.id = d.SF_GRN_ID 
+		                                                    WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		                                                      AND S.BF_ORG_ID = g.Wareh_Id 
+		                                                      AND S.PROD_ID = d.PROD_ID)
+		                       END
+		        ,LAST_MODIFIED_DATE = sysdate
+		  WHERE EXISTS(
+		  SELECT 
+		  1
+		  FROM SF_GRN g
+		  INNER JOIN SF_GRN_DTL d
+		  ON g.id = d.SF_GRN_ID 
+		  WHERE g.id = #{grnId,jdbcType=DECIMAL}
+		    AND S.BF_ORG_ID = g.Wareh_Id 
+		    AND S.PROD_ID = d.PROD_ID
+		    AND S.SF_WAREHOUSE_LOC_ID = NVL(D.RCPT_LOC_ID,#{sfWarehouseLocId,jdbcType=DECIMAL}))    
+    </update>
+    
+    <!-- 根据交货单添加已分配库存  -->
+    <insert id="insertQtyCommittedByDgn" parameterType="java.util.Map">
+		INSERT INTO SF_WAREH_PROD(ID,BF_ORG_ID, BF_PRODUCT_ID,QTY_COMMITTED,STK_ON_HAND, QTY_ON_ORDER,QTY_IN_TRANSIT,QTY_IN_DOUBT,STK_PUBLISHED)
+		SELECT 
+		fu_get_next_identity('SF_WAREH_PROD',1),
+		g.WAREH_ID ,
+		d.PROD_ID,
+		CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+		0,0,0,0,0
+		FROM SF_DGN g
+		INNER JOIN SF_DGN_DTL d
+		ON g.id = d.sf_dgn_id 
+		WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+		AND NOT EXISTS(SELECT 1 FROM SF_WAREH_PROD S 
+		               WHERE S.BF_ORG_ID = g.WAREH_ID 
+		                 AND S.BF_PRODUCT_ID = d.PROD_ID)    
+    </insert>
+    <!-- 根据交货单更新已分配库存  -->
+    <update id="updateQtyCommittedByDgn" parameterType="java.util.Map">
+		UPDATE SF_WAREH_PROD S
+		  SET QTY_COMMITTED = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(QTY_COMMITTED,0) + (SELECT 
+		                                                                      NVL(d.QUANTITY,0) 
+		                                                                      FROM SF_DGN g
+		                                                                      INNER JOIN SF_DGN_DTL d
+		                                                                      ON g.id = d.sf_dgn_id 
+		                                                                      WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+		                                                                        AND S.BF_ORG_ID = g.Wareh_Id 
+		                                                                        AND S.BF_PRODUCT_ID = d.PROD_ID)
+		                       ELSE NVL(QTY_COMMITTED,0) - (SELECT 
+		                                                    NVL(d.QUANTITY,0) 
+		                                                    FROM SF_DGN g
+		                                                    INNER JOIN SF_DGN_DTL d
+		                                                    ON g.id = d.sf_dgn_id 
+		                                                    WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+		                                                      AND S.BF_ORG_ID = g.Wareh_Id 
+		                                                      AND S.BF_PRODUCT_ID = d.PROD_ID)
+		                       END
+		        ,LAST_MODIFIED_DATE = sysdate
+		  WHERE EXISTS(
+		  SELECT 
+		  1
+		  FROM SF_DGN g
+		  INNER JOIN SF_DGN_DTL d
+		  ON g.id = d.sf_dgn_id 
+		  WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+		    AND S.BF_ORG_ID = g.Wareh_Id 
+		    AND S.BF_PRODUCT_ID = d.PROD_ID)    
+    </update>
+    
+    <!--获取出库单成本组成本核算方法-->
+      <select id="getGdnCalType" resultType="java.lang.String"  parameterType="java.lang.Long">
+        SELECT CALTYPE FROM SF_WAREHOUSE D,
+		              SF_GDN C,
+		              FI_COST_GRP E 
+		WHERE D.COST_GRP_ID=E.ID 
+		  AND D.BF_ORG_ID=C.BF_ORG_WAREH_ID
+		  AND C.ID=#{gdnId,jdbcType=DECIMAL}
+      </select>
+      
+      <!--获取入库单成本组成本核算方法-->
+      <select id="getGrnCalType" resultType="java.lang.String"  parameterType="java.lang.Long">
+        SELECT CALTYPE FROM SF_WAREHOUSE D,
+		              SF_GRN C,
+		              FI_COST_GRP E 
+		WHERE D.COST_GRP_ID=E.ID 
+		  AND D.BF_ORG_ID=C.WAREH_ID 
+		  AND C.ID=#{grnId,jdbcType=DECIMAL}
+      </select>
+      
+        <!-- 根据交货单插入在购库存  -->
+      <insert id="insertQtyOnOrderByDgn" parameterType="java.util.Map">
+        INSERT INTO SF_WAREH_PROD(ID,BF_ORG_ID, BF_PRODUCT_ID,QTY_ON_ORDER,STK_ON_HAND, QTY_COMMITTED,QTY_IN_TRANSIT,QTY_IN_DOUBT,STK_PUBLISHED)
+        SELECT 
+        fu_get_next_identity('SF_WAREH_PROD',1),
+        g.BF_ORG_RCV_WAREH_ID ,
+        d.PROD_ID,
+        CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+        0,0,0,0,0
+        FROM SF_DGN g
+        INNER JOIN SF_DGN_DTL d
+        ON g.id = d.sf_dgn_id 
+        WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+        AND NOT EXISTS(SELECT 1 FROM SF_WAREH_PROD S 
+                       WHERE S.BF_ORG_ID = g.BF_ORG_RCV_WAREH_ID 
+                         AND S.BF_PRODUCT_ID = d.PROD_ID)    
+    </insert> 
+      
+      
+       <!-- 根据交货单更新在购库存  -->
+    <update id="updateQtyOnOrderByDgn" parameterType="java.util.Map">
+        UPDATE SF_WAREH_PROD S
+          SET QTY_ON_ORDER = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(QTY_ON_ORDER,0) + (SELECT 
+                                                                              NVL(d.QUANTITY,0) 
+                                                                              FROM SF_DGN g
+                                                                              INNER JOIN SF_DGN_DTL d
+                                                                              ON g.id = d.sf_dgn_id 
+                                                                              WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+                                                                                AND S.BF_ORG_ID = g.BF_ORG_RCV_WAREH_ID 
+                                                                                AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               ELSE NVL(QTY_ON_ORDER,0) - (SELECT 
+                                                            NVL(d.QUANTITY,0) 
+                                                            FROM SF_DGN g
+                                                            INNER JOIN SF_DGN_DTL d
+                                                            ON g.id = d.sf_dgn_id 
+                                                            WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+                                                              AND S.BF_ORG_ID = g.BF_ORG_RCV_WAREH_ID 
+                                                              AND S.BF_PRODUCT_ID = d.PROD_ID)
+                               END
+                ,LAST_MODIFIED_DATE = sysdate
+          WHERE EXISTS(
+          SELECT 
+          1
+          FROM SF_DGN g
+          INNER JOIN SF_DGN_DTL d
+          ON g.id = d.sf_dgn_id 
+          WHERE g.id = #{dgnId,jdbcType=DECIMAL}
+            AND S.BF_ORG_ID = g.BF_ORG_RCV_WAREH_ID 
+            AND S.BF_PRODUCT_ID = d.PROD_ID)    
+    </update>
+      
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfWarehouseMapper" >
+  <resultMap id="sfWarehouseMap" type="mb.erp.dr.soa.vo.SfWarehouseVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="BF_ORG_ID" property="bfOrgId" jdbcType="DECIMAL" />
+    <result column="COST_GRP_ID" property="costGrpId" jdbcType="DECIMAL" />
+    <result column="LOC_ADOPTED" property="locAdopted" jdbcType="CHAR" />
+    <result column="SCAN_ADOPTED" property="scanAdopted" jdbcType="CHAR" />
+    <result column="DISP_LOC_ID" property="dispLocId" jdbcType="DECIMAL" />
+    <result column="RCPT_LOC_ID" property="rcptLocId" jdbcType="DECIMAL" />
+    <result column="TEMP_LOC_ID" property="tempLocId" jdbcType="DECIMAL" />
+    <result column="FUC_ADOPTED" property="fucAdopted" jdbcType="CHAR" />
+    <result column="DELIV_ADOPTED" property="delivAdopted" jdbcType="CHAR" />
+    <result column="RF_ADOPTED" property="rfAdopted" jdbcType="CHAR" />
+    <result column="TRANSFER_FLAG" property="transferFlag" jdbcType="CHAR" />
+    <result column="BOX_ADOPTED" property="boxAdopted" jdbcType="CHAR" />
+    <result column="BOX_CODE_PREFIX" property="boxCodePrefix" jdbcType="VARCHAR" />
+    <result column="TRANS_LOC_ID" property="transLocId" jdbcType="DECIMAL" />
+    <result column="TRAY_CODE_PREFIX" property="trayCodePrefix" jdbcType="VARCHAR" />
+    <result column="ARR_LOC_ADOPTED" property="arrLocAdopted" jdbcType="CHAR" />
+    <result column="WH_TYPE" property="whType" jdbcType="VARCHAR" />
+    <result column="TASK_NUM" property="taskNum" jdbcType="DECIMAL" />
+    <result column="DAILY_MAX_COUNT" property="dailyMaxCount" jdbcType="DECIMAL" />
+    <result column="LEAST_SEND_NUM" property="leastSendNum" jdbcType="DECIMAL" />
+    <result column="CLEAN_TEMP_LOC_ID" property="cleanTempLocId" jdbcType="DECIMAL" />
+    <result column="CLASS_TEMP_LOC_ID" property="classTempLocId" jdbcType="DECIMAL" />
+    <result column="B2B_DISP_LOC_ID" property="b2bDispLocId" jdbcType="DECIMAL" />
+    <result column="BRAND_ID" property="brandId" jdbcType="DECIMAL" />
+    <result column="BGR_SEASON_ID" property="bgrSeasonId" jdbcType="DECIMAL" />
+    <result column="FINANCE_LOC_ID" property="financeLocId" jdbcType="DECIMAL" />
+    <result column="BOX_RCPT_LOC_ID" property="boxRcptLocId" jdbcType="DECIMAL" />
+    <result column="BGR_SORT_SEASON_ID" property="bgrSortSeasonId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="sfWarehouse_List" >
+    ID, BF_ORG_ID, COST_GRP_ID, LOC_ADOPTED, SCAN_ADOPTED, DISP_LOC_ID, RCPT_LOC_ID, 
+    TEMP_LOC_ID, FUC_ADOPTED, DELIV_ADOPTED, RF_ADOPTED, TRANSFER_FLAG, BOX_ADOPTED, 
+    BOX_CODE_PREFIX, TRANS_LOC_ID, TRAY_CODE_PREFIX, ARR_LOC_ADOPTED, WH_TYPE, TASK_NUM, 
+    DAILY_MAX_COUNT, LEAST_SEND_NUM, CLEAN_TEMP_LOC_ID, CLASS_TEMP_LOC_ID, B2B_DISP_LOC_ID, 
+    BRAND_ID, BGR_SEASON_ID, FINANCE_LOC_ID, BOX_RCPT_LOC_ID, BGR_SORT_SEASON_ID
+  </sql>
+  <select id="selectById" resultMap="sfWarehouseMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="sfWarehouse_List" />
+    from SF_WAREHOUSE
+    where BF_ORG_ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectLocById" resultType="java.lang.Long" parameterType="java.lang.Long" >
+    select 1
+    from SF_WAREHOUSE_LOC
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+</mapper>

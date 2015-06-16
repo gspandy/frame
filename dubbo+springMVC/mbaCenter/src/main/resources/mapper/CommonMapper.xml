@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.dao.CommonMapper">
+    
+    <resultMap id="productMap" type="mb.mba.vo.Product" >
+	    <id column="ID" property="id" jdbcType="DECIMAL" />
+	    <result column="CODE" property="code" jdbcType="VARCHAR" />
+	    <result column="NAME" property="name" jdbcType="VARCHAR" />
+	    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+	    <result column="CREATE_TIME" property="createTime" jdbcType="DATE"/>
+	    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE"/>
+    </resultMap>
+    
+    <sql id="productColumn">
+        ID,CODE,NAME,REMARK,CREATE_TIME,UPDATE_TIME
+    </sql>
+    
+    <select id="getProductById" resultMap="productMap">
+        SELECT 
+        <include refid="productColumn" />
+         FROM PRODUCT WHERE ID = #{1,jdbcType=DECIMAL}
+    </select>
+    
+</mapper>

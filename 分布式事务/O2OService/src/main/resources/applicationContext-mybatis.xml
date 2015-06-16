@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd"
+	default-lazy-init="false">
+	<description>Spring公共配置</description>
+    <import resource="datasource/datasource.xml" />
+    
+	<!-- 加载属性文件 -->
+    <context:property-placeholder file-encoding="utf-8" 
+                                   location="classpath*:message/messages.properties,
+                                                   classpath:application.development.properties,
+                                                   classpath:dubbo.properties"/>
+	
+	<context:annotation-config />
+	<context:component-scan base-package="mb.erp.dr" />
+	
+	<!-- 导入配置 -->
+    <import resource="applicationContext-soa.xml" />
+	   <!-- 导入分布式事务配置 -->
+    <import resource="applicationContext-distributed-transaction.xml" />
+    <!-- 导入webservice配置  -->
+    <import resource="applicationContext-webservice.xml" />
+    <!-- 导入队列配置 -->
+    <import resource="applicationContext-activemq.xml" />
+    <!-- 导入DUBBO配置 -->
+<!--     <import resource="applicationContext-dubbo-server.xml" /> -->
+<!--     <import resource="applicationContext-dubbo-consumer.xml" /> -->
+<!--     <import resource="applicationContext-Advisor.xml" /> -->
+</beans>

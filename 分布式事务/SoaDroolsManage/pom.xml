@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>mb.erp.dr.soa</groupId>
+  <artifactId>SoaDroolsManage</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+  <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+	
+  <dependencies>
+  
+  <dependency>
+		<groupId>mb.erp.dr.soa</groupId>
+	  <artifactId>SoaBillInterface</artifactId>
+	  <version>1.0.0</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.drools</groupId>
+	  <artifactId>drools-compiler</artifactId>
+	  <version>6.1.0.Final</version>
+	  <exclusions>
+       <exclusion>
+           <groupId>org.slf4j</groupId>
+           <artifactId>slf4j-api</artifactId>   
+       </exclusion>
+     </exclusions>
+	</dependency>
+	
+  </dependencies>
+  
+  <build>
+  	<finalName>SoaDroolsManage</finalName>
+  </build>
+  <distributionManagement>
+	<repository>
+	<id>dal-releases</id>
+	<url>http://10.100.200.4:8081/nexus/content/repositories/dal-releases</url>  
+	</repository>
+	<snapshotRepository>
+	<id>dal</id>
+	<url>http://10.100.200.4:8081/nexus/content/repositories/dal</url>  
+	</snapshotRepository>
+	</distributionManagement>
+</project>

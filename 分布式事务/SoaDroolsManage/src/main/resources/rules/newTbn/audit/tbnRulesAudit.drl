@@ -1,0 +1,16 @@
+package mb.erp.dr.o2o.drools.rules.newERPVo.DrTbn
+ 
+import mb.erp.dr.soa.vo.DrTbnVo;
+import mb.erp.dr.soa.service.wareh.NewWarehService;
+import mb.erp.dr.soa.bean.WarehBean;
+ 
+rule "是否需要锁定已分配库存 - 审核"
+    no-loop true
+    when
+        $tbn : DrTbnVo( controlStatus matches "^1.*")
+        $warehService : NewWarehService()
+    then
+        // System.out.println( "是否需要锁定已分配库存 getVenderId:" +$tbn.getVenderId()+"  getTbnNum:"+$tbn.getTbnNum()+" getDispWarehId:"+$tbn.getDispWarehId());
+        $warehService.increaseQtyCommittedByTbn($tbn.getId());
+end
+

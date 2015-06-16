@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mb.mba.center.dao.CostAccountingGroupEntityMapper">
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.CostAccountingGroupEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="cost_accounting_name" jdbcType="VARCHAR" property="costAccountingName" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="unit_code" jdbcType="VARCHAR" property="unitCode" />
+    <result column="costac_code" jdbcType="INTEGER" property="costacCode" />
+    <result column="isvalid" jdbcType="CHAR" property="isvalid" />
+    <result column="create_oper" jdbcType="VARCHAR" property="createOper" />
+    <result column="modify_oper" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, cost_accounting_name, code, unit_code, costac_code, isvalid, create_oper, modify_oper, 
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cost_accounting_group
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from cost_accounting_group
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="mb.mba.core.entity.CostAccountingGroupEntity">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cost_accounting_group (cost_accounting_name, code, unit_code, 
+      costac_code, isvalid, create_oper, 
+      modify_oper, create_time, modify_time
+      )
+    values (#{costAccountingName,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{unitCode,jdbcType=VARCHAR}, 
+      #{costacCode,jdbcType=INTEGER}, #{isvalid,jdbcType=CHAR}, #{createOper,jdbcType=VARCHAR}, 
+      #{modifyOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="mb.mba.core.entity.CostAccountingGroupEntity">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cost_accounting_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="costAccountingName != null">
+        cost_accounting_name,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="unitCode != null">
+        unit_code,
+      </if>
+      <if test="costacCode != null">
+        costac_code,
+      </if>
+      <if test="isvalid != null">
+        isvalid,
+      </if>
+      <if test="createOper != null">
+        create_oper,
+      </if>
+      <if test="modifyOper != null">
+        modify_oper,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="costAccountingName != null">
+        #{costAccountingName,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null">
+        #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="costacCode != null">
+        #{costacCode,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null">
+        #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.mba.core.entity.CostAccountingGroupEntity">
+    update cost_accounting_group
+    <set>
+      <if test="costAccountingName != null">
+        cost_accounting_name = #{costAccountingName,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null">
+        unit_code = #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="costacCode != null">
+        costac_code = #{costacCode,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null">
+        isvalid = #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null">
+        create_oper = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mb.mba.core.entity.CostAccountingGroupEntity">
+    update cost_accounting_group
+    set cost_accounting_name = #{costAccountingName,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      unit_code = #{unitCode,jdbcType=VARCHAR},
+      costac_code = #{costacCode,jdbcType=INTEGER},
+      isvalid = #{isvalid,jdbcType=CHAR},
+      create_oper = #{createOper,jdbcType=VARCHAR},
+      modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectValidCostGrpById" parameterType="java.lang.Long" resultType="mb.mba.core.entity.CostAccountingGroupEntity">
+      select * from cost_accounting_group
+      where id = #{id} and isvalid = '1'
+  </select>
+  
+  <!-- 根据组织code查询成本组 -->
+  <select id="isHaveCostGroup" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select count(*) from cost_accounting_group
+      where unit_code = #{code} and isvalid = '1'
+  </select>
+  
+  <!-- 根据仓库code查询成本组 -->
+  <select id="getByWarehCode" parameterType="java.lang.String" resultType="mb.mba.core.entity.CostAccountingGroupEntity">
+	SELECT
+		A.*
+	FROM
+		cost_accounting_group A,
+		cost_accounting_warehouse B
+	WHERE
+		A.id = B.cost_id
+	AND B.wareh_code = #{code}
+	AND A.isvalid = '1'
+	AND B.isvalid = '1'   
+  </select>
+  
+  <!-- 根据出库单Id查询成本组 -->
+  <select id="getCostGrpByDelivId" parameterType="java.lang.Long" resultType="mb.mba.core.entity.CostAccountingGroupEntity">
+      select A.* from cost_accounting_group A inner join cost_accounting_warehouse B on A.id = B.cost_id
+	  inner join trades C on B.wareh_code = C.vender_wareh_code 
+      where C.id = #{id} And A.isvalid = '1'
+  </select>
+  
+  <!-- 根据入库单ID查询成本组 -->
+  <select id="getCostGrpByAddId" parameterType="java.lang.Long" resultType="mb.mba.core.entity.CostAccountingGroupEntity">
+      select A.* from cost_accounting_group A inner join cost_accounting_warehouse B on A.id = B.cost_id
+	  inner join trades C on B.wareh_code = C.vendee_wareh_code 
+      where C.id = #{id} And A.isvalid = '1'
+  </select>
+  
+  <!-- 出库方式是否满足成本核算 -->
+  <select id="isDelivTypeConfirm" parameterType="java.util.Map" resultType="java.lang.Long">
+      SELECT
+			1
+	  FROM
+	  cost_accounting_group A,
+	  cost_accounting_warehouse B,
+	  cost_accounting_inventory_type C,
+	  trades D
+	  WHERE
+		A.id = B.cost_id
+	  AND a.id = c.cost_id
+	  AND D.vender_wareh_code = B.wareh_code
+	  AND D.inoutwareh_code = C.inoutwareh_code
+	  AND D.id = #{id}
+	  AND A.costac_code = #{calType}
+  </select>
+  
+  <!-- 入库方式是否满足成本核算 -->
+  <select id="isAddTypeConfirm" parameterType="java.util.Map" resultType="java.lang.Long">
+      SELECT
+			1
+	  FROM
+	  cost_accounting_group A,
+	  cost_accounting_warehouse B,
+	  cost_accounting_inventory_type C,
+	  trades D
+	  WHERE
+		A.id = B.cost_id
+	  AND a.id = c.cost_id
+	  AND D.vendee_wareh_code = B.wareh_code
+	  AND D.inoutwareh_code = C.inoutwareh_code
+	  AND D.id = #{id}
+	  AND A.costac_code = #{calType}      
+  </select>
+</mapper>

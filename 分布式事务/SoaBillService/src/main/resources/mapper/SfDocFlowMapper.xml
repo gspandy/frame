@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfDocFlowMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.SfDocFlowVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SRC_DOC_TYPE" property="srcDocType" jdbcType="VARCHAR" />
+    <result column="SRC_UNIT_CODE" property="srcUnitCode" jdbcType="VARCHAR" />
+    <result column="SRC_DOC_CODE" property="srcDocCode" jdbcType="VARCHAR" />
+    <result column="DOC_FLOW_STATE" property="docFlowState" jdbcType="DECIMAL" />
+    <result column="DOC_TYPE" property="docType" jdbcType="VARCHAR" />
+    <result column="UNIT_CODE" property="unitCode" jdbcType="VARCHAR" />
+    <result column="DOC_CODE" property="docCode" jdbcType="VARCHAR" />
+    <result column="OPER_USER" property="operUser" jdbcType="VARCHAR" />
+    <result column="OPER_DATE" property="operDate" jdbcType="TIMESTAMP" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SRC_DOC_TYPE, SRC_UNIT_CODE, SRC_DOC_CODE, DOC_FLOW_STATE, DOC_TYPE, UNIT_CODE, 
+    DOC_CODE, OPER_USER, OPER_DATE, DATA_SOURCE, REMARK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from SF_DOC_FLOW
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from SF_DOC_FLOW
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.SfDocFlowVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into SF_DOC_FLOW
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="srcDocType != null and srcDocType != ''" >
+        SRC_DOC_TYPE,
+      </if>
+      <if test="srcUnitCode != null and srcUnitCode != ''" >
+        SRC_UNIT_CODE,
+      </if>
+      <if test="srcDocCode != null and srcDocCode != ''" >
+        SRC_DOC_CODE,
+      </if>
+      <if test="docFlowState != null and docFlowState != ''" >
+        DOC_FLOW_STATE,
+      </if>
+      <if test="docType != null and docType != ''" >
+        DOC_TYPE,
+      </if>
+      <if test="unitCode != null and unitCode != ''" >
+        UNIT_CODE,
+      </if>
+      <if test="docCode != null and docCode != ''" >
+        DOC_CODE,
+      </if>
+      <if test="operUser != null and operUser != ''" >
+        OPER_USER,
+      </if>
+      <if test="operDate != null and operDate != ''" >
+        OPER_DATE,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="srcDocType != null and srcDocType != ''" >
+        #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitCode != null and srcUnitCode != ''" >
+        #{srcUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocCode != null and srcDocCode != ''" >
+        #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docFlowState != null and docFlowState != ''" >
+        #{docFlowState,jdbcType=DECIMAL},
+      </if>
+      <if test="docType != null and docType != ''" >
+        #{docType,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null and unitCode != ''" >
+        #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docCode != null and docCode != ''" >
+        #{docCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operUser != null and operUser != ''" >
+        #{operUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operDate != null and operDate != ''" >
+        #{operDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.SfDocFlowVo" >
+    update SF_DOC_FLOW
+    <set >
+      <if test="srcDocType != null" >
+        SRC_DOC_TYPE = #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitCode != null" >
+        SRC_UNIT_CODE = #{srcUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocCode != null" >
+        SRC_DOC_CODE = #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docFlowState != null" >
+        DOC_FLOW_STATE = #{docFlowState,jdbcType=DECIMAL},
+      </if>
+      <if test="docType != null" >
+        DOC_TYPE = #{docType,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null" >
+        UNIT_CODE = #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docCode != null" >
+        DOC_CODE = #{docCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operUser != null" >
+        OPER_USER = #{operUser,jdbcType=VARCHAR},
+      </if>
+      <if test="operDate != null" >
+        OPER_DATE = #{operDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <!-- 保存单据流 -->
+  <insert id="saveSfDocFlow" parameterType="mb.erp.dr.soa.vo.SfDocFlowVo" >
+		 MERGE INTO SF_DOC_FLOW A
+			USING (SELECT #{docFlowState} AS DOC_FLOW_STATE,
+			              #{srcDocCode}   AS SRC_DOC_CODE,
+			              #{srcDocType}   AS SRC_DOC_TYPE,
+			              #{docType}       AS DOC_TYPE,
+			              #{unitCode}          AS UNIT_CODE,
+			              #{docCode}       AS DOC_CODE,
+			              #{operUser}       AS OPERUSER,
+			              #{dataSource}    AS DATA_SOURCE
+			         FROM DUAL
+			        ) T
+			ON (T.DOC_FLOW_STATE = A.DOC_FLOW_STATE AND T.SRC_DOC_CODE = A.SRC_DOC_CODE 
+				AND T.SRC_DOC_TYPE = A.SRC_DOC_TYPE AND T.UNIT_CODE = A.UNIT_CODE 
+				AND T.DATA_SOURCE = A.DATA_SOURCE AND T.DOC_CODE = A.DOC_CODE AND T.DOC_TYPE = A.DOC_TYPE)
+			WHEN MATCHED THEN
+			  UPDATE
+			     SET 
+			         A.OPER_USER   = T.OPERUSER,
+			         A.OPER_DATE   = SYSTIMESTAMP
+			WHEN NOT MATCHED THEN
+			  INSERT
+			    (ID,
+			     SRC_DOC_TYPE,
+			     SRC_UNIT_CODE,
+			     SRC_DOC_CODE,
+			     DOC_FLOW_STATE,
+			     DOC_TYPE,
+			     UNIT_CODE,
+			     DOC_CODE,
+			     OPER_USER,
+			     OPER_DATE,
+			     DATA_SOURCE,
+			     REMARK)
+			  VALUES
+			    (FU_GET_NEXT_IDENTITY('SF_DOC_FLOW', 1),
+			     T.SRC_DOC_TYPE,
+			     '',
+			     T.SRC_DOC_CODE,
+			     T.DOC_FLOW_STATE,
+			     T.DOC_TYPE,
+			     T.UNIT_CODE,
+			     T.DOC_CODE,
+			     T.OPERUSER,
+			     SYSTIMESTAMP,
+			     T.DATA_SOURCE,
+			     '')
+  </insert>
+</mapper>

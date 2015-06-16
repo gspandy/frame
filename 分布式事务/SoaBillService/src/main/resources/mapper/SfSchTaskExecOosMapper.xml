@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfSchTaskExecOosMapper" >
+  <resultMap id="sfSchTaskExecOosMap" type="mb.erp.dr.soa.vo.SfSchTaskExecOosVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SF_SCH_TASK_EXEC_ID" property="sfSchTaskExecId" jdbcType="DECIMAL" />
+    <result column="DISP_WAREH_CODE" property="dispWarehCode" jdbcType="VARCHAR" />
+    <result column="SHOP_CODE" property="shopCode" jdbcType="VARCHAR" />
+    <result column="IS_NEED_LOCK_WAREH" property="isNeedLockWareh" jdbcType="CHAR" />
+    <result column="IS_ATUO_GDN" property="isAtuoGdn" jdbcType="CHAR" />
+    <result column="IS_ATUO_GRN" property="isAtuoGrn" jdbcType="CHAR" />
+    <result column="FILL_RATE" property="fillRate" jdbcType="DECIMAL" />
+    <result column="IS_OLD_ERP" property="isOldErp" jdbcType="CHAR" />
+    <result column="RCV_USER" property="rcvUser" jdbcType="VARCHAR" />
+    <result column="RCV_ADDRESS" property="rcvAddress" jdbcType="VARCHAR" />
+    <result column="RCV_PHONENO" property="rcvPhoneno" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="VENDER_CODE" property="venderCode" jdbcType="VARCHAR" />
+    <result column="VENDEE_CODE" property="vendeeCode" jdbcType="VARCHAR" />
+    <result column="IDT_CODE" property="idtCode" jdbcType="VARCHAR" />
+    <result column="ORDER_VAL" property="orderVal" jdbcType="DECIMAL" />
+    <result column="HAD_LOCK_WAREH" property="hadLockWareh" jdbcType="CHAR" />
+    <result column="IS_OOS" property="isOos" jdbcType="CHAR" />
+    <result column="SRC_DOC_TYPE" property="srcDocType" jdbcType="VARCHAR" />
+    <result column="SRC_UNIT_CODE" property="srcUnitCode" jdbcType="VARCHAR" />
+    <result column="SRC_DOC_CODE" property="srcDocCode" jdbcType="VARCHAR" />
+    <result column="IS_ONLINE" property="isOnline" jdbcType="CHAR" />
+    <result column="B2C_DOC_CODE" property="b2cDocCode" jdbcType="VARCHAR" />
+    <result column="OS_DOC_CODE" property="osDocCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="sfSchTaskExecOosDtlVoMap" type="mb.erp.dr.soa.vo.SfSchTaskExecOosDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="EXEC_OOS_ID" property="execOosId" jdbcType="DECIMAL" />
+    <result column="PROD_NUM" property="prodNum" jdbcType="VARCHAR" />
+    <result column="QTY" property="qty" jdbcType="DECIMAL" />
+    <result column="LOC_ID" property="locId" jdbcType="VARCHAR" />
+    <result column="RCPT_LOC_ID" property="rcptLocId" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SF_SCH_TASK_EXEC_ID, DISP_WAREH_CODE, SHOP_CODE, IS_NEED_LOCK_WAREH, IS_ATUO_GDN, 
+    IS_ATUO_GRN, FILL_RATE, IS_OLD_ERP, RCV_USER, RCV_ADDRESS, RCV_PHONENO, DATA_SOURCE, 
+    VENDER_CODE, VENDEE_CODE, IDT_CODE, ORDER_VAL, HAD_LOCK_WAREH, IS_OOS, SRC_DOC_TYPE, 
+    SRC_UNIT_CODE, SRC_DOC_CODE, IS_ONLINE, B2C_DOC_CODE, OS_DOC_CODE
+  </sql>
+  
+  <sql id="sfSchTaskExecOosDtlVoList" >
+    ID, EXEC_OOS_ID, PROD_NUM, QTY, LOC_ID, RCPT_LOC_ID, PRICE, DISC_RATE, BRAND_ID
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="sfSchTaskExecOosMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from SF_SCH_TASK_EXEC_OOS
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <!-- 查询总单 -->
+  <select id="selectVo" resultMap="sfSchTaskExecOosMap" parameterType="map" >
+  	select * from SF_SCH_TASK_EXEC_OOS
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 查询详情 -->
+  <select id="selectDtlVo" resultMap="sfSchTaskExecOosDtlVoMap" parameterType="map" >
+  	select * from SF_SCH_TASK_EXEC_OOS_DTL
+    where EXEC_OOS_ID = #{execOosId,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from SF_SCH_TASK_EXEC_OOS
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="save" parameterType="mb.erp.dr.soa.vo.SfSchTaskExecOosVo" >
+    insert into SF_SCH_TASK_EXEC_OOS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    	ID,
+      <if test="sfSchTaskExecId != null and sfSchTaskExecId != ''" >
+        SF_SCH_TASK_EXEC_ID,
+      </if>
+      <if test="dispWarehCode != null and dispWarehCode != ''" >
+        DISP_WAREH_CODE,
+      </if>
+      <if test="shopCode != null and shopCode != ''" >
+        SHOP_CODE,
+      </if>
+      <if test="isNeedLockWareh != null and isNeedLockWareh != ''" >
+        IS_NEED_LOCK_WAREH,
+      </if>
+      <if test="isAtuoGdn != null and isAtuoGdn != ''" >
+        IS_ATUO_GDN,
+      </if>
+      <if test="isAtuoGrn != null and isAtuoGrn != ''" >
+        IS_ATUO_GRN,
+      </if>
+      <if test="fillRate != null and fillRate != ''" >
+        FILL_RATE,
+      </if>
+      <if test="isOldErp != null and isOldErp != ''" >
+        IS_OLD_ERP,
+      </if>
+      <if test="rcvUser != null and rcvUser != ''" >
+        RCV_USER,
+      </if>
+      <if test="rcvAddress != null and rcvAddress != ''" >
+        RCV_ADDRESS,
+      </if>
+      <if test="rcvPhoneno != null and rcvPhoneno != ''" >
+        RCV_PHONENO,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="venderCode != null and venderCode != ''" >
+        VENDER_CODE,
+      </if>
+      <if test="vendeeCode != null and vendeeCode != ''" >
+        VENDEE_CODE,
+      </if>
+      <if test="idtCode != null and idtCode != ''" >
+        IDT_CODE,
+      </if>
+      <if test="orderVal != null and orderVal != ''" >
+        ORDER_VAL,
+      </if>
+      <if test="hadLockWareh != null and hadLockWareh != ''" >
+        HAD_LOCK_WAREH,
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        IS_OOS,
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        SRC_DOC_TYPE,
+      </if>
+      <if test="srcUnitCode != null and srcUnitCode != ''" >
+        SRC_UNIT_CODE,
+      </if>
+      <if test="srcDocCode != null and srcDocCode != ''" >
+        SRC_DOC_CODE,
+      </if>
+      <if test="isOnline != null and isOnline != ''" >
+        IS_ONLINE,
+      </if>
+      <if test="b2cDocCode != null and b2cDocCode != ''" >
+        B2C_DOC_CODE,
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id},
+      <if test="sfSchTaskExecId != null and sfSchTaskExecId != ''" >
+        #{sfSchTaskExecId,jdbcType=DECIMAL},
+      </if>
+      <if test="dispWarehCode != null and dispWarehCode != ''" >
+        #{dispWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCode != null and shopCode != ''" >
+        #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isNeedLockWareh != null and isNeedLockWareh != ''" >
+        #{isNeedLockWareh,jdbcType=CHAR},
+      </if>
+      <if test="isAtuoGdn != null and isAtuoGdn != ''" >
+        #{isAtuoGdn,jdbcType=CHAR},
+      </if>
+      <if test="isAtuoGrn != null and isAtuoGrn != ''" >
+        #{isAtuoGrn,jdbcType=CHAR},
+      </if>
+      <if test="fillRate != null and fillRate != ''" >
+        #{fillRate,jdbcType=DECIMAL},
+      </if>
+      <if test="isOldErp != null and isOldErp != ''" >
+        #{isOldErp,jdbcType=CHAR},
+      </if>
+      <if test="rcvUser != null and rcvUser != ''" >
+        #{rcvUser,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvAddress != null and rcvAddress != ''" >
+        #{rcvAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvPhoneno != null and rcvPhoneno != ''" >
+        #{rcvPhoneno,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="venderCode != null and venderCode != ''" >
+        #{venderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vendeeCode != null and vendeeCode != ''" >
+        #{vendeeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="idtCode != null and idtCode != ''" >
+        #{idtCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderVal != null and orderVal != ''" >
+        #{orderVal,jdbcType=DECIMAL},
+      </if>
+      <if test="hadLockWareh != null and hadLockWareh != ''" >
+        #{hadLockWareh,jdbcType=CHAR},
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        #{isOos,jdbcType=CHAR},
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitCode != null and srcUnitCode != ''" >
+        #{srcUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocCode != null and srcDocCode != ''" >
+        #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnline != null and isOnline != ''" >
+        #{isOnline,jdbcType=CHAR},
+      </if>
+      <if test="b2cDocCode != null and b2cDocCode != ''" >
+        #{b2cDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="mb.erp.dr.soa.vo.SfSchTaskExecOosVo" >
+    update SF_SCH_TASK_EXEC_OOS
+    <set >
+      <if test="sfSchTaskExecId != null" >
+        SF_SCH_TASK_EXEC_ID = #{sfSchTaskExecId,jdbcType=DECIMAL},
+      </if>
+      <if test="dispWarehCode != null" >
+        DISP_WAREH_CODE = #{dispWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCode != null" >
+        SHOP_CODE = #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isNeedLockWareh != null" >
+        IS_NEED_LOCK_WAREH = #{isNeedLockWareh,jdbcType=CHAR},
+      </if>
+      <if test="isAtuoGdn != null" >
+        IS_ATUO_GDN = #{isAtuoGdn,jdbcType=CHAR},
+      </if>
+      <if test="isAtuoGrn != null" >
+        IS_ATUO_GRN = #{isAtuoGrn,jdbcType=CHAR},
+      </if>
+      <if test="fillRate != null" >
+        FILL_RATE = #{fillRate,jdbcType=DECIMAL},
+      </if>
+      <if test="isOldErp != null" >
+        IS_OLD_ERP = #{isOldErp,jdbcType=CHAR},
+      </if>
+      <if test="rcvUser != null" >
+        RCV_USER = #{rcvUser,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvAddress != null" >
+        RCV_ADDRESS = #{rcvAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvPhoneno != null" >
+        RCV_PHONENO = #{rcvPhoneno,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="venderCode != null" >
+        VENDER_CODE = #{venderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vendeeCode != null" >
+        VENDEE_CODE = #{vendeeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="idtCode != null" >
+        IDT_CODE = #{idtCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderVal != null" >
+        ORDER_VAL = #{orderVal,jdbcType=DECIMAL},
+      </if>
+      <if test="hadLockWareh != null" >
+        HAD_LOCK_WAREH = #{hadLockWareh,jdbcType=CHAR},
+      </if>
+      <if test="isOos != null" >
+        IS_OOS = #{isOos,jdbcType=CHAR},
+      </if>
+      <if test="srcDocType != null" >
+        SRC_DOC_TYPE = #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitCode != null" >
+        SRC_UNIT_CODE = #{srcUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocCode != null" >
+        SRC_DOC_CODE = #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnline != null" >
+        IS_ONLINE = #{isOnline,jdbcType=CHAR},
+      </if>
+      <if test="b2cDocCode != null" >
+        B2C_DOC_CODE = #{b2cDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="osDocCode != null" >
+        OS_DOC_CODE = #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <insert id="saveDtl" parameterType="mb.erp.dr.soa.vo.SfSchTaskExecOosDtlVo" >
+    insert into SF_SCH_TASK_EXEC_OOS_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    	ID,
+      <if test="execOosId != null and execOosId != ''" >
+        EXEC_OOS_ID,
+      </if>
+      <if test="prodNum != null and prodNum != ''" >
+        PROD_NUM,
+      </if>
+      <if test="qty != null and qty != ''" >
+        QTY,
+      </if>
+      <if test="locId != null and locId != ''" >
+        LOC_ID,
+      </if>
+      <if test="rcptLocId != null and rcptLocId != ''" >
+        RCPT_LOC_ID,
+      </if>
+      <if test="price != null and price != ''" >
+        PRICE,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    	#{id},
+      <if test="execOosId != null and execOosId != ''" >
+        #{execOosId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodNum != null and prodNum != ''" >
+        #{prodNum,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null and qty != ''" >
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="locId != null and locId != ''" >
+        #{locId,jdbcType=VARCHAR},
+      </if>
+      <if test="rcptLocId != null and rcptLocId != ''" >
+        #{rcptLocId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null and price != ''" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.SfSchTaskExecOosDtlVo" >
+    update SF_SCH_TASK_EXEC_OOS_DTL
+    <set >
+      <if test="execOosId != null" >
+        EXEC_OOS_ID = #{execOosId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodNum != null" >
+        PROD_NUM = #{prodNum,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null" >
+        QTY = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="locId != null" >
+        LOC_ID = #{locId,jdbcType=VARCHAR},
+      </if>
+      <if test="rcptLocId != null" >
+        RCPT_LOC_ID = #{rcptLocId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

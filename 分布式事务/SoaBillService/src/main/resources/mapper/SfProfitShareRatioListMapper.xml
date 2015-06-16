@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.SfProfitShareRatioListMapper" >
+  <resultMap id="SfProfitShareRatioListMap" type="mb.erp.dr.soa.vo.SfProfitShareRatioListVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="EFFICIENT_DATE" property="efficientDate" jdbcType="DATE" />
+    <result column="LOSE_EFFICIENT_DATE" property="loseEfficientDate" jdbcType="DATE" />
+    <result column="BUSINESS_SOURCE" property="businessSource" jdbcType="VARCHAR" />
+    <result column="DELIVERY_MODE" property="deliveryMode" jdbcType="VARCHAR" />
+    <result column="IS_GLOBAL" property="isGlobal" jdbcType="CHAR" />
+    <result column="APPROVE_DATE" property="approveDate" jdbcType="DATE" />
+    <result column="BF_ORG_ID" property="bfOrgId" jdbcType="DECIMAL" />
+    <result column="DISP_RATIO" property="dispRatio" jdbcType="DECIMAL" />
+    <result column="RCV_RATIO" property="rcvRatio" jdbcType="DECIMAL" />
+    <result column="DOC_TYPE" property="docType" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="SfProfitShareRatioList_List" >
+    ID, CODE, EFFICIENT_DATE, LOSE_EFFICIENT_DATE, BUSINESS_SOURCE, DELIVERY_MODE, IS_GLOBAL, 
+    APPROVE_DATE, BF_ORG_ID, DISP_RATIO, RCV_RATIO, DOC_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="SfProfitShareRatioListMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="SfProfitShareRatioList_List" />
+    from SF_PROFIT_SHARE_RATIO_LIST
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="getRatioByGlobal" parameterType="java.util.Map" resultMap="SfProfitShareRatioListMap" >
+	    SELECT ID,
+	       CODE,
+	       EFFICIENT_DATE,
+	       LOSE_EFFICIENT_DATE,
+	       BUSINESS_SOURCE,
+	       DELIVERY_MODE,
+	       IS_GLOBAL,
+	       APPROVE_DATE,
+	       BF_ORG_ID,
+	       DISP_RATIO,
+	       RCV_RATIO,
+	       DOC_TYPE
+	  FROM SF_PROFIT_SHARE_RATIO_LIST T 
+	 WHERE T.BUSINESS_SOURCE = #{businessSource,jdbcType=VARCHAR}
+	   AND T.DELIVERY_MODE = #{deliveryMode,jdbcType=VARCHAR}
+	   AND T.EFFICIENT_DATE &lt;= TRUNC(SYSDATE)
+	   AND T.LOSE_EFFICIENT_DATE >= TRUNC(SYSDATE)
+	   AND T.IS_GLOBAL = 1
+	   AND EXISTS(SELECT 1
+	  FROM BF_ORG O
+	 INNER JOIN BF_ORG_AGENT OA ON OA.BF_ORG_ID = O.OWNER_ID
+	                           AND O.CODE = #{orgCode,jdbcType=VARCHAR}
+	                         WHERE DECODE(OA.ACCOUNT_GROUP, '0100', 1, 0) = T.DOC_TYPE)
+	 ORDER BY T.APPROVE_DATE DESC
+  </select>
+  
+  <select id="getRatioByOrg" parameterType="java.util.Map" resultMap="SfProfitShareRatioListMap" >
+	     SELECT 
+	       T.ID,
+	       T.CODE,
+	       EFFICIENT_DATE,
+	       LOSE_EFFICIENT_DATE,
+	       BUSINESS_SOURCE,
+	       DELIVERY_MODE,
+	       IS_GLOBAL,
+	       APPROVE_DATE,
+	       BF_ORG_ID,
+	       DISP_RATIO,
+	       RCV_RATIO,
+	       DOC_TYPE
+	  FROM SF_PROFIT_SHARE_RATIO_LIST T
+	  INNER JOIN BF_ORG O ON T.BF_ORG_ID = O.ID
+	 WHERE T.BUSINESS_SOURCE = #{businessSource,jdbcType=VARCHAR}
+	   AND T.DELIVERY_MODE = #{deliveryMode,jdbcType=VARCHAR}
+	   AND T.EFFICIENT_DATE &lt;= TRUNC(SYSDATE)
+	   AND T.LOSE_EFFICIENT_DATE >= TRUNC(SYSDATE)
+	   AND T.IS_GLOBAL = 2
+	   AND O.CODE = #{orgCode,jdbcType=VARCHAR}
+	 ORDER BY T.APPROVE_DATE DESC
+  </select>
+  
+  <select id="getOwnerCode" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT T.CODE FROM BF_ORG T WHERE T.ID = (
+    SELECT O.OWNER_ID FROM BF_ORG O WHERE O.code = #{orgCode,jdbcType=VARCHAR} AND ROWNUM = 1)
+  </select>
+  
+  <select id="getOrgIdByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT T.ID FROM BF_ORG T WHERE T.code = #{orgCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

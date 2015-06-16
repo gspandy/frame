@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.RpAgentUnitCostMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.RpAgentUnitCostVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="AGENT_ID" property="agentId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="INQTY" property="inqty" jdbcType="DECIMAL" />
+    <result column="INVAL" property="inval" jdbcType="DECIMAL" />
+    <result column="PROD_CLSID" property="prodClsid" jdbcType="DECIMAL" />
+    <result column="BRAND_ID" property="brandId" jdbcType="DECIMAL" />
+    <result column="PROD_SEASON" property="prodSeason" jdbcType="VARCHAR" />
+    <result column="PROD_YEAR" property="prodYear" jdbcType="DECIMAL" />
+    <result column="PROD_SEX" property="prodSex" jdbcType="CHAR" />
+    <result column="PROD_STYLE" property="prodStyle" jdbcType="VARCHAR" />
+    <result column="PROD_DEPT" property="prodDept" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, AGENT_ID, PROD_ID, INQTY, INVAL, PROD_CLSID, BRAND_ID, PROD_SEASON, PROD_YEAR, 
+    PROD_SEX, PROD_STYLE, PROD_DEPT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from RP_AGENT_UNIT_COST
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from RP_AGENT_UNIT_COST
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.RpAgentUnitCostVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into RP_AGENT_UNIT_COST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="agentId != null and agentId != ''" >
+        AGENT_ID,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="inqty != null and inqty != ''" >
+        INQTY,
+      </if>
+      <if test="inval != null and inval != ''" >
+        INVAL,
+      </if>
+      <if test="prodClsid != null and prodClsid != ''" >
+        PROD_CLSID,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="prodSeason != null and prodSeason != ''" >
+        PROD_SEASON,
+      </if>
+      <if test="prodYear != null and prodYear != ''" >
+        PROD_YEAR,
+      </if>
+      <if test="prodSex != null and prodSex != ''" >
+        PROD_SEX,
+      </if>
+      <if test="prodStyle != null and prodStyle != ''" >
+        PROD_STYLE,
+      </if>
+      <if test="prodDept != null and prodDept != ''" >
+        PROD_DEPT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="agentId != null and agentId != ''" >
+        #{agentId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="inqty != null and inqty != ''" >
+        #{inqty,jdbcType=DECIMAL},
+      </if>
+      <if test="inval != null and inval != ''" >
+        #{inval,jdbcType=DECIMAL},
+      </if>
+      <if test="prodClsid != null and prodClsid != ''" >
+        #{prodClsid,jdbcType=DECIMAL},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodSeason != null and prodSeason != ''" >
+        #{prodSeason,jdbcType=VARCHAR},
+      </if>
+      <if test="prodYear != null and prodYear != ''" >
+        #{prodYear,jdbcType=DECIMAL},
+      </if>
+      <if test="prodSex != null and prodSex != ''" >
+        #{prodSex,jdbcType=CHAR},
+      </if>
+      <if test="prodStyle != null and prodStyle != ''" >
+        #{prodStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="prodDept != null and prodDept != ''" >
+        #{prodDept,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.RpAgentUnitCostVo" >
+    update RP_AGENT_UNIT_COST
+    <set >
+      <if test="agentId != null" >
+        AGENT_ID = #{agentId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="inqty != null" >
+        INQTY = #{inqty,jdbcType=DECIMAL},
+      </if>
+      <if test="inval != null" >
+        INVAL = #{inval,jdbcType=DECIMAL},
+      </if>
+      <if test="prodClsid != null" >
+        PROD_CLSID = #{prodClsid,jdbcType=DECIMAL},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodSeason != null" >
+        PROD_SEASON = #{prodSeason,jdbcType=VARCHAR},
+      </if>
+      <if test="prodYear != null" >
+        PROD_YEAR = #{prodYear,jdbcType=DECIMAL},
+      </if>
+      <if test="prodSex != null" >
+        PROD_SEX = #{prodSex,jdbcType=CHAR},
+      </if>
+      <if test="prodStyle != null" >
+        PROD_STYLE = #{prodStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="prodDept != null" >
+        PROD_DEPT = #{prodDept,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <!-- 更新单位成本记录 -->
+  <update id="updateUnitCost" parameterType="java.lang.Long">
+	 	UPDATE RP_AGENT_UNIT_COST T
+		SET (T.INQTY, T.INVAL) = 
+		    (SELECT
+		      NVL(T.INQTY,0) + SUM(NVL(B.QUANTITY,0))
+		      ,NVL(T.INVAL,0) + SUM(NVL(B.QUANTITY,0)*NVL(B.UNIT_PRICE,0)*NVL(B.DISC_RATE,100)/100)
+		      FROM SF_GRN A
+		      INNER JOIN SF_GRN_DTL B ON B.SF_GRN_ID = A.ID
+		      WHERE A.UNIT_ID = T.AGENT_ID AND A.ID = #{sfGrnId} AND B.PROD_ID = T.PROD_ID)
+		WHERE EXISTS(SELECT 1
+		             FROM SF_GRN W
+		             INNER JOIN SF_GRN_DTL S ON S.SF_GRN_ID = W.ID
+		             WHERE W.UNIT_ID = T.AGENT_ID
+		               AND S.SF_GRN_ID = #{sfGrnId}
+		               AND S.PROD_ID = T.PROD_ID)
+    </update>
+    
+    <!-- 新增单位成本记录 -->
+    <insert id="insertUnitCost" parameterType="java.lang.Long">
+    	INSERT INTO RP_AGENT_UNIT_COST(ID, AGENT_ID, PROD_ID, 
+		   INQTY, INVAL, PROD_CLSID, 
+		   BRAND_ID, PROD_SEASON, PROD_YEAR, 
+		   PROD_DEPT, PROD_SEX, PROD_STYLE)
+		SELECT
+		FU_GET_NEXT_IDENTITY('RP_AGENT_UNIT_COST',1)
+		,A.UNIT_ID
+		,B.PROD_ID
+		,SUM(NVL(B.QUANTITY,0))
+		,SUM(NVL(B.QUANTITY,0)*NVL(B.UNIT_PRICE,0)*NVL(B.DISC_RATE,100)/100)
+		,D.BF_PROD_SORT_ID
+		,A.BRAND_ID
+		,D.PROD_SEASON
+		,D.PROD_YEAR
+		,D.PROD_PARTM
+		,D.SEX
+		,D.SERIES
+		FROM SF_GRN A
+		INNER JOIN SF_GRN_DTL B ON B.SF_GRN_ID = A.ID
+		INNER JOIN BF_PRODUCT C ON C.ID = B.PROD_ID
+		LEFT JOIN BF_PROD_CLS D ON D.BF_BRAND_ID = A.BRAND_ID AND D.ID = C.BF_PROD_CLS_ID
+		WHERE A.ID = #{sfGrnId}
+		AND NOT EXISTS(SELECT 1
+		             FROM RP_AGENT_UNIT_COST W
+		             WHERE W.AGENT_ID = A.UNIT_ID 
+		               AND W.PROD_ID = B.PROD_ID)
+		GROUP BY A.UNIT_ID
+		,B.PROD_ID
+		,D.BF_PROD_SORT_ID
+		,A.BRAND_ID
+		,D.PROD_SEASON
+		,D.PROD_YEAR
+		,D.PROD_PARTM
+		,D.SEX
+		,D.SERIES
+    </insert>
+</mapper>

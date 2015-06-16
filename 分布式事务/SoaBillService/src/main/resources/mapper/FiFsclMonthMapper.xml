@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.FiFsclMonthMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.FiFsclMonthVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="UNIT_ID" property="unitId" jdbcType="DECIMAL" />
+    <result column="YEAR_VAL" property="yearVal" jdbcType="DECIMAL" />
+    <result column="MONTH_VAL" property="monthVal" jdbcType="DECIMAL" />
+    <result column="FROM_DATE" property="fromDate" jdbcType="DATE" />
+    <result column="UNTIL_DATE" property="untilDate" jdbcType="DATE" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+    <result column="COST_GRP_ID" property="costGrpId" jdbcType="DECIMAL" />
+    <result column="IS_CLOSED" property="isClosed" jdbcType="CHAR" />
+    <result column="IS_CHECKOUT" property="isCheckout" jdbcType="CHAR" />
+    <result column="LAST_COST_TIME" property="lastCostTime" jdbcType="TIMESTAMP" />
+    <result column="LAST_CA_TIME" property="lastCaTime" jdbcType="TIMESTAMP" />
+    <result column="LAST_UN_CA_TIME" property="lastUnCaTime" jdbcType="TIMESTAMP" />
+    <result column="LAST_COST_USER" property="lastCostUser" jdbcType="VARCHAR" />
+    <result column="LAST_CA_USER" property="lastCaUser" jdbcType="VARCHAR" />
+    <result column="LAST_UN_CA_USER" property="lastUnCaUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, UNIT_ID, YEAR_VAL, MONTH_VAL, FROM_DATE, UNTIL_DATE, REMARK, LAST_MODIFIED_DATE, 
+    COST_GRP_ID, IS_CLOSED, IS_CHECKOUT, LAST_COST_TIME, LAST_CA_TIME, LAST_UN_CA_TIME, 
+    LAST_COST_USER, LAST_CA_USER, LAST_UN_CA_USER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from FI_FSCL_MONTH
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from FI_FSCL_MONTH
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.FiFsclMonthVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into FI_FSCL_MONTH
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="yearVal != null and yearVal != ''" >
+        YEAR_VAL,
+      </if>
+      <if test="monthVal != null and monthVal != ''" >
+        MONTH_VAL,
+      </if>
+      <if test="fromDate != null and fromDate != ''" >
+        FROM_DATE,
+      </if>
+      <if test="untilDate != null and untilDate != ''" >
+        UNTIL_DATE,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        LAST_MODIFIED_DATE,
+      </if>
+      <if test="costGrpId != null and costGrpId != ''" >
+        COST_GRP_ID,
+      </if>
+      <if test="isClosed != null and isClosed != ''" >
+        IS_CLOSED,
+      </if>
+      <if test="isCheckout != null and isCheckout != ''" >
+        IS_CHECKOUT,
+      </if>
+      <if test="lastCostTime != null and lastCostTime != ''" >
+        LAST_COST_TIME,
+      </if>
+      <if test="lastCaTime != null and lastCaTime != ''" >
+        LAST_CA_TIME,
+      </if>
+      <if test="lastUnCaTime != null and lastUnCaTime != ''" >
+        LAST_UN_CA_TIME,
+      </if>
+      <if test="lastCostUser != null and lastCostUser != ''" >
+        LAST_COST_USER,
+      </if>
+      <if test="lastCaUser != null and lastCaUser != ''" >
+        LAST_CA_USER,
+      </if>
+      <if test="lastUnCaUser != null and lastUnCaUser != ''" >
+        LAST_UN_CA_USER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="yearVal != null and yearVal != ''" >
+        #{yearVal,jdbcType=DECIMAL},
+      </if>
+      <if test="monthVal != null and monthVal != ''" >
+        #{monthVal,jdbcType=DECIMAL},
+      </if>
+      <if test="fromDate != null and fromDate != ''" >
+        #{fromDate,jdbcType=DATE},
+      </if>
+      <if test="untilDate != null and untilDate != ''" >
+        #{untilDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costGrpId != null and costGrpId != ''" >
+        #{costGrpId,jdbcType=DECIMAL},
+      </if>
+      <if test="isClosed != null and isClosed != ''" >
+        #{isClosed,jdbcType=CHAR},
+      </if>
+      <if test="isCheckout != null and isCheckout != ''" >
+        #{isCheckout,jdbcType=CHAR},
+      </if>
+      <if test="lastCostTime != null and lastCostTime != ''" >
+        #{lastCostTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCaTime != null and lastCaTime != ''" >
+        #{lastCaTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUnCaTime != null and lastUnCaTime != ''" >
+        #{lastUnCaTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCostUser != null and lastCostUser != ''" >
+        #{lastCostUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastCaUser != null and lastCaUser != ''" >
+        #{lastCaUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUnCaUser != null and lastUnCaUser != ''" >
+        #{lastUnCaUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.FiFsclMonthVo" >
+    update FI_FSCL_MONTH
+    <set >
+      <if test="unitId != null" >
+        UNIT_ID = #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="yearVal != null" >
+        YEAR_VAL = #{yearVal,jdbcType=DECIMAL},
+      </if>
+      <if test="monthVal != null" >
+        MONTH_VAL = #{monthVal,jdbcType=DECIMAL},
+      </if>
+      <if test="fromDate != null" >
+        FROM_DATE = #{fromDate,jdbcType=DATE},
+      </if>
+      <if test="untilDate != null" >
+        UNTIL_DATE = #{untilDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null" >
+        LAST_MODIFIED_DATE = #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="costGrpId != null" >
+        COST_GRP_ID = #{costGrpId,jdbcType=DECIMAL},
+      </if>
+      <if test="isClosed != null" >
+        IS_CLOSED = #{isClosed,jdbcType=CHAR},
+      </if>
+      <if test="isCheckout != null" >
+        IS_CHECKOUT = #{isCheckout,jdbcType=CHAR},
+      </if>
+      <if test="lastCostTime != null" >
+        LAST_COST_TIME = #{lastCostTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCaTime != null" >
+        LAST_CA_TIME = #{lastCaTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUnCaTime != null" >
+        LAST_UN_CA_TIME = #{lastUnCaTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCostUser != null" >
+        LAST_COST_USER = #{lastCostUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastCaUser != null" >
+        LAST_CA_USER = #{lastCaUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUnCaUser != null" >
+        LAST_UN_CA_USER = #{lastUnCaUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getByCostGrp"  parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	   SELECT * FROM FI_FSCL_MONTH 
+	   WHERE COST_GRP_ID=#{costGrpId}
+  </select>
+</mapper>

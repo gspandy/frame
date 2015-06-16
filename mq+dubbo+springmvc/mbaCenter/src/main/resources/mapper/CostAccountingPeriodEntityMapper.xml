@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.center.dao.CostAccountingPeriodEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.CostAccountingPeriodEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="cost_id" property="costId" jdbcType="BIGINT" />
+    <result column="cost_accounting_name" property="costAccountingName" jdbcType="VARCHAR" />
+    <result column="unit_code" property="unitCode" jdbcType="VARCHAR" />
+    <result column="ac_year" property="acYear" jdbcType="VARCHAR" />
+    <result column="ac_month" property="acMonth" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="ac_status" property="acStatus" jdbcType="VARCHAR" />
+    <result column="ac_checkout" property="acCheckout" jdbcType="CHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cost_id, cost_accounting_name, unit_code, ac_year, ac_month, start_date, end_date, 
+    ac_status, ac_checkout, remarks, isvalid, create_oper, create_time, modify_oper, 
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cost_accounting_period
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from cost_accounting_period
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="mb.mba.core.entity.CostAccountingPeriodEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cost_accounting_period (cost_id, cost_accounting_name, unit_code, 
+      ac_year, ac_month, start_date, 
+      end_date, ac_status, ac_checkout, 
+      remarks, isvalid, create_oper, 
+      create_time, modify_oper, modify_time
+      )
+    values (#{costId,jdbcType=BIGINT}, #{costAccountingName,jdbcType=VARCHAR}, #{unitCode,jdbcType=VARCHAR}, 
+      #{acYear,jdbcType=VARCHAR}, #{acMonth,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, 
+      #{endDate,jdbcType=DATE}, #{acStatus,jdbcType=VARCHAR}, #{acCheckout,jdbcType=CHAR}, 
+      #{remarks,jdbcType=VARCHAR}, #{isvalid,jdbcType=CHAR}, #{createOper,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyOper,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="mb.mba.core.entity.CostAccountingPeriodEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cost_accounting_period
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="costId != null" >
+        cost_id,
+      </if>
+      <if test="costAccountingName != null" >
+        cost_accounting_name,
+      </if>
+      <if test="unitCode != null" >
+        unit_code,
+      </if>
+      <if test="acYear != null" >
+        ac_year,
+      </if>
+      <if test="acMonth != null" >
+        ac_month,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="acStatus != null" >
+        ac_status,
+      </if>
+      <if test="acCheckout != null" >
+        ac_checkout,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="isvalid != null" >
+        isvalid,
+      </if>
+      <if test="createOper != null" >
+        create_oper,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="costId != null" >
+        #{costId,jdbcType=BIGINT},
+      </if>
+      <if test="costAccountingName != null" >
+        #{costAccountingName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null" >
+        #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="acYear != null" >
+        #{acYear,jdbcType=VARCHAR},
+      </if>
+      <if test="acMonth != null" >
+        #{acMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="acStatus != null" >
+        #{acStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="acCheckout != null" >
+        #{acCheckout,jdbcType=CHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.mba.core.entity.CostAccountingPeriodEntity" >
+    update cost_accounting_period
+    <set >
+      <if test="costId != null" >
+        cost_id = #{costId,jdbcType=BIGINT},
+      </if>
+      <if test="costAccountingName != null" >
+        cost_accounting_name = #{costAccountingName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitCode != null" >
+        unit_code = #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="acYear != null" >
+        ac_year = #{acYear,jdbcType=VARCHAR},
+      </if>
+      <if test="acMonth != null" >
+        ac_month = #{acMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="acStatus != null" >
+        ac_status = #{acStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="acCheckout != null" >
+        ac_checkout = #{acCheckout,jdbcType=CHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        isvalid = #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        create_oper = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mb.mba.core.entity.CostAccountingPeriodEntity" >
+    update cost_accounting_period
+    set cost_id = #{costId,jdbcType=BIGINT},
+      cost_accounting_name = #{costAccountingName,jdbcType=VARCHAR},
+      unit_code = #{unitCode,jdbcType=VARCHAR},
+      ac_year = #{acYear,jdbcType=VARCHAR},
+      ac_month = #{acMonth,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      ac_status = #{acStatus,jdbcType=VARCHAR},
+      ac_checkout = #{acCheckout,jdbcType=CHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      isvalid = #{isvalid,jdbcType=CHAR},
+      create_oper = #{createOper,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据成本组id查询 有效未结转的会计期间 -->
+  <select id="getByCostId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      select * from cost_accounting_period
+      where cost_id = {#id} and ac_checkout = '0'
+  </select>
+  
+  <!--根据ID查询有效的会计期间-->
+  <select id="selectValidPeriodById" parameterType="java.lang.Long" resultType="mb.mba.core.entity.CostAccountingPeriodEntity">
+      select *  from cost_accounting_period
+      where id = #{id} and isvalid = '1'
+  </select>
+</mapper>

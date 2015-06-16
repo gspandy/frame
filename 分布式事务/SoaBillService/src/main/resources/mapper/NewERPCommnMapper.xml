@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.common.NewERPCommonMapper" >
+  <resultMap id="commonIdCodeMap" type="mb.erp.dr.soa.vo.common.CommonIdCodeVo" >
+  	 <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+  	 <result column="BF_ORG_VENDEE_ID" property="bfOrgVendeeId" jdbcType="DECIMAL" />
+     <result column="BF_ORG_VENDER_ID" property="bfOrgVenderId" jdbcType="DECIMAL" />
+     <result column="BF_ORG_SHOP_ID" property="bfOrgShopId" jdbcType="DECIMAL" />
+     <result column="BF_ORG_WAREH_ID" property="bfOrgWarehId" jdbcType="DECIMAL" />
+     <result column="BF_ORG_RCV_WAREH_ID" property="bfOrgRcvWarehId" jdbcType="DECIMAL" />
+     <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+     <result column="LOW_SHOP_ID" property="lowShopId" jdbcType="DECIMAL" />
+     <result column="RCPT_LOC_ID" property="rcptLocId" jdbcType="DECIMAL" />
+     <result column="FACT_SEN_WAREN_ID" property="factSenWarehId" jdbcType="DECIMAL" />
+     <result column="FACT_RCV_WAREN_ID" property="factRcvWarehId" jdbcType="DECIMAL" />
+     <result column="OPR_ID" property="oprId" jdbcType="DECIMAL" />
+     <result column="PROD_CODE" property="prodCode" jdbcType="VARCHAR" />
+  	 <result column="BF_ORG_VENDEE_CODE" property="bfOrgVendeeCode" jdbcType="VARCHAR" />
+     <result column="BF_ORG_VENDER_CODE" property="bfOrgVenderCode" jdbcType="VARCHAR" />
+     <result column="BF_ORG_SHOP_CODE" property="bfOrgShopCode" jdbcType="VARCHAR" />
+     <result column="BF_ORG_WAREH_CODE" property="bfOrgWarehCode" jdbcType="VARCHAR" />
+     <result column="BF_ORG_RCV_WAREH_CODE" property="bfOrgRcvWarehCode" jdbcType="VARCHAR" />
+     <result column="BRAND_CODE" property="brandCode" jdbcType="VARCHAR" />
+     <result column="LOW_SHOP_CODE" property="lowShopCode" jdbcType="VARCHAR" />
+     <result column="RCPT_LOC_CODE" property="rcptLocCode" jdbcType="VARCHAR" />
+     <result column="FACT_SEN_WAREN_CODE" property="factSenWarehCode" jdbcType="VARCHAR" />
+     <result column="FACT_RCV_WAREN_CODE" property="factRcvWarehCode" jdbcType="VARCHAR" />
+     <result column="OPR_CODE" property="oprCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="nDirectroyMap" type="mb.erp.dr.soa.vo.common.NDirectoryVo" >
+  	 <result column="type" property="type" jdbcType="VARCHAR" />
+  	 <result column="name" property="name" jdbcType="VARCHAR" />
+  	 <result column="code" property="code" jdbcType="VARCHAR" />
+  	 <result column="describe" property="describe" jdbcType="DECIMAL" />
+  </resultMap>
+   <!-- 获取主键中的ID值 -->
+  <select id="getPrimaryIdNew" parameterType="java.util.HashMap" resultType="java.lang.Long" >
+      SELECT FU_GET_NEXT_IDENTITY(#{table_name},#{count}) FROM DUAL
+  </select>
+  
+    <!-- 新ERP获取CODE值 -->
+  <select id="getPrimaryCode" parameterType="java.util.HashMap" resultType="java.lang.String" >
+    SELECT FU_GET_NEXT_DOC_CODE(#{bill_type},#{count}) FROM DUAL
+  </select>
+  
+  <!-- 新ERP根据CODE获取ID值 -->
+  <select id="getIdByTableCode" parameterType="java.util.HashMap" resultType="java.lang.Long" >
+    SELECT ID FROM #{table_name} WHERE CODE = #{code}
+  </select>
+  
+  <!-- 新ERP根据组织ID查询CODE -->
+  <select id="getUnitCodeByUnitId" parameterType="java.util.HashMap" resultType="java.lang.String" >
+    SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{unid_id}
+  </select>
+  
+  <!-- 新ERP根据组织CODE查询ID -->
+  <select id="getUnitIdByUnitCode" parameterType="java.util.HashMap" resultType="java.lang.Long" >
+    SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{code}
+  </select>
+  
+  <!-- 新ERP根据商品ID查询商品PROD_NUM -->
+  <select id="getProdNumByProdId" parameterType="java.lang.Long" resultType="java.lang.String" >
+    SELECT PROD_NUM FROM BF_PRODUCT WHERE PROD_STATUS = 'A' AND ID = #{prod_id}
+  </select>
+  
+  <!-- 新ERP根据商品PROD_NUM查询商品ID -->
+  <select id="getProdIdByProdNum" parameterType="java.lang.String" resultType="java.lang.Long" >
+    SELECT ID FROM BF_PRODUCT WHERE PROD_STATUS = 'A' AND PROD_NUM = #{prod_num}
+  </select>
+  
+  <!-- 新ERP根据品牌组id查询品牌code -->
+  <select id="getBrandCodeByBrandId" parameterType="java.util.HashMap" resultType="java.lang.String" >
+    SELECT A.AT_CODE FROM DR_ATP_DTL A,DR_ATP T WHERE A.DR_ATP_ID = T.ID AND T.ATP_CODE = 'BRAND_CLASS' AND KEY_CODE = #{key_code}
+  </select>
+  
+  <!-- 新ERP根据品牌组code查询品牌组id -->
+  <select id="getBrandIdByBrandCode" parameterType="java.util.HashMap" resultType="java.lang.String" >
+    SELECT A.KEY_CODE FROM DR_ATP_DTL A,DR_ATP T WHERE A.DR_ATP_ID = T.ID AND T.ATP_CODE = 'BRAND_CLASS' AND AT_CODE = #{at_code}
+  </select>
+  
+  <!-- 新ERP根据操作员code查询操作员id -->
+  <select id="getOprIdByOprCode" parameterType="java.util.HashMap" resultType="java.lang.Long" >
+    SELECT ID FROM BF_USER WHERE CODE = #{code}
+  </select>
+    
+  <!-- 新ERP查询全局系统参数 -->
+  <select id="getMainSysParamValue" parameterType="java.lang.String" resultType="java.lang.String" >
+	SELECT PARM_VAL FROM  BF_SYS_PARAM T WHERE T.CODE = #{code}
+  </select>
+  
+  <!-- 新ERP根据ID查询CODE -->
+  <select id="getCodeById" parameterType="mb.erp.dr.soa.vo.common.CommonIdCodeVo" resultMap="commonIdCodeMap" >
+      SELECT 
+	      <if test="prodId != null">
+		    	(SELECT PROD_NUM FROM BF_PRODUCT WHERE PROD_STATUS = 'A' AND ID = #{prodId}) AS PROD_CODE,
+		  </if>
+		  <if test="brandId != null">
+		    	(SELECT AT_CODE FROM DR_ATP  D1 INNER JOIN DR_ATP_DTL D2 ON D1.ID = D2.DR_ATP_ID 
+		    	WHERE D1.ATP_CODE = 'BRAND_CLASS' AND D2.KEY_CODE = #{brandId}) AS BRAND_CODE,
+		  </if>
+		  <if test="bfOrgVendeeId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{bfOrgVendeeId}) AS BF_ORG_VENDEE_CODE,
+		  </if>
+		  <if test="bfOrgVenderId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{bfOrgVenderId}) AS BF_ORG_VENDER_CODE,
+		  </if>
+		  <if test="bfOrgWarehId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{bfOrgWarehId}) AS BF_ORG_WAREH_CODE,
+		  </if>
+		  <if test="bfOrgRcvWarehId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{bfOrgRcvWarehId}) AS BF_ORG_RCV_WAREH_CODE,
+		  </if>
+		  <if test="bfOrgShopId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{bfOrgShopId}) AS BF_ORG_SHOP_CODE,
+		  </if>
+		  <if test="lowShopId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{lowShopId}) AS LOW_SHOP_CODE,
+		  </if>
+		  <if test="rcptLocId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND ID = #{rcptLocId}) AS RCPT_LOC_CODE,
+		  </if>
+		  <if test="factSenWarehId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{factSenWarehId}) AS FACT_SEN_WAREN_CODE,
+		  </if>
+		  <if test="factRcvWarehId != null">
+		    	(SELECT CODE FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{factRcvWarehId}) AS FACT_RCV_WAREN_CODE,
+		  </if>
+		  <if test="oprId != null">
+		    	(SELECT CODE FROM BF_USER WHERE ID = #{oprId}) AS OPR_CODE,
+		  </if>
+		  1
+	  FROM DUAL
+  </select>
+  
+  <!-- 新ERP根据ID查询CODE -->
+  <select id="getIdByCode" parameterType="mb.erp.dr.soa.vo.common.CommonIdCodeVo" resultMap="commonIdCodeMap" >
+      SELECT 
+	      <if test="prodCode != null and prodCode != ''">
+		    	(SELECT ID FROM BF_PRODUCT WHERE PROD_STATUS = 'A' AND PROD_NUM = #{prodCode}) AS PROD_ID,
+		  </if>
+		  <if test="brandCode != null and brandCode != ''">
+		    	(SELECT KEY_CODE FROM DR_ATP  D1 INNER JOIN DR_ATP_DTL D2 ON D1.ID = D2.DR_ATP_ID 
+		    	WHERE D1.ATP_CODE = 'BRAND_CLASS' AND D2.AT_CODE = #{brandCode}) AS BRAND_ID,
+		  </if>
+		  <if test="bfOrgVendeeCode != null and bfOrgVendeeCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{bfOrgVendeeCode}) AS BF_ORG_VENDEE_ID,
+		  </if>
+		  <if test="bfOrgVenderCode != null and bfOrgVenderCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{bfOrgVenderCode}) AS BF_ORG_VENDER_ID,
+		  </if>
+		  <if test="bfOrgWarehCode != null and bfOrgWarehCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{bfOrgWarehCode}) AS BF_ORG_WAREH_ID,
+		  </if>
+		  <if test="bfOrgRcvWarehCode != null and bfOrgRcvWarehCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{bfOrgRcvWarehCode}) AS BF_ORG_RCV_WAREH_ID,
+		  </if>
+		  <if test="bfOrgShopCode != null and bfOrgShopCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{bfOrgShopCode}) AS BF_ORG_SHOP_ID,
+		  </if>
+		  <if test="lowShopCode != null and lowShopCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{lowShopCode}) AS LOW_SHOP_ID,
+		  </if>
+		  <if test="rcptLocCode != null and rcptLocCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{rcptLocCode}) AS RCPT_LOC_ID,
+		  </if>
+		  <if test="factSenWarehCode != null and factSenWarehCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{factSenWarehCode}) AS FACT_SEN_WAREN_ID,
+		  </if>
+		  <if test="factRcvWarehCode != null and factRcvWarehCode != ''">
+		    	(SELECT ID FROM BF_ORG WHERE STATUS = 'A' AND CODE = #{factRcvWarehCode}) AS FACT_RCV_WAREN_ID,
+		  </if>
+		  <if test="oprCode != null and oprCode != ''">
+		    	(SELECT ID FROM BF_USER WHERE CODE = #{oprCode}) AS OPR_ID,
+		  </if>
+		  1
+	  FROM DUAL
+  </select>
+  
+  <!-- 向临时表 TMP_BF_ORG_CODE 插入数据 -->
+  <insert id="saveProdToTmpBfOrgCode" parameterType="java.util.List" >
+    insert into TMP_BF_ORG_CODE (BF_ORG_CODE)
+    <foreach collection="list" item="item" index="index"  separator="UNION ALL" > 
+      SELECT 
+        #{item,jdbcType=VARCHAR}
+      from dual 
+    </foreach> 
+  </insert>
+  
+  <!-- 判断组织是否代理商 -->
+  <select id="isAgent" parameterType="java.lang.Long">
+	    SELECT 
+		 COUNT(1)
+		 FROM BF_ORG_AGENT 
+		 WHERE BF_ORG_ID = #{orgId,jdbcType=DECIMAL}
+	   AND ACCOUNT_GROUP IN ('2000','1000','0100')
+  </select>
+  
+  <!-- 判断组织是否分部 -->
+  <select id="isBranch" parameterType="java.lang.Long">
+        SELECT 
+		 COUNT(1)
+		 FROM BF_ORG_AGENT 
+		 WHERE BF_ORG_ID = #{orgId,jdbcType=DECIMAL}
+		   AND ACCOUNT_GROUP IN ('1000','0100')
+  </select>
+  
+  <!-- 获取数据库时间 -->
+  <select id="getSysDate" parameterType="java.lang.Long" resultType="java.util.Date">
+       SELECT TRUNC(SYSDATE) FROM DUAL
+  </select>
+  
+  <!-- 是否启用新ERP -->
+  <select id="isEnableNewErp" parameterType="java.lang.String" resultType="java.lang.Long">
+       SELECT A.UNIT_ID
+	   FROM DR_INTERFACE_PRO A
+	   INNER JOIN BF_ORG O ON A.UNIT_ID = O.ID
+	   WHERE O.CODE = #{unitCode}
+  </select>
+  
+  <!-- 根据locCode,WAREH_ID获取locId -->
+  <select id="getLocIdByLocCode" parameterType="java.util.Map" resultType="java.lang.Long">
+      SELECT L.ID
+      FROM SF_WAREHOUSE_LOC L
+     INNER JOIN SF_WAREHOUSE_ZONE Z ON L.SF_WAREHOUSE_ZONE_ID = Z.ID
+     INNER JOIN SF_WAREHOUSE W ON W.BF_ORG_ID = Z.BF_ORG_ID
+     WHERE W.BF_ORG_ID = #{warehId}
+       AND L.CODE = #{locCode}
+       AND ROWNUM = 1
+  </select>
+  
+  <!-- 根据发货仓库id查询发货货位编码 -->
+  <select id="getDispLocId" parameterType="java.lang.Long" resultType="java.lang.Long">
+     SELECT 
+		CASE 
+		  WHEN T.BOX_ADOPTED = 1
+		    THEN T.B2B_DISP_LOC_ID
+		  WHEN T.LOC_ADOPTED = 1
+		    THEN T.DISP_LOC_ID
+		  END LOC_ID
+	 FROM SF_WAREHOUSE T WHERE T.BF_ORG_ID = #{bfOrgId}
+  </select>
+  
+  <!-- 根据收货仓库id查询收货货位编码 -->
+  <select id="getRcptLocId" parameterType="java.lang.Long" resultType="java.lang.Long">
+     SELECT 
+		CASE 
+		  WHEN T.BOX_ADOPTED = 1
+		    THEN T.BOX_RCPT_LOC_ID
+		  WHEN T.LOC_ADOPTED = 1
+		    THEN T.RCPT_LOC_ID
+		  END LOC_ID
+	 FROM SF_WAREHOUSE T WHERE T.BF_ORG_ID = #{bfOrgId}
+  </select>
+  
+  <!-- 更新出库单单EX_FLAG -->
+  <update id="upSfGdnExFlag" parameterType="java.lang.String">
+        UPDATE SF_GDN T
+           SET EX_FLAG = 2, T.TAKE_ACCOUNT_DATE = SYSTIMESTAMP
+         WHERE T.EX_FLAG = 1
+           AND CODE = #{srcDocCode,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 更新门店发货单EX_FLAG -->
+  <update id="upSfDegExFlag" parameterType="java.lang.String">
+    UPDATE SF_DEG T
+       SET EX_FLAG = 2, T.TAKE_ACCOUNT_DATE = SYSTIMESTAMP
+     WHERE T.EX_FLAG = 1
+       AND CODE = #{srcDocCode,jdbcType=VARCHAR}
+  </update>
+  <select id="selectNDirectory" parameterType="java.util.Map" resultMap="nDirectroyMap">
+    select d.type,d.name,d.code,d.describe from nd_directory d 
+    	where d.type=#{type,jdbcType=VARCHAR} 
+     	  and d.name=#{name,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllNDirectory" resultMap="nDirectroyMap">
+     select d.type,d.name,d.code,d.describe from nd_directory d order by d.type,d.name,d.des
+  </select>
+</mapper>

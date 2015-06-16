@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.common.CommonMapper" >
+  <resultMap id="shopMap" type="map" >
+    <result column="SHOP_ID" property="shopId" jdbcType="VARCHAR" />
+    <result column="SETTLE_DATE" property="settleDate" jdbcType="DATE" />
+  </resultMap>
+   <resultMap id="oDirectroyMap" type="mb.erp.dr.soa.vo.common.NDirectoryVo" >
+  	 <result column="type" property="type" jdbcType="VARCHAR" />
+  	 <result column="name" property="name" jdbcType="VARCHAR" />
+  	 <result column="code" property="code" jdbcType="VARCHAR" />
+  	 <result column="describe" property="describe" jdbcType="DECIMAL" />
+  </resultMap>
+    <!-- 老ERP获取逻辑主键中的Num值 -->
+  <select id="getPrimaryKey" parameterType="java.util.HashMap" resultType="java.lang.String" >
+    SELECT  PCK_SYS_SHARE.FUNC_GET_NEXT_NUM(#{PK_NAME},#{PK_NUM}) FROM DUAL 
+  </select>
+  
+    <!-- 查询出库单是否已封账 -->
+  <select id="isClosedAccountByGdn" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+     SELECT CASE WHEN C.CF_AT IS NOT NULL THEN CASE WHEN A.DOC_DATE &lt;= C.CF_AT THEN -1 ELSE 1 END ELSE 1 END AS IS_CF   FROM GDN A 
+     INNER JOIN WAREHOUSE B ON  A.WAREH_ID=B.WAREH_ID 
+     INNER JOIN SYS_UNIT D ON B.WAREH_ID=D.UNIT_ID 
+     LEFT OUTER JOIN  COST_GRP C  ON C.UNIT_ID=D.OWNER_ID AND B.COST_GRP_ID=C.COST_GRP_ID
+     WHERE A.UNIT_ID=#{unitId} AND A.GDN_NUM=#{docNum}
+  </select>
+  
+    <!-- 查询入库单是否已封账 -->
+  <select id="isClosedAccountByGrn"  parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+     SELECT CASE WHEN C.CF_AT IS NOT NULL THEN CASE WHEN A.DOC_DATE &lt;= C.CF_AT THEN -1 ELSE 1 END ELSE 1 END AS IS_CF   FROM GRN A 
+     INNER JOIN WAREHOUSE B ON  A.WAREH_ID=B.WAREH_ID 
+     INNER JOIN SYS_UNIT D ON B.WAREH_ID=D.UNIT_ID 
+     LEFT OUTER JOIN  COST_GRP C  ON C.UNIT_ID=D.OWNER_ID AND B.COST_GRP_ID=C.COST_GRP_ID
+     WHERE A.UNIT_ID=#{unitId} AND A.GRN_NUM=#{docNum}
+  </select>
+  
+   <!-- 获取主键中的ID值 -->
+  <select id="getPrimaryIdOld" parameterType="java.util.HashMap" resultType="java.lang.Long" >
+      SELECT FU_GET_NEXT_IDENTITY(#{table_name},#{count}) FROM DUAL
+  </select>
+  
+  <!-- 查询门店结转日期 -->
+   <select id="isSettle" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT A.SHOP_ID
+		  FROM SHOP A
+		 INNER JOIN SYS_UNIT B ON (A.SHOP_ID = B.UNIT_ID)
+		 INNER JOIN SYS_UNIT_CLSF C ON (B.UNIT_ID = C.UNIT_ID)
+		 WHERE B.OWNER_ID = #{ownerId}
+		   AND C.UNIT_TYPE = 'SH'
+		   AND C.STATUS = 'A' AND (A.SETTLE_DATE IS NULL OR A.SETTLE_DATE &lt;
+		SYSDATE - (
+		  SELECT PARM_VAL
+		    FROM SYS_PARAMETER D
+		   WHERE D.PARM_ID = 'SETTLE_DELAY_PERMITTED'))
+  </select>
+  
+  <!-- 查询代理商为加盟或者直营 -->
+  <select id="isOldFranchiseeOrDirect" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    SELECT COUNT(*)
+	  FROM AGENT T
+	  JOIN SYS_UNIT U ON U.UNIT_ID = T.AGENT_ID
+	 WHERE (T.ACCOUNT_GROUP = '2000'  OR T.ACCOUNT_GROUP = '0100')
+	   AND U.UNIT_ID = #{vendeeId}
+  </select>
+  
+  <!-- 查询代理商是否加盟 -->
+  <select id="isOldFranchisee" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    SELECT COUNT(*)
+	  FROM AGENT T
+	  JOIN SYS_UNIT U ON U.UNIT_ID = T.AGENT_ID
+	 WHERE (T.ACCOUNT_GROUP = '2000')
+	   AND U.UNIT_ID = #{vendeeId}
+  </select>
+  
+  <!-- 查询收货货位和发货货位 -->
+  <select id="selectLocId" parameterType="java.lang.String" resultType="java.util.Map" >
+    SELECT T.DISP_LOC_ID,T.RCPT_LOC_ID FROM WAREHOUSE T WHERE T.WAREH_ID = #{warehId} AND T.LOC_ADOPTED = 'T'
+  </select>
+  
+   <!--  判断指定仓库的货位是否存在 -->
+  <select id="selectByLocIdWarehId" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    SELECT 1 FROM WAREH_LOC WHERE WAREH_ID =  #{warehId} AND LOC_ID = #{locId}
+  </select>
+  
+  <select id="selectODirectory" parameterType="java.util.Map" resultMap="oDirectroyMap">
+    select d.type,d.name,d.code,d.describe from od_directory d 
+    	where d.type=#{type,jdbcType=VARCHAR} 
+     	  and d.name=#{name,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllODirectory" resultMap="oDirectroyMap">
+     select d.type,d.name,d.code,d.describe from od_directory d order by d.type,d.name,d.des
+  </select>
+</mapper>

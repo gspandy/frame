@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- JMS消息重试策略 -->
+	<bean id="activeMQRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+		<property name="maximumRedeliveries" value="0" />
+		<property name="maximumRedeliveryDelay" value="3000" />
+	</bean>
+
+	<!-- MQ Factory -->
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+		<property name="brokerURL" value="failover:(tcp://192.168.203.56:61616,tcp://192.168.203.57:61616,tcp://192.168.203.58:61616)" />
+		<property name="redeliveryPolicy"  ref="activeMQRedeliveryPolicy" />
+	</bean>
+	<!-- jms jta事务管理 -->
+	<bean id="atomikosConnectionFactory" class="com.atomikos.jms.AtomikosConnectionFactoryBean"
+		init-method="init" destroy-method="close">
+		<property name="uniqueResourceName" value="amq1" />
+		<property name="xaConnectionFactory" ref="amqConnectionFactory" />
+		<property name="poolSize" value="100" />
+	</bean>
+
+	<!-- 消息对象转换 -->
+	<bean id="messageConvert" class="mb.erp.dr.o2o.service.impl.mq.SoaMessageConverter" />
+	<!-- mq消费者 -->
+	<bean id="jmsConsumerService" class="mb.erp.dr.o2o.service.impl.consumer.JmsConsumerService" />
+	<!-- mq生产者 -->
+	<bean id="jmsProducerService" class="mb.erp.dr.o2o.service.impl.producer.JmsProduceService" />
+
+	<!-- 线程池 -->
+	<bean id="userRegisterMessageExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="80" />
+		<property name="maxPoolSize" value="100" />
+		<property name="daemon" value="true" />
+		<property name="keepAliveSeconds" value="120" />
+	</bean>
+
+
+	<!-- 以下配置仅限junit测试使用，不需要在consumer配置 -->
+	<!-- spring JmsTemplate -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="atomikosConnectionFactory" />
+		<property name="defaultDestination" ref="initialDataDestination" />
+		<property name="receiveTimeout" value="10000" />
+		<property name="sessionTransacted" value="true" />
+		<property name="sessionAcknowledgeMode" value="1" />
+		<property name="timeToLive" value="86400" />
+		<property name="deliveryMode" value="2" />
+		<property name="messageConverter" ref="messageConvert" />
+	</bean>
+
+	<!-- Jms消息发送 -->
+	<bean id="jmsSend" class="mb.erp.dr.o2o.service.impl.mq.JmsSend" />
+
+    <!-- 原始数据队列 开始 -->
+    <!-- MQ队列 for Obj -->
+    <bean id="initialDataDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="MB.ERP.DR.O2O.INITDATE" />
+    </bean>
+
+    <!-- JMS异步监听容器 Spring jmsContainer for obj -->
+    <bean id="messageListenerContainerForInitialData"
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="atomikosConnectionFactory" />
+        <property name="messageListener" ref="jmsListenerForInitialData" />
+        <property name="destination" ref="initialDataDestination" />
+        <property name="sessionTransacted" value="true" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="concurrentConsumers" value="3" />
+        <property name="maxConcurrentConsumers" value="50" />
+        <property name="taskExecutor" ref="userRegisterMessageExecutor" />
+        <!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+            <property name="messageSelector" value="JMSType like 'red%'" /> -->
+    </bean>
+
+    <!-- Spring jmsListener for obj -->
+    <bean id="jmsListenerForInitialData"
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+        <property name="defaultListenerMethod" value="onMessageForInitialDataQueue" />
+        <property name="messageConverter" ref="messageConvert" />
+    </bean>
+    <!--  原始数据队列 结束 -->
+    
+	<!-- 预处理队列 开始 -->
+	<!-- MQ队列 for Obj -->
+    <bean id="prepareDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="MB.ERP.DR.O2O.PREPARE" />
+    </bean>
+
+    <!-- JMS异步监听容器 Spring jmsContainer for obj -->
+    <bean id="defaultMessageListenerContainerForObj"
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="atomikosConnectionFactory" />
+        <property name="messageListener" ref="jmsListenerForObj" />
+        <property name="destination" ref="prepareDestination" />
+        <property name="sessionTransacted" value="true" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="concurrentConsumers" value="3" />
+        <property name="maxConcurrentConsumers" value="50" />
+        <property name="taskExecutor" ref="userRegisterMessageExecutor" />
+        <!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+            <property name="messageSelector" value="JMSType like 'red%'" /> -->
+    </bean>
+
+    <!-- Spring jmsListener for obj -->
+    <bean id="jmsListenerForObj"
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+        <property name="defaultListenerMethod" value="onMessage" />
+        <property name="messageConverter" ref="messageConvert" />
+    </bean>
+
+	<!-- 预处理队列 结束 -->
+
+	<!-- 两方调配处理队列 开始 -->
+	<!-- MQ队列 for Obj -->
+	<bean id="t2QueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="MB.ERP.DR.O2O.TBN" />
+	</bean>
+
+	<!-- JMS异步监听容器 Spring jmsContainer for obj -->
+	<bean id="t2QueueMessageListenerContainerForObj"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="atomikosConnectionFactory" />
+		<property name="messageListener" ref="jmsListenerForT2queue" />
+		<property name="destination" ref="t2QueueDestination" />
+		<property name="sessionTransacted" value="true" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="concurrentConsumers" value="3" />
+		<property name="maxConcurrentConsumers" value="50" />
+		<property name="taskExecutor" ref="userRegisterMessageExecutor" />
+		<!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+			<property name="messageSelector" value="JMSType like 'red%'" /> -->
+	</bean>
+
+	<!-- Spring jmsListener for obj -->
+	<bean id="jmsListenerForT2queue"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+		<property name="defaultListenerMethod" value="onMessageForT2queue" />
+		<property name="messageConverter" ref="messageConvert" />
+	</bean>
+	<!-- 两方调配处理队列 结束 -->
+	
+	<!--  老ERP订单队列 开始 -->
+	<!-- MQ队列 for Obj -->
+	<bean id="idtQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="MB.ERP.DR.O2O.IDT" />
+	</bean>
+
+	<!-- JMS异步监听容器 Spring jmsContainer for obj -->
+	<bean id="idtQueueMessageListenerContainerForObj"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="atomikosConnectionFactory" />
+		<property name="messageListener" ref="jmsListenerForIdtQueue" />
+		<property name="destination" ref="idtQueueDestination" />
+		<property name="sessionTransacted" value="true" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="concurrentConsumers" value="3" />
+		<property name="maxConcurrentConsumers" value="50" />
+		<property name="taskExecutor" ref="userRegisterMessageExecutor" />
+		<!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+			<property name="messageSelector" value="JMSType like 'red%'" /> -->
+	</bean>
+
+	<!-- Spring jmsListener for obj -->
+	<bean id="jmsListenerForIdtQueue"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+		<property name="defaultListenerMethod" value="onMessageForIdtQueue" />
+		<property name="messageConverter" ref="messageConvert" />
+	</bean>
+	<!-- 老ERP订单队列  结束 -->
+	
+	<!--  老ERP配货队列 开始 -->
+	<!-- MQ队列 for Obj -->
+	<bean id="adnQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="MB.ERP.DR.O2O.ADN" />
+	</bean>
+
+	<!-- JMS异步监听容器 Spring jmsContainer for obj -->
+	<bean id="adnQueueMessageListenerContainerForObj"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="atomikosConnectionFactory" />
+		<property name="messageListener" ref="jmsListenerForAdnQueue" />
+		<property name="destination" ref="adnQueueDestination" />
+		<property name="sessionTransacted" value="true" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="concurrentConsumers" value="3" />
+		<property name="maxConcurrentConsumers" value="50" />
+		<property name="taskExecutor" ref="userRegisterMessageExecutor" />
+		<!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+			<property name="messageSelector" value="JMSType like 'red%'" /> -->
+	</bean>
+
+	<!-- Spring jmsListener for obj -->
+	<bean id="jmsListenerForAdnQueue"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+		<property name="defaultListenerMethod" value="onMessageForAdnQueue" />
+		<property name="messageConverter" ref="messageConvert" />
+	</bean>
+	<!-- 老ERP配货队列  结束 -->
+	
+	<!--  老ERP出库队列 开始 -->
+	<!-- MQ队列 for Obj -->
+	<bean id="gdnQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="MB.ERP.DR.O2O.GDN" />
+	</bean>
+
+	<!-- JMS异步监听容器 Spring jmsContainer for obj -->
+	<bean id="gdnQueueMessageListenerContainerForObj"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="atomikosConnectionFactory" />
+		<property name="messageListener" ref="jmsListenerForGdnQueue" />
+		<property name="destination" ref="gdnQueueDestination" />
+		<property name="sessionTransacted" value="true" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="concurrentConsumers" value="3" />
+		<property name="maxConcurrentConsumers" value="50" />
+		<property name="taskExecutor" ref="userRegisterMessageExecutor" />
+		<!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+			<property name="messageSelector" value="JMSType like 'red%'" /> -->
+	</bean>
+
+	<!-- Spring jmsListener for obj -->
+	<bean id="jmsListenerForGdnQueue"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+		<property name="defaultListenerMethod" value="onMessageForGdnQueue" />
+		<property name="messageConverter" ref="messageConvert" />
+	</bean>
+	<!-- 老ERP出库队列  结束 -->
+	
+	<!--  老ERP入库队列 开始 -->
+	<!-- MQ队列 for Obj -->
+	<bean id="grnQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="MB.ERP.DR.O2O.GRN" />
+	</bean>
+
+	<!-- JMS异步监听容器 Spring jmsContainer for obj -->
+	<bean id="grnQueueMessageListenerContainerForObj"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="atomikosConnectionFactory" />
+		<property name="messageListener" ref="jmsListenerForGrnQueue" />
+		<property name="destination" ref="grnQueueDestination" />
+		<property name="sessionTransacted" value="true" />
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="concurrentConsumers" value="3" />
+		<property name="maxConcurrentConsumers" value="50" />
+		<property name="taskExecutor" ref="userRegisterMessageExecutor" />
+		<!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+			<property name="messageSelector" value="JMSType like 'red%'" /> -->
+	</bean>
+
+	<!-- Spring jmsListener for obj -->
+	<bean id="jmsListenerForGrnQueue"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+		<property name="defaultListenerMethod" value="onMessageForGrnQueue" />
+		<property name="messageConverter" ref="messageConvert" />
+	</bean>
+	<!-- 老ERP入库队列  结束 -->
+	
+	<!--  老ERP退货申请单队列 开始 -->
+    <!-- MQ队列 for Obj -->
+    <bean id="bgrQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="MB.ERP.DR.O2O.BGR" />
+    </bean>
+
+    <!-- JMS异步监听容器 Spring jmsContainer for obj -->
+    <bean id="bgrQueueMessageListenerContainerForObj"
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="atomikosConnectionFactory" />
+        <property name="messageListener" ref="jmsListenerForBgrQueue" />
+        <property name="destination" ref="bgrQueueDestination" />
+        <property name="sessionTransacted" value="true" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="concurrentConsumers" value="3" />
+        <property name="maxConcurrentConsumers" value="50" />
+        <property name="taskExecutor" ref="userRegisterMessageExecutor" />
+        <!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+            <property name="messageSelector" value="JMSType like 'red%'" /> -->
+    </bean>
+    
+    <!-- Spring jmsListener for obj -->
+    <bean id="jmsListenerForBgrQueue"
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+        <property name="defaultListenerMethod" value="onMessageForBgrQueue" />
+        <property name="messageConverter" ref="messageConvert" />
+    </bean>
+    <!--  老ERP退货申请单队列  结束 -->
+    
+    <!--  老ERP退货出库队列 开始 -->
+    <!-- MQ队列 for Obj -->
+    <bean id="thGdnQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="MB.ERP.DR.O2O.THGDN" />
+    </bean>
+
+    <!-- JMS异步监听容器 Spring jmsContainer for obj -->
+    <bean id="thGdnQueueMessageListenerContainerForObj"
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="atomikosConnectionFactory" />
+        <property name="messageListener" ref="jmsListenerForThgdnQueue" />
+        <property name="destination" ref="thGdnQueueDestination" />
+        <property name="sessionTransacted" value="true" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="concurrentConsumers" value="3" />
+        <property name="maxConcurrentConsumers" value="50" />
+        <property name="taskExecutor" ref="userRegisterMessageExecutor" />
+        <!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+            <property name="messageSelector" value="JMSType like 'red%'" /> -->
+    </bean>
+
+    <!-- Spring jmsListener for obj -->
+    <bean id="jmsListenerForThgdnQueue"
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+        <property name="defaultListenerMethod" value="onMessageForThgdnQueue" />
+        <property name="messageConverter" ref="messageConvert" />
+    </bean>
+    <!--  老ERP退货出库队列  结束 -->
+    
+     <!--  老ERP退货单队列 开始 -->
+    <!-- MQ队列 for Obj -->
+    <bean id="scnQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="MB.ERP.DR.O2O.SCN" />
+    </bean>
+
+    <!-- JMS异步监听容器 Spring jmsContainer for obj -->
+    <bean id="scnQueueMessageListenerContainerForObj"
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="atomikosConnectionFactory" />
+        <property name="messageListener" ref="jmsListenerForScnQueue" />
+        <property name="destination" ref="scnQueueDestination" />
+        <property name="sessionTransacted" value="true" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="concurrentConsumers" value="3" />
+        <property name="maxConcurrentConsumers" value="50" />
+        <property name="taskExecutor" ref="userRegisterMessageExecutor" />
+        <!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+            <property name="messageSelector" value="JMSType like 'red%'" /> -->
+    </bean>
+
+    <!-- Spring jmsListener for obj -->
+    <bean id="jmsListenerForScnQueue"
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+        <property name="defaultListenerMethod" value="onMessageForScnQueue" />
+        <property name="messageConverter" ref="messageConvert" />
+    </bean>
+    <!--  老ERP退货单队列  结束 -->
+    
+     <!--  老ERP退货入库队列 开始 -->
+    <!-- MQ队列 for Obj -->
+    <bean id="thGrnQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="MB.ERP.DR.O2O.THGRN" />
+    </bean>
+
+    <!-- JMS异步监听容器 Spring jmsContainer for obj -->
+    <bean id="thGrnQueueMessageListenerContainerForObj"
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="atomikosConnectionFactory" />
+        <property name="messageListener" ref="jmsListenerForThgrnQueue" />
+        <property name="destination" ref="thGrnQueueDestination" />
+        <property name="sessionTransacted" value="true" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="concurrentConsumers" value="3" />
+        <property name="maxConcurrentConsumers" value="50" />
+        <property name="taskExecutor" ref="userRegisterMessageExecutor" />
+        <!-- 消息选择器。支持sql92标准表达式。可以在消息对象中设置，如果使用messageConverter，逻辑可以在messageConverter中加入 
+            <property name="messageSelector" value="JMSType like 'red%'" /> -->
+    </bean>
+
+    <!-- Spring jmsListener for obj -->
+    <bean id="jmsListenerForThgrnQueue"
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <ref bean="jmsConsumerService"/>
+        </constructor-arg>
+        <property name="defaultListenerMethod" value="onMessageForThgrnQueue" />
+        <property name="messageConverter" ref="messageConvert" />
+    </bean>
+    <!--  老ERP退货入库队列  结束 -->
+
+</beans>

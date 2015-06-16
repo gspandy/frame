@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.DrTbnMapper" >
+  <resultMap id="DrTbnMap" type="mb.erp.dr.soa.vo.DrTbnVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="VENDER_ID" property="venderId" jdbcType="DECIMAL" />
+    <result column="TBN_NUM" property="tbnNum" jdbcType="VARCHAR" />
+    <result column="DOC_DATE" property="docDate" jdbcType="DATE" />
+    <result column="VENDEE_ID" property="vendeeId" jdbcType="DECIMAL" />
+    <result column="DISP_WAREH_ID" property="dispWarehId" jdbcType="DECIMAL" />
+    <result column="RCV_WAREH_ID" property="rcvWarehId" jdbcType="DECIMAL" />
+    <result column="SM_ADN_ID" property="smAdnId" jdbcType="DECIMAL" />
+    <result column="OPR_ID" property="oprId" jdbcType="DECIMAL" />
+    <result column="BUYER_ID" property="buyerId" jdbcType="DECIMAL" />
+    <result column="SELLER_ID" property="sellerId" jdbcType="DECIMAL" />
+    <result column="DELIV_MTHD" property="delivMthd" jdbcType="VARCHAR" />
+    <result column="DELIV_ADDR" property="delivAddr" jdbcType="VARCHAR" />
+    <result column="DELIV_PSTD" property="delivPstd" jdbcType="VARCHAR" />
+    <result column="REQD_AT" property="reqdAt" jdbcType="TIMESTAMP" />
+    <result column="DISP_TIME" property="dispTime" jdbcType="TIMESTAMP" />
+    <result column="RCV_TIME" property="rcvTime" jdbcType="TIMESTAMP" />
+    <result column="TAX_RATE" property="taxRate" jdbcType="DECIMAL" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="TTL_QTY" property="ttlQty" jdbcType="DECIMAL" />
+    <result column="TTL_VAL" property="ttlVal" jdbcType="DECIMAL" />
+    <result column="TTL_DELIV_QTY" property="ttlDelivQty" jdbcType="DECIMAL" />
+    <result column="TTL_DELIV_VAL" property="ttlDelivVal" jdbcType="DECIMAL" />
+    <result column="TTL_RCV_QTY" property="ttlRcvQty" jdbcType="DECIMAL" />
+    <result column="TTL_RCV_VAL" property="ttlRcvVal" jdbcType="DECIMAL" />
+    <result column="DOC_STATE" property="docState" jdbcType="DECIMAL" />
+    <result column="TBN_TYPE" property="tbnType" jdbcType="VARCHAR" />
+    <result column="BRAND_ID" property="brandId" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LAST_MODIFIED_USER" property="lastModifiedUser" jdbcType="VARCHAR" />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+    <result column="OLD_TBN_NUM" property="oldTbnNum" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="APPROVED" property="approved" jdbcType="VARCHAR" />
+    <result column="REASON_CODE" property="reasonCode" jdbcType="VARCHAR" />
+    <result column="MESSAGES" property="messages" jdbcType="VARCHAR" />
+    <result column="PROGRESS" property="progress" jdbcType="VARCHAR" />
+    <result column="DGN_CODE" property="dgnCode" jdbcType="VARCHAR" />
+    <result column="ALLOC_STATE" property="allocState" jdbcType="DECIMAL" />
+    <result column="DIST_STATUS" property="distStatus" jdbcType="VARCHAR" />
+    <result column="NS_STATE" property="nsState" jdbcType="VARCHAR" />
+    <result column="RCV_ADDR" property="rcvAddr" jdbcType="VARCHAR" />
+    <result column="RCV_USER" property="rcvUser" jdbcType="VARCHAR" />
+    <result column="RCV_PHONE_NO" property="rcvPhoneNo" jdbcType="VARCHAR" />
+    <result column="ORG_DOC_TYPE" property="orgDocType" jdbcType="VARCHAR" />
+    <result column="IS_OOS" property="isOos" jdbcType="CHAR" />
+    <result column="CONSIGN_TYPE" property="consignType" jdbcType="VARCHAR" />
+    <result column="OS_DOC_CODE" property="osDocCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="DrTbnDtlMap" type="mb.erp.dr.soa.vo.DrTbnDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="DR_TBN_ID" property="drTbnId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="EXPD_QTY" property="expdQty" jdbcType="DECIMAL" />
+    <result column="DELIV_QTY" property="delivQty" jdbcType="DECIMAL" />
+    <result column="RCV_QTY" property="rcvQty" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CR_VAL" property="crVal" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <resultMap id="DrTbnAllocDtlMap" type="mb.erp.dr.soa.vo.DrTbnAllocDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="DR_TBN_ID" property="drTbnId" jdbcType="DECIMAL" />
+    <result column="WAREH_ID" property="warehId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="OH_ALLOC_QTY" property="ohAllocQty" jdbcType="DECIMAL" />
+    <result column="ALLOC_QTY" property="allocQty" jdbcType="DECIMAL" />
+    <result column="ALLOC_DATE" property="allocDate" jdbcType="TIMESTAMP" />
+    <result column="ACT_QTY" property="actQty" jdbcType="DECIMAL" />
+    <result column="RCV_QTY" property="rcvQty" jdbcType="DECIMAL" />
+    <result column="DOC_STATE" property="docState" jdbcType="DECIMAL" />
+    <result column="PROGRESS" property="progress" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="GDN_CODE" property="gdnCode" jdbcType="VARCHAR" />
+    <result column="GRN_CODE" property="grnCode" jdbcType="VARCHAR" />
+    <result column="DGN_CODE" property="dgnCode" jdbcType="VARCHAR" />
+    <result column="GDN_TIME" property="gdnTime" jdbcType="TIMESTAMP" />
+    <result column="GRN_TIME" property="grnTime" jdbcType="TIMESTAMP" />
+    <result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+    <result column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <result column="DIST_QTY" property="distQty" jdbcType="DECIMAL" />
+    <result column="PRE_DIST_QTY" property="preDistQty" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="TbnAllocDtl_Column_List" >
+    ID, DR_TBN_ID, WAREH_ID, PROD_ID, OH_ALLOC_QTY, ALLOC_QTY, ALLOC_DATE, ACT_QTY, RCV_QTY, 
+    DOC_STATE, PROGRESS, REMARK, GDN_CODE, GRN_CODE, DGN_CODE, GDN_TIME, GRN_TIME, ORDER_ID, 
+    UNIT_ID, DIST_QTY, PRE_DIST_QTY
+  </sql>
+  
+  <sql id="tbn_Column_List" >
+    ID, VENDER_ID, TBN_NUM, DOC_DATE, VENDEE_ID, DISP_WAREH_ID, RCV_WAREH_ID, SM_ADN_ID, 
+    OPR_ID, BUYER_ID, SELLER_ID, DELIV_MTHD, DELIV_ADDR, DELIV_PSTD, REQD_AT, DISP_TIME, 
+    RCV_TIME, TAX_RATE, CURRENCY, TTL_QTY, TTL_VAL, TTL_DELIV_QTY, TTL_DELIV_VAL, TTL_RCV_QTY, 
+    TTL_RCV_VAL, DOC_STATE, TBN_TYPE, BRAND_ID, REMARK, CREATE_USER, CREATE_DATE, LAST_MODIFIED_USER, 
+    LAST_MODIFIED_DATE, OLD_TBN_NUM, DATA_SOURCE, APPROVED, REASON_CODE, MESSAGES, PROGRESS, 
+    DGN_CODE, ALLOC_STATE, DIST_STATUS, NS_STATE, RCV_ADDR, RCV_USER, RCV_PHONE_NO, ORG_DOC_TYPE, 
+    IS_OOS, CONSIGN_TYPE, OS_DOC_CODE,DGN_CODE
+  </sql>
+  <sql id="tbnDtl_Column_List" >
+    ID, DR_TBN_ID, PROD_ID, UNIT_PRICE, DISC_RATE, EXPD_QTY, DELIV_QTY, RCV_QTY, REMARK, 
+    CR_VAL
+  </sql>
+  
+  <select id="selectTbnById" resultMap="DrTbnMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="tbn_Column_List" />
+    from DR_TBN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectTbnByCode" resultMap="DrTbnMap" parameterType="java.lang.String" >
+    select 
+    <include refid="tbn_Column_List" />
+    from DR_TBN
+    where TBN_NUM = #{code,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询调配单信息 -->
+  <select id="searchDrTbn" resultMap="DrTbnMap" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    select 
+    <include refid="tbn_Column_List" />
+    from DR_TBN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 查询调配单明细 -->
+  <select id="searchTbnDtl" resultMap="DrTbnDtlMap" parameterType="mb.erp.dr.soa.vo.DrTbnDtlVo" >
+    select 
+    <include refid="tbnDtl_Column_List" />
+    from DR_TBN_DTL
+    where DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 查询调配单配货明细 -->
+  <select id="searchDrTbnAllocDtl" resultMap="DrTbnAllocDtlMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="TbnAllocDtl_Column_List" />
+    from DR_TBN_ALLOC_DTL
+    where DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+  </select>
+  
+  <!-- 保存调配单 -->
+  <insert id="save" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    insert into DR_TBN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null and id != ''" >
+        ID,
+      </if>
+      <if test="venderId != null and venderId != ''" >
+        VENDER_ID,
+      </if>
+      <if test="tbnNum != null and tbnNum != ''" >
+        TBN_NUM,
+      </if>
+        DOC_DATE,
+      <if test="vendeeId != null and vendeeId != ''" >
+        VENDEE_ID,
+      </if>
+      <if test="dispWarehId != null and dispWarehId != ''" >
+        DISP_WAREH_ID,
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        RCV_WAREH_ID,
+      </if>
+      <if test="smAdnId != null and smAdnId != ''" >
+        SM_ADN_ID,
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        OPR_ID,
+      </if>
+      <if test="buyerId != null and buyerId != ''" >
+        BUYER_ID,
+      </if>
+      <if test="sellerId != null and sellerId != ''" >
+        SELLER_ID,
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        DELIV_MTHD,
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        DELIV_ADDR,
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        DELIV_PSTD,
+      </if>
+        REQD_AT,
+      <if test="dispTime != null and dispTime != ''" >
+        DISP_TIME,
+      </if>
+      <if test="rcvTime != null and rcvTime != ''" >
+        RCV_TIME,
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="ttlQty != null" >
+        TTL_QTY,
+      </if>
+      <if test="ttlVal != null" >
+        TTL_VAL,
+      </if>
+      <if test="ttlDelivQty != null" >
+        TTL_DELIV_QTY,
+      </if>
+      <if test="ttlDelivVal != null" >
+        TTL_DELIV_VAL,
+      </if>
+      <if test="ttlRcvQty != null" >
+        TTL_RCV_QTY,
+      </if>
+      <if test="ttlRcvVal != null" >
+        TTL_RCV_VAL,
+      </if>
+        DOC_STATE,
+      <if test="tbnType != null and tbnType != ''" >
+        TBN_TYPE,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        CREATE_USER,
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        CREATE_DATE,
+      </if>
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        LAST_MODIFIED_USER,
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        LAST_MODIFIED_DATE,
+      </if>
+      <if test="oldTbnNum != null and oldTbnNum != ''" >
+        OLD_TBN_NUM,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="approved != null and approved != ''" >
+        APPROVED,
+      </if>
+      <if test="reasonCode != null and reasonCode != ''" >
+        REASON_CODE,
+      </if>
+      <if test="messages != null and messages != ''" >
+        MESSAGES,
+      </if>
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="dgnCode != null and dgnCode != ''" >
+        DGN_CODE,
+      </if>
+      <if test="allocState != null and allocState != ''" >
+        ALLOC_STATE,
+      </if>
+      <if test="distStatus != null and distStatus != ''" >
+        DIST_STATUS,
+      </if>
+      <if test="nsState != null and nsState != ''" >
+        NS_STATE,
+      </if>
+      <if test="rcvAddr != null and rcvAddr != ''" >
+        RCV_ADDR,
+      </if>
+      <if test="rcvUser != null and rcvUser != ''" >
+        RCV_USER,
+      </if>
+      <if test="rcvPhoneNo != null and rcvPhoneNo != ''" >
+        RCV_PHONE_NO,
+      </if>
+      <if test="orgDocType != null and orgDocType != ''" >
+        ORG_DOC_TYPE,
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        IS_OOS,
+      </if>
+      <if test="consignType != null and consignType != ''" >
+        CONSIGN_TYPE,
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null and id != ''" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="venderId != null and venderId != ''" >
+        #{venderId,jdbcType=DECIMAL},
+      </if>
+      <if test="tbnNum != null and tbnNum != ''" >
+        #{tbnNum,jdbcType=VARCHAR},
+      </if>
+      TRUNC(SYSDATE),
+      <if test="vendeeId != null and vendeeId != ''" >
+        #{vendeeId,jdbcType=DECIMAL},
+      </if>
+      <if test="dispWarehId != null and dispWarehId != ''" >
+        #{dispWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        #{rcvWarehId,jdbcType=DECIMAL},
+      </if>
+      <if test="smAdnId != null and smAdnId != ''" >
+        #{smAdnId,jdbcType=DECIMAL},
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        #{oprId,jdbcType=DECIMAL},
+      </if>
+      <if test="buyerId != null and buyerId != ''" >
+        #{buyerId,jdbcType=DECIMAL},
+      </if>
+      <if test="sellerId != null and sellerId != ''" >
+        #{sellerId,jdbcType=DECIMAL},
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        #{delivMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        #{delivAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        #{delivPstd,jdbcType=VARCHAR},
+      </if>
+      TRUNC(SYSDATE),
+      <if test="dispTime != null and dispTime != ''" >
+        #{dispTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rcvTime != null and rcvTime != ''" >
+        #{rcvTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taxRate != null" >
+        #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="ttlQty != null" >
+        #{ttlQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlVal != null" >
+        #{ttlVal,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlDelivQty != null" >
+        #{ttlDelivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlDelivVal != null" >
+        #{ttlDelivVal,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlRcvQty != null" >
+        #{ttlRcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="ttlRcvVal != null" >
+        #{ttlRcvVal,jdbcType=DECIMAL},
+      </if>
+        #{docState,jdbcType=DECIMAL},
+      <if test="tbnType != null and tbnType != ''" >
+        #{tbnType,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oldTbnNum != null and oldTbnNum != ''" >
+        #{oldTbnNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="approved != null and approved != ''" >
+        #{approved,jdbcType=VARCHAR},
+      </if>
+      <if test="reasonCode != null and reasonCode != ''" >
+        #{reasonCode,jdbcType=VARCHAR},
+      </if>
+      <if test="messages != null and messages != ''" >
+        #{messages,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null and progress != ''" >
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="dgnCode != null and dgnCode != ''" >
+        #{dgnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="allocState != null and allocState != ''" >
+        #{allocState,jdbcType=DECIMAL},
+      </if>
+      <if test="distStatus != null and distStatus != ''" >
+        #{distStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="nsState != null and nsState != ''" >
+        #{nsState,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvAddr != null and rcvAddr != ''" >
+        #{rcvAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvUser != null and rcvUser != ''" >
+        #{rcvUser,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvPhoneNo != null and rcvPhoneNo != ''" >
+        #{rcvPhoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orgDocType != null and orgDocType != ''" >
+        #{orgDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        #{isOos,jdbcType=CHAR},
+      </if>
+      <if test="consignType != null and consignType != ''" >
+        #{consignType,jdbcType=VARCHAR},
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 保存调配单明细 -->
+  <insert id="saveDtl" parameterType="mb.erp.dr.soa.vo.DrTbnDtlVo" >
+    insert into DR_TBN_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    <if test="id != null and id != ''" >
+        ID,
+      </if>
+      <if test="drTbnId != null and drTbnId != ''" >
+        DR_TBN_ID,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE,
+      </if>
+      <if test="expdQty != null" >
+        EXPD_QTY,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="crVal != null and crVal != ''" >
+        CR_VAL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    <if test="id != null and id != ''" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="drTbnId != null and drTbnId != ''" >
+        #{drTbnId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="expdQty != null" >
+        #{expdQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="crVal != null and crVal != ''" >
+        #{crVal,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <!-- 保存调配单配货明细 -->
+  <insert id="saveAllocDtl" parameterType="mb.erp.dr.soa.vo.DrTbnAllocDtlVo" >
+    insert into DR_TBN_ALLOC_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="drTbnId != null and drTbnId != ''" >
+        DR_TBN_ID,
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        WAREH_ID,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="ohAllocQty != null and ohAllocQty != ''" >
+        OH_ALLOC_QTY,
+      </if>
+      <if test="allocQty != null and allocQty != ''" >
+        ALLOC_QTY,
+      </if>
+      <if test="allocDate != null and allocDate != ''" >
+        ALLOC_DATE,
+      </if>
+      <if test="actQty != null and actQty != ''" >
+        ACT_QTY,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="docState != null and docState != ''" >
+        DOC_STATE,
+      </if>
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="gdnCode != null and gdnCode != ''" >
+        GDN_CODE,
+      </if>
+      <if test="grnCode != null and grnCode != ''" >
+        GRN_CODE,
+      </if>
+      <if test="dgnCode != null and dgnCode != ''" >
+        DGN_CODE,
+      </if>
+      <if test="gdnTime != null and gdnTime != ''" >
+        GDN_TIME,
+      </if>
+      <if test="grnTime != null and grnTime != ''" >
+        GRN_TIME,
+      </if>
+      <if test="orderId != null and orderId != ''" >
+        ORDER_ID,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="distQty != null" >
+        DIST_QTY,
+      </if>
+      <if test="preDistQty != null" >
+        PRE_DIST_QTY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="drTbnId != null and drTbnId != ''" >
+        #{drTbnId,jdbcType=DECIMAL},
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        #{warehId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="ohAllocQty != null and ohAllocQty != ''" >
+        #{ohAllocQty,jdbcType=DECIMAL},
+      </if>
+      <if test="allocQty != null and allocQty != ''" >
+        #{allocQty,jdbcType=DECIMAL},
+      </if>
+      <if test="allocDate != null and allocDate != ''" >
+        #{allocDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actQty != null and actQty != ''" >
+        #{actQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="docState != null and docState != ''" >
+        #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="progress != null and progress != ''" >
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="gdnCode != null and gdnCode != ''" >
+        #{gdnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="grnCode != null and grnCode != ''" >
+        #{grnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dgnCode != null and dgnCode != ''" >
+        #{dgnCode,jdbcType=VARCHAR},
+      </if>
+      <if test="gdnTime != null and gdnTime != ''" >
+        #{gdnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grnTime != null and grnTime != ''" >
+        #{grnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderId != null and orderId != ''" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="distQty != null" >
+        #{distQty,jdbcType=DECIMAL},
+      </if>
+      <if test="preDistQty != null" >
+        #{preDistQty,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 验证调配单的状态 -->
+  <select id="selectProcess" resultType="java.lang.Integer" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    select doc_state
+    from DR_TBN
+    where ID = #{id}
+  </select>
+  <!-- 更新调配单状态 -->
+  <update id="updateProcess" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    UPDATE  DR_TBN
+ SET 
+ DOC_STATE = #{docState,jdbcType=DECIMAL}
+ ,PROGRESS = CASE #{docState,jdbcType=VARCHAR}
+             WHEN 0 THEN 'PG'
+             WHEN 1 THEN 'CN'
+             WHEN 2 THEN 'AP'
+             WHEN 4 THEN 'CP'
+             WHEN 8 THEN 'CL'
+             WHEN 393216 THEN 'DP'
+             WHEN 458752 THEN 'DC'
+             WHEN 196608 THEN 'SP'
+             WHEN 69632 THEN 'SC'
+             WHEN 327680 THEN 'RP'
+             WHEN 77824 THEN 'RC'
+             WHEN 65552 THEN 'PD'
+             WHEN 131088 THEN 'PA'
+             WHEN 196624 THEN 'PS'
+             WHEN 262160 THEN 'PB'
+             WHEN 327696 THEN 'PR'
+             WHEN 393232 THEN 'PC'
+             ELSE ''
+             END
+ WHERE ID = #{id,jdbcType=DECIMAL} 
+   <if test="docStateList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="docStateList"  open="(" separator="or" close=")">               
+                DOC_STATE =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  <!--  原始单据修改 =================================================================== -->
+  <!-- 原始单据修改-调配单表头（发货） -->
+  <update id="updateOriginalTbnF" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    update DR_TBN
+    set 
+      PROGRESS = #{progress},
+      deliv_Qty = 0<!-- 发货数量 -->
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （发货）-->
+  <update id="updateOriginalTbnDtlF" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    update DR_TBN_DTL
+    set 
+      deliv_Qty = 0<!-- 发货数量 -->
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单表头 （收货）-->
+  <update id="updateOriginalTbnS" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    update DR_TBN
+    set 
+      PROGRESS = #{progress},
+      rcv_Qty = 0<!-- 发货数量 -->
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （收货）-->
+  <update id="updateOriginalTbnDtlS" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+    update DR_TBN_DTL
+    set 
+      rcv_Qty = 0<!-- 发货数量 -->
+    where VENDER_ID = #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单表头 （已发货接口）-->
+  <update id="updateOriginalTbnYfh" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+  update DR_TBN T
+    set 
+      PROGRESS = #{progress},
+      (deliv_Qty,deliv_Val) = (SELECT G.TTL_QTY,G.TTL_VAL FROM GDN G WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM )
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （已发货接口）-->
+  <update id="updateOriginalTbnDtlYfh" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+  update DR_TBN_DTL T
+    set 
+      deliv_Qty= NVL((
+          SELECT GD.quantity 
+          FROM GDN_DTL GD  INNER JOIN GDN G ON G.UNIT_ID = GD.UNIT_ID AND G.GDN_NUM = GD.GDN_NUM
+          WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM AND GD.PROD_ID = T.PROD_ID
+       ),0)
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  
+  <!-- 原始单据修改-调配单表头 （已收货接口）-->
+  <update id="updateOriginalTbnYsh" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+  update DR_TBN T
+    set 
+      PROGRESS = #{progress},
+      rcv_Qty= NVL((SELECT G.TTL_QTY FROM GRN G WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM ),0)
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 原始单据修改-调配单明细 （已收货接口）-->
+  <update id="updateOriginalTbnDtlYsh" parameterType="mb.erp.dr.soa.vo.DrTbnVo" >
+  update DR_TBN_DTL T
+    set 
+      rcv_Qty= NVL((
+          SELECT GD.quantity 
+          FROM GRN_DTL GD  INNER JOIN GRN G ON G.UNIT_ID = GD.UNIT_ID AND G.GRN_NUM = GD.GRN_NUM
+          WHERE G.SRC_DOC_TYPE='TBN' AND G.SRC_UNIT_ID = T.VENDER_ID AND G.SRC_DOC_NUM = T.TBN_NUM AND GD.PROD_ID = T.PROD_ID
+       ),0)
+    where VENDER_ID =  #{venderId}
+      and TBN_NUM = #{tbnNum}
+  </update>
+  
+  <!-- 根据出库单 GDN 查询 调配单 -->
+  <select id="selectTbnByGdn" parameterType="mb.erp.dr.soa.vo.SfGdnVo"  resultMap="DrTbnMap">
+    SELECT T.* FROM TBN T INNER JOIN GDN G ON G.SRC_DOC_NUM = T.TBN_NUM
+                      WHERE G.SRC_DOC_TYPE = 'TBN'
+                      AND   G.UNIT_ID = #{unitId}
+                      AND   G.GDN_NUM = #{gdnNum} 
+  </select>
+  
+  <!-- 根据入库单 GRN 查询 调配单 -->
+  <select id="selectTbnByGrn" parameterType="mb.erp.dr.soa.vo.SfGrnVo"  resultMap="DrTbnMap">
+    SELECT T.* FROM TBN T INNER JOIN GRN G ON G.SRC_DOC_NUM = T.TBN_NUM
+                      WHERE G.SRC_DOC_TYPE = 'TBN'
+                      AND   G.UNIT_ID = #{unitId}
+                      AND   G.GDN_NUM = #{gdnNum} 
+  </select>
+  
+  <!-- 从调配单中获取税率 -->
+  <select id="selectTaxRateFromTbn" parameterType="map"  resultType="java.lang.Double">
+     SELECT NVL(MAX(T.TAX_RATE),-1)
+        FROM TBN T 
+       WHERE T.SUSPENDED = 'F'
+         AND T.CANCELLED = 'F'
+         AND T.TBN_NUM = #{docNum}
+         AND T.VENDER_ID = #{unit_id}
+  </select>
+  
+  <!-- 根据交货单更新原始调配单据 -->
+  <update id="updateDrTbnByDGN" parameterType="java.util.Map">
+	    UPDATE DR_TBN_ALLOC_DTL T
+		SET (DGN_CODE) = 
+		    (
+		      SELECT D.CODE
+		      FROM SF_DGN D
+		      INNER JOIN SF_DGN_DTL A ON A.SF_DGN_ID = D.ID
+		      WHERE D.ID = #{dgnId,jdbcType=DECIMAL} AND D.WAREH_ID = T.WAREH_ID AND A.PROD_ID = T.PROD_ID
+		    )
+		WHERE T.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL} AND T.DGN_CODE IS NULL
+		  AND EXISTS(
+		        SELECT 1
+		        FROM SF_DGN D
+		      INNER JOIN SF_DGN_DTL A ON A.SF_DGN_ID = D.ID
+		      WHERE D.ID = #{dgnId,jdbcType=DECIMAL} AND D.WAREH_ID = T.WAREH_ID AND A.PROD_ID = T.PROD_ID
+		)
+  </update>
+	<select id="selectDrTbnByDGN" parameterType="java.util.Map" resultMap="DrTbnAllocDtlMap">
+	select t.* from  DR_TBN_ALLOC_DTL T
+		  INNER join SF_DGN D on D.WAREH_ID = T.WAREH_ID 
+          INNER JOIN SF_DGN_DTL A ON A.SF_DGN_ID = D.ID AND A.PROD_ID = T.PROD_ID 
+          WHERE D.ID = #{dgnId,jdbcType=DECIMAL} AND T.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL} 
+	</select>
+  <insert id="insertDrTbnAllocByDgn"  parameterType="java.util.Map">
+     INSERT INTO 
+	 DR_TBN_ALLOC_DTL 
+	 (ID 
+	 ,DR_TBN_ID 
+	 ,WAREH_ID 
+	 ,PROD_ID 
+	 ,ALLOC_QTY 
+	 ,ACT_QTY 
+	 ,RCV_QTY
+	 ,DGN_CODE 
+	 ,DOC_STATE
+	 ,PROGRESS
+	 ) 
+	SELECT 
+	FU_GET_NEXT_IDENTITY('DR_TBN_ALLOC_DTL',1)
+	,#{drTbnId,jdbcType=DECIMAL}
+	,G.WAREH_ID
+	,D.PROD_ID
+	,0
+	,0
+	,0
+	,G.CODE
+	,131072
+	,'DP'
+	FROM SF_DGN G
+	INNER JOIN SF_DGN_DTL D ON D.SF_DGN_ID=G.ID
+	WHERE G.ID=#{dgnId,jdbcType=DECIMAL}
+	  AND NOT EXISTS(
+	      SELECT 1
+	      FROM DR_TBN_ALLOC_DTL A
+	      WHERE A.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+	        AND A.WAREH_ID = G.WAREH_ID
+	        AND A.PROD_ID = D.PROD_ID
+	        AND A.DGN_CODE = G.CODE
+	  )
+  </insert>
+	
+  <!-- 配货明细 -  已配货 -->
+  <update id="updateDrTbnAllocToDc" parameterType="java.util.Map">
+	   UPDATE DR_TBN_ALLOC_DTL D
+		SET (D.ALLOC_QTY,D.ALLOC_DATE,D.DOC_STATE,D.PROGRESS) = 
+		    (SELECT T.QUANTITY,SYSDATE,65536,'DC'
+		     FROM SF_DGN G
+		     INNER JOIN SF_DGN_DTL T ON T.SF_DGN_ID=G.ID
+		     WHERE T.SF_DGN_ID= #{dgnId,jdbcType=DECIMAL}
+		       AND T.PROD_ID = D.PROD_ID
+		       AND D.DGN_CODE = G.CODE
+		                 )
+		WHERE D.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+		  AND D.DOC_STATE = 131072
+		  AND EXISTS(SELECT 1
+		             FROM SF_DGN S
+		             WHERE S.CODE = D.DGN_CODE
+		               AND S.ID = #{dgnId,jdbcType=DECIMAL})
+	</update>
+	
+  <!-- 配货明细 -  发货中-->
+  <update id="updateDrTbnAllocToSp" parameterType="java.util.Map">
+		UPDATE DR_TBN_ALLOC_DTL D
+		SET D.DOC_STATE = 262144,
+		    D.PROGRESS = 'SP'
+		WHERE D.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+		  AND D.DGN_CODE = #{dgnCode,jdbcType=VARCHAR}
+		  AND (D.DOC_STATE =65536 OR D.DOC_STATE = 262144)
+  </update>
+  
+  <!-- 配货明细 -  已发货-->
+   <update id="updateDrTbnAllocToSc" parameterType="java.util.Map">
+	  UPDATE DR_TBN_ALLOC_DTL D
+	SET (D.DOC_STATE,D.PROGRESS,D.ACT_QTY,D.GDN_CODE,D.GDN_TIME)=
+	    (SELECT 196608,'SC',T.QUANTITY,G.CODE,SYSDATE
+	     FROM SF_GDN_DTL T
+	     INNER JOIN SF_GDN G ON G.ID =T.SF_GDN_ID
+	     WHERE T.PROD_ID = D.PROD_ID
+	       AND G.ID = #{sfGdnId,jdbcType=DECIMAL})
+	WHERE D.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+	  AND D.DOC_STATE =262144
+	  AND D.DGN_CODE = #{dgnCode,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 配货明细 -  收货中-->
+   <update id="updateDrTbnAllocToRp" parameterType="java.util.Map">
+	   UPDATE DR_TBN_ALLOC_DTL D
+	SET D.DOC_STATE = 393216,
+	    D.PROGRESS = 'RP'
+	WHERE D.DR_TBN_ID =#{drTbnId,jdbcType=DECIMAL}
+	  AND (D.DOC_STATE =196608 OR D.DOC_STATE = 393216)
+	  AND D.GDN_CODE = #{gdnCode,jdbcType=VARCHAR}
+   </update>
+   
+   <!-- 配货明细 -  已收货-->
+   <update id="updateDrTbnAllocToRc" parameterType="java.util.Map">
+	   UPDATE DR_TBN_ALLOC_DTL D
+	SET (D.DOC_STATE,D.PROGRESS,D.GRN_CODE,D.RCV_QTY,D.GRN_TIME) = 
+	    (SELECT 327680,'RC',G.GRN_NUM,GD.QUANTITY,SYSDATE
+	     FROM SF_GRN_DTL GD
+	     INNER JOIN SF_GRN G ON GD.SF_GRN_ID = G.ID
+	     WHERE GD.PROD_ID = D.PROD_ID
+	       AND G.ID = #{sfGrnId,jdbcType=DECIMAL})
+	WHERE D.DR_TBN_ID =#{drTbnId,jdbcType=DECIMAL}
+	  AND D.DOC_STATE =393216
+	  AND D.GDN_CODE = #{gdnCode,jdbcType=VARCHAR}
+   </update>
+   
+   <!-- 根据老ERP入库单更新配货明细 -  已收货-->
+   <update id="updateDrTbnAllocByGrnToRc" parameterType="java.util.Map">
+	   UPDATE DR_TBN_ALLOC_DTL D
+		SET 
+		D.DOC_STATE = 327680,
+		D.PROGRESS = 'RC',
+		D.GRN_CODE = #{grn_code},
+		D.RCV_QTY = #{rcv_qty},
+		D.GRN_TIME = SYSDATE 
+	WHERE D.DR_TBN_ID =#{drTbnId,jdbcType=DECIMAL}
+	  AND D.DOC_STATE =393216
+	  AND D.GDN_CODE = #{gdnCode,jdbcType=VARCHAR}
+	  AND D.PROD_ID = #{prod_id,jdbcType=VARCHAR}
+   </update>
+	
+	<!-- 已配货 更新调配单的数量 -->
+	<update id="updateDrTbnQtyVAL" parameterType="java.lang.Long">
+	   UPDATE DR_TBN F
+		SET (F.TTL_DELIV_QTY,F.TTL_DELIV_VAL,F.TTL_RCV_QTY,F.TTL_RCV_VAL)=
+		    (SELECT 
+		     NVL(SUM(NVL(A.ACT_QTY,0)),0),
+		     NVL(SUM(NVL(A.ACT_QTY,0)*NVL(D.UNIT_PRICE,0)*NVL(D.DISC_RATE,0)/100),0),
+		     NVL(SUM(NVL(A.RCV_QTY,0)),0),
+		     NVL(SUM(NVL(A.RCV_QTY,0)*NVL(D.UNIT_PRICE,0)*NVL(D.DISC_RATE,0)/100),0)
+		     FROM DR_TBN_ALLOC_DTL A
+		     INNER JOIN DR_TBN_DTL D
+		     ON A.PROD_ID = D.PROD_ID AND A.DR_TBN_ID = D.DR_TBN_ID
+		     WHERE A.DR_TBN_ID =F.ID
+		       AND A.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+		    )
+		WHERE F.ID = #{drTbnId,jdbcType=DECIMAL}
+	</update>
+	
+	<!-- 已配货 更新调配单明细的数量 -->
+	<update id="updateDrTbnQty" parameterType="java.lang.Long">
+	   UPDATE  DR_TBN_DTL T
+		 SET (T.DELIV_QTY,T.RCV_QTY)=
+		 (SELECT SUM(NVL(D.ACT_QTY,0)),SUM(NVL(D.RCV_QTY,0))
+		  FROM DR_TBN_ALLOC_DTL D
+		  WHERE D.DR_TBN_ID = T.DR_TBN_ID
+		    AND D.PROD_ID = T.PROD_ID
+		    AND D.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+		  GROUP BY D.DR_TBN_ID,D.PROD_ID
+		 )
+		 WHERE T.DR_TBN_ID = #{drTbnId,jdbcType=DECIMAL}
+	</update>
+	
+	<select id="selectTaxRateFromDrTbn" parameterType="java.lang.String" resultType="java.lang.Double">
+		SELECT NVL(MAX(T.TAX_RATE),-1)
+		  FROM DR_TBN T
+		 WHERE T.TBN_NUM = #{tbn_num}
+	</select>
+</mapper>

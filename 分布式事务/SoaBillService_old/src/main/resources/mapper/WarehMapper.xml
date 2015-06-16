@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.WarehMapper" >
+    <!-- 仓库库库存表 -->
+  <resultMap id="warehProdMap" type="mb.erp.dr.soa.old.vo.WarehProdVo" >
+    <id column="WAREH_ID" property="warehId"  />
+    <id column="PROD_ID" property="prodId" />
+    <result column="STK_ON_HAND" property="stkOnHand" />
+    <result column="QTY_ON_ORDER" property="qtyOnOrder" />
+    <result column="QTY_IN_TRANSIT" property="qtyInTransit" />
+    <result column="QTY_COMMITTED" property="qtyCommitted" />
+    <result column="QTY_IN_DOUBT" property="qtyInDoubt" />
+    <result column="STK_PUBLISHED" property="stkPublished" />
+    <result column="MIN_STK" property="minStk" />
+    <result column="MAX_STK" property="maxStk" />
+    <result column="ALERT_MIN_STK" property="alertMinStk" />
+    <result column="ALERT_MAX_STK" property="alertMaxStk" />
+    <result column="MIN_AD_STK" property="minAdStk" />
+    <result column="MAX_AD_STK" property="maxAdStk" />
+    <result column="DFLT_ZONE_ID" property="dfltZoneId"  />
+    <result column="STD_LOC_CAP" property="stdLocCap" />
+    <result column="DFLT_LOC_ID" property="dfltLocId"  />
+    <result column="QTY_FUC_COMM" property="qtyFucComm" />
+    <result column="STK_JUST_TIME" property="stkJustTime" />
+    <result column="QTY_CUR_COMM" property="qtyCurComm" />
+    <result column="STK_CHANGE_DATE" property="stkChangeDate" />
+    <result column="BGR_STK" property="bgrStk" />
+    <result column="IN_RCV_STK" property="inRcvStk" />
+    <result column="LOCKED_QTY" property="lockedQty" />
+    <result column="LOCK_STOCKIN" property="lockStockin" />
+    <result column="STOCKIN_FREE" property="stockinFree" />
+    <result column="RESERVED_QTY" property="reservedQty" />
+  </resultMap>
+  <!-- 货位表 -->
+  <resultMap id="warehouseMap" type="mb.erp.dr.soa.old.vo.Warehouse" >
+    <id column="WAREH_ID" property="warehId" />
+    <result column="COST_GRP_ID" property="costGrpId" />
+    <result column="LOC_ADOPTED" property="locAdopted"  />
+    <result column="SCAN_ADOPTED" property="scanAdopted"  />
+    <result column="DISP_LOC_ID" property="dispLocId" />
+    <result column="RCPT_LOC_ID" property="rcptLocId" />
+    <result column="FUC_ADOPTED" property="fucAdopted"  />
+    <result column="DELIV_ADOPTED" property="delivAdopted"  />
+    <result column="RF_ADOPTED" property="rfAdopted"  />
+    <result column="TRANSFER_FLAG" property="transferFlag" />
+    <result column="DAILY_MAX_COUNT" property="dailyMaxCount" />
+    <result column="CUR_STOCK_TYPE" property="curStockType" />
+  </resultMap>
+  
+  <!-- 货位库存表 -->
+  <resultMap id="stkDtlMap" type="mb.erp.dr.soa.old.vo.StkDtlVo" >
+    <id column="WAREH_ID" property="warehId" />
+    <id column="LOC_ID" property="locId" />
+    <id column="PROD_ID" property="prodId" />
+    <result column="STK_ON_HAND" property="stkOnHand" />
+    <result column="ALLOC_QTY" property="allocQty" />
+    <result column="EXPD_QTY" property="expdQty" />
+    <result column="STK_CHANGE_DATE" property="stkChangeDate" />
+  </resultMap>
+  
+  <!-- 已分配库存事务表 -->
+  <resultMap id="commitTranMap" type="mb.erp.dr.soa.old.vo.WarehCommitedTranVo" >
+    <id column="WAREH_ID" property="warehId" />
+    <id column="COMMITED_TRAN_ID" property="commitedTranId" />
+    <result column="PROD_ID" property="prodId" />
+    <result column="TRAN_DATE" property="tranDate"/>
+    <result column="TRAN_TIME" property="tranTime"/>
+    <result column="DOC_TYPE" property="docType" />
+    <result column="DOC_NUM" property="docNum" />
+    <result column="TRAN_QTY" property="tranQty" />
+    <result column="BALANCE" property="balance" />
+  </resultMap>
+  
+    <!-- 库存事务表 -->
+  <resultMap id="warehTranMap" type="mb.erp.dr.soa.old.vo.WarehTranVo" >
+    <id column="WAREH_ID" property="warehId" />
+    <id column="WAREH_TRAN_ID" property="warehTranId" />
+    <result column="PROD_ID" property="prodId" />
+    <result column="TRAN_DATE" property="tranDate"/>
+    <result column="TRAN_TIME" property="tranTime"/>
+    <result column="DOC_TYPE" property="docType" />
+    <result column="DOC_NUM" property="docNum" />
+    <result column="TRAN_QTY" property="tranQty" />
+    <result column="BALANCE" property="balance" />
+  </resultMap>
+  
+  <!-- 在购库存事务表 -->
+  <resultMap id="orderTranMap" type="mb.erp.dr.soa.old.vo.WarehOrderTranVo" >
+    <id column="WAREH_ID" property="warehId" />
+    <id column="ORDER_TRAN_ID" property="orderTranId" />
+    <result column="PROD_ID" property="prodId" />
+    <result column="TRAN_DATE" property="tranDate"/>
+    <result column="TRAN_TIME" property="tranTime"/>
+    <result column="DOC_TYPE" property="docType" />
+    <result column="DOC_NUM" property="docNum" />
+    <result column="TRAN_QTY" property="tranQty" />
+    <result column="BALANCE" property="balance" />
+  </resultMap>
+  
+  <sql id="Wareh_Prod_List" >
+    WAREH_ID, PROD_ID, STK_ON_HAND, QTY_ON_ORDER, QTY_IN_TRANSIT, QTY_COMMITTED, QTY_IN_DOUBT, 
+    STK_PUBLISHED, MIN_STK, MAX_STK, ALERT_MIN_STK, ALERT_MAX_STK, MIN_AD_STK, MAX_AD_STK, 
+    DFLT_ZONE_ID, STD_LOC_CAP, DFLT_LOC_ID, QTY_FUC_COMM, STK_JUST_TIME, QTY_CUR_COMM, 
+    STK_CHANGE_DATE, BGR_STK, IN_RCV_STK, LOCKED_QTY, LOCK_STOCKIN, STOCKIN_FREE, RESERVED_QTY
+  </sql>
+  <sql id="Warehouse_List" >
+    WAREH_ID, COST_GRP_ID, LOC_ADOPTED, SCAN_ADOPTED, DISP_LOC_ID, RCPT_LOC_ID, FUC_ADOPTED, 
+    DELIV_ADOPTED, RF_ADOPTED, TRANSFER_FLAG, DAILY_MAX_COUNT, CUR_STOCK_TYPE
+  </sql>
+  
+  <!-- 查询货位信息 -->
+  <select id="searchWarehouseInfo" resultMap="warehouseMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Warehouse_List" />
+    from MTSBW.WAREHOUSE
+    where WAREH_ID = #{warehId}
+  </select>
+  
+  <!-- 查询货位库存信息 -->
+  <select id="searchStkDtl" resultMap="stkDtlMap" parameterType="mb.erp.dr.soa.bean.ProdBean" >
+    select 
+    WAREH_ID, LOC_ID, PROD_ID, STK_ON_HAND, ALLOC_QTY, EXPD_QTY, STK_CHANGE_DATE
+    from MTSBW.STK_DTL
+    where WAREH_ID = #{warehId}
+      and LOC_ID = #{locId}
+      and PROD_ID = #{prodId}
+  </select>
+  
+  <!-- 查询已分配库存事务信息 -->
+  <select id="searchCommitTranInfo" resultMap="commitTranMap" parameterType="mb.erp.dr.soa.bean.OrderSearchBean" >
+    select WAREH_ID, COMMITED_TRAN_ID, PROD_ID, 
+          TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE
+    from MTSBW.WAREH_COMMITED_TRAN
+    where WAREH_ID = #{warehId}
+            AND DOC_TYPE=#{docType}
+            AND  DOC_NUM = #{docNum}
+  </select>
+  
+  <!-- 查询已库存事务信息 -->
+  <select id="searchWarehTranInfo" resultMap="warehTranMap" parameterType="mb.erp.dr.soa.bean.OrderSearchBean" >
+    select WAREH_ID, WAREH_TRAN_ID, PROD_ID, 
+          TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE
+    from MTSBW.WAREH_TRAN
+    where WAREH_ID = #{warehId}
+            AND DOC_TYPE=#{docType}
+            AND  DOC_NUM = #{docNum}
+  </select>
+  
+  <!-- 查询库存信息 -->
+  <select id="searchWarehInfo" resultMap="warehProdMap" parameterType="mb.erp.dr.soa.bean.ProdBean" >
+    select 
+    <include refid="Wareh_Prod_List" />
+    from MTSBW.WAREH_PROD
+    where WAREH_ID = #{warehId}
+      and PROD_ID = #{prodId}
+  </select>
+  
+   <!-- 查询在购库存事务信息 -->
+  <select id="searchOrderTranInfo" resultMap="orderTranMap" parameterType="mb.erp.dr.soa.bean.OrderSearchBean" >
+    select WAREH_ID, ORDER_TRAN_ID, PROD_ID, 
+          TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE
+    from WAREH_ORDER_TRAN
+    where WAREH_ID = #{warehId}
+            AND DOC_TYPE=#{docType}
+            AND  DOC_NUM = #{docNum}
+  </select>
+  
+  
+  <!-- 将数据保存进临时表，方便批量更新 -->
+    <insert id="saveToTempTable" parameterType="java.util.List" >
+	    insert into TMP_WAREH_PROD_QTY (WAREH_ID, PROD_ID,LOC_ID,QTY)
+	    <foreach collection="list" item="prodBean" index="index"  separator="UNION ALL" > 
+	      SELECT 
+	        #{prodBean.warehId},
+	        #{prodBean.prodId},
+	        #{prodBean.locId},
+	        #{prodBean.qty}
+	      from dual 
+	    </foreach> 
+	  </insert>
+  
+   <!-- 批量更新实物库存（根据临时表，所以不需要传入参数） -->
+  <update id="updateWarehProdQty" >
+    UPDATE WAREH_PROD T SET T.STK_ON_HAND = T.STK_ON_HAND+
+	(SELECT QTY FROM TMP_WAREH_PROD_QTY TEMP WHERE TEMP.WAREH_ID = T.WAREH_ID AND TEMP.PROD_ID = T.PROD_ID )
+	WHERE EXISTS (SELECT TEMP.WAREH_ID FROM TMP_WAREH_PROD_QTY TEMP WHERE TEMP.WAREH_ID = T.WAREH_ID AND TEMP.PROD_ID = T.PROD_ID)
+  </update>
+  
+  <!-- 批量插入更新时，库存中不存在的实物库存（根据临时表，所以不需要传入参数） -->
+  <insert id="insertWarehProdQty" >
+    INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, STK_ON_HAND, QTY_ON_ORDER, QTY_IN_TRANSIT,
+            QTY_COMMITTED, QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+    (SELECT WAREH_ID,PROD_ID,QTY, 0, 0, 0, 0, 0, 0 FROM TMP_WAREH_PROD_QTY TEMP 
+    WHERE NOT EXISTS (SELECT T.WAREH_ID FROM WAREH_PROD T WHERE T.WAREH_ID = TEMP.WAREH_ID AND T.PROD_ID = TEMP.PROD_ID)
+    )
+  </insert>
+  
+    <!-- 批量更新货位库存（根据临时表，所以不需要传入参数） -->
+  <update id="updateLocProdQty" >
+    UPDATE STK_DTL T SET T.STK_ON_HAND = T.STK_ON_HAND+
+    (SELECT QTY FROM TMP_WAREH_PROD_QTY TEMP WHERE TEMP.WAREH_ID = T.WAREH_ID AND TEMP.PROD_ID = T.PROD_ID AND TEMP.LOC_ID = T.LOC_ID )
+    WHERE EXISTS (SELECT TEMP.WAREH_ID FROM TMP_WAREH_PROD_QTY TEMP WHERE TEMP.WAREH_ID = T.WAREH_ID AND TEMP.PROD_ID = T.PROD_ID AND TEMP.LOC_ID = T.LOC_ID)
+  </update>
+  
+  <!-- 批量插入更新时，库存中不存在的货位库存（根据临时表，所以不需要传入参数） -->
+  <insert id="insertLocProdQty" >
+    INSERT INTO STK_DTL (WAREH_ID,PROD_ID,LOC_ID,STK_ON_HAND,ALLOC_QTY,EXPD_QTY)
+    (SELECT WAREH_ID,PROD_ID,LOC_ID,QTY,0,QTY FROM TMP_WAREH_PROD_QTY TEMP 
+    WHERE NOT EXISTS (SELECT T.WAREH_ID FROM STK_DTL T WHERE T.WAREH_ID = TEMP.WAREH_ID AND T.PROD_ID = TEMP.PROD_ID AND T.LOC_ID = TEMP.LOC_ID)
+    )
+  </insert>
+  
+  <!-- 批量更新已分配库存（根据临时表，所以不需要传入参数） -->
+  <update id="updateCommitTranProdQty" >
+    UPDATE WAREH_PROD T SET T.QTY_COMMITTED = T.QTY_COMMITTED+
+    (SELECT QTY FROM TMP_WAREH_PROD_QTY TEMP WHERE TEMP.WAREH_ID = T.WAREH_ID AND TEMP.PROD_ID = T.PROD_ID )
+    WHERE EXISTS (SELECT TEMP.WAREH_ID FROM TMP_WAREH_PROD_QTY TEMP WHERE TEMP.WAREH_ID = T.WAREH_ID AND TEMP.PROD_ID = T.PROD_ID)
+  </update>
+  
+  <!-- 批量更新已分配库存（根据临时表，所以不需要传入参数） -->
+  <update id="insertCommitTranProdQty" >
+    INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, STK_ON_HAND, QTY_ON_ORDER, QTY_IN_TRANSIT,
+            QTY_COMMITTED, QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+    (SELECT WAREH_ID,PROD_ID,QTY, 0, 0, QTY, 0, 0, 0 FROM TMP_WAREH_PROD_QTY TEMP 
+    WHERE NOT EXISTS (SELECT T.WAREH_ID FROM WAREH_PROD T WHERE T.WAREH_ID = TEMP.WAREH_ID AND T.PROD_ID = TEMP.PROD_ID)
+    )
+    </update>
+  
+      <!-- 保存仓库事务 -->
+      <insert id="saveWarehTran" parameterType="java.util.List" >
+	    insert into MTSBW.WAREH_TRAN (WAREH_ID, WAREH_TRAN_ID, PROD_ID, 
+	      TRAN_DATE, TRAN_TIME, DOC_TYPE,  DOC_NUM, TRAN_QTY, BALANCE
+	      )
+	      <foreach collection="list" item="warehTranVo" index="index"  separator="UNION ALL" > 
+          SELECT 
+            #{warehTranVo.warehId},
+            #{warehTranVo.warehTranId},
+            #{warehTranVo.prodId},
+             TRUNC(SYSDATE) ,
+            SYSDATE,
+            #{warehTranVo.docType},
+            #{warehTranVo.docNum},
+            #{warehTranVo.tranQty},
+            #{warehTranVo.balance}
+          from dual 
+        </foreach> 
+	  </insert>
+	  
+	  <!-- 保存货位事务 -->
+      <insert id="saveLocTran" parameterType="java.util.List" >
+        insert into MTSBW.LOC_TRAN (LOC_TRAN_ID, WAREH_ID, LOC_ID, PROD_ID,
+  TRAN_DATE, TRAN_TIME,DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE  )
+          <foreach collection="list" item="locTranVo" index="index"  separator="UNION ALL" > 
+          SELECT 
+            #{locTranVo.locTranId},
+            #{locTranVo.warehId},
+            #{locTranVo.locId},
+            #{locTranVo.prodId},
+            TRUNC(SYSDATE) ,
+            SYSDATE,
+            #{locTranVo.docType},
+            #{locTranVo.docNum},
+            #{locTranVo.tranQty},
+            #{locTranVo.balance}
+          from dual 
+        </foreach> 
+      </insert>
+      
+	  <!-- 保存已分配库存事务 -->
+      <insert id="saveWarehCommitTran" parameterType="java.util.List" >
+	       insert into MTSBW.WAREH_COMMITED_TRAN (WAREH_ID, COMMITED_TRAN_ID, PROD_ID, 
+	      TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE
+	      )
+	      <foreach collection="list" item="warehCommitedTranVo" index="index"  separator="UNION ALL" > 
+          SELECT 
+            #{warehCommitedTranVo.warehId},
+            #{warehCommitedTranVo.commitedTranId},
+            #{warehCommitedTranVo.prodId},
+            TRUNC(SYSDATE) ,
+            SYSDATE,
+            #{warehCommitedTranVo.docType},
+            #{warehCommitedTranVo.docNum},
+            #{warehCommitedTranVo.tranQty},
+            #{warehCommitedTranVo.balance}
+          from dual 
+        </foreach> 
+      </insert>
+  
+    <!-- 操作已货位库存====================================================================== -->
+  
+  <!-- 更新货位库存(出库单) -->
+<!--   <update id="updateStkDtlByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" > -->
+<!--         UPDATE STK_DTL SET STK_CHANGE_DATE=SYSTIMESTAMP,STK_ON_HAND = (SELECT NVL(STK_DTL.STK_ON_HAND,0)  -->
+<!--                 <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose> -->
+<!--                 NVL(B.QUANTITY,0) -->
+<!--                FROM GDN_DTL B WHERE B.UNIT_ID = #{unitId}  -->
+<!--                AND B.GDN_NUM = #{gdnNum} -->
+<!--                 AND STK_DTL.PROD_ID = B.PROD_ID -->
+<!--                 AND 1= CASE WHEN B.LOC_ID IS NOT NULL THEN  -->
+<!--                CASE WHEN  B.LOC_ID = STK_DTL.LOC_ID THEN 1 ELSE 0 END -->
+<!--                ELSE CASE WHEN  STK_DTL.LOC_ID = #{locId} -->
+<!--                THEN 1 ELSE 0 END -->
+<!--                END) -->
+<!--          WHERE WAREH_ID = #{warehId} -->
+<!--            AND EXISTS (SELECT 1 FROM GDN_DTL B WHERE B.UNIT_ID = #{unitId}  -->
+<!--                AND B.GDN_NUM = #{gdnNum} -->
+<!--                AND STK_DTL.PROD_ID = B.PROD_ID -->
+<!--                AND 1= CASE WHEN B.LOC_ID IS NOT NULL THEN  -->
+<!--                CASE WHEN  B.LOC_ID = STK_DTL.LOC_ID THEN 1 ELSE 0 END -->
+<!--                ELSE CASE WHEN  STK_DTL.LOC_ID = #{locId} -->
+<!--                THEN 1 ELSE 0 END -->
+<!--                END) -->
+<!--   </update> -->
+    <update id="updateStkDtlByGdn" parameterType="java.util.Map" >
+        UPDATE STK_DTL S 
+        SET STK_ON_HAND = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(STK_ON_HAND,0) + (SELECT 
+                                                                                NVL(d.QUANTITY,0) 
+                                                                                FROM GDN g
+                                                                                INNER JOIN GDN_DTL d
+                                                                                ON g.UNIT_ID = d.UNIT_ID
+                                                                                AND g.GDN_NUM = d.GDN_NUM
+                                                                                WHERE g.UNIT_ID = #{unitId}
+                                                                                  AND g.GDN_NUM = #{docNum}
+                                                                                  AND S.WAREH_ID = g.WAREH_ID 
+                                                                                  AND S.PROD_ID = d.PROD_ID)
+                            ELSE NVL(STK_ON_HAND,0) - (SELECT 
+                                                            NVL(d.QUANTITY,0) 
+                                                            FROM GDN g
+                                                            INNER JOIN GDN_DTL d
+                                                            ON g.UNIT_ID = d.UNIT_ID
+                                                            AND g.GDN_NUM = d.GDN_NUM
+                                                            WHERE g.UNIT_ID = #{unitId}
+                                                            AND g.GDN_NUM = #{docNum}
+                                                            AND S.WAREH_ID = g.WAREH_ID 
+                                                            AND S.PROD_ID = d.PROD_ID)
+                            END
+            ,STK_CHANGE_DATE = sysdate
+         WHERE EXISTS(
+          SELECT 
+          1
+          FROM GDN g
+          INNER JOIN GDN_DTL d
+          ON g.UNIT_ID = d.UNIT_ID
+          AND g.GDN_NUM = d.GDN_NUM
+          WHERE g.UNIT_ID = #{unitId}
+            AND g.GDN_NUM = #{docNum}
+            AND S.WAREH_ID = g.WAREH_ID 
+            AND S.PROD_ID = d.PROD_ID
+            AND S.LOC_ID = NVL(D.LOC_ID,#{locId}))
+  </update>
+  <!-- 插入货位库存(出库单) -->
+<!--   <insert id="insertStkDtlByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" > -->
+<!--     INSERT INTO STK_DTL(WAREH_ID,LOC_ID,PROD_ID,STK_ON_HAND,ALLOC_QTY,EXPD_QTY) -->
+<!--         SELECT #{warehId},CASE WHEN A.LOC_ID IS NOT NULL THEN A.LOC_ID ELSE #{locId} -->
+<!--         END ,A.PROD_ID, <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose> NVL(A.QUANTITY,0), 0, 0 -->
+<!--           FROM GDN_DTL A -->
+<!--          WHERE A.UNIT_ID = #{unitId}  -->
+<!--          AND A.GDN_NUM = #{gdnNum} -->
+<!--            AND NOT EXISTS(SELECT 1 FROM STK_DTL B -->
+<!--                WHERE B.WAREH_ID =#{warehId} -->
+<!--                  AND A.PROD_ID = B.PROD_ID  AND 1= CASE WHEN A.LOC_ID IS NOT NULL THEN  -->
+<!--                CASE WHEN  A.LOC_ID = B.LOC_ID THEN 1 ELSE 0 END -->
+<!--                ELSE CASE WHEN  B.LOC_ID = #{locId} -->
+<!--                THEN 1 ELSE 0 END END ) -->
+<!--   </insert> -->
+    <!-- 插入货位库存(出库单) -->
+  <insert id="insertStkDtlByGdn" parameterType="java.util.Map" >
+    INSERT INTO STK_DTL(WAREH_ID,LOC_ID,PROD_ID,STK_ON_HAND,STK_CHANGE_DATE,ALLOC_QTY,EXPD_QTY)
+        SELECT
+            g.WAREH_ID ,
+            NVL(d.LOC_ID,#{locId}),
+            d.PROD_ID,
+            CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+            SYSDATE,
+            0,0
+        FROM GDN g
+        INNER JOIN GDN_DTL d
+        ON g.UNIT_ID = d.UNIT_ID
+        AND g.GDN_NUM = d.GDN_NUM
+        WHERE g.UNIT_ID = #{unitId}
+        AND g.GDN_NUM = #{docNum}
+        AND NOT EXISTS (SELECT 1 FROM STK_DTL S
+                        WHERE S.WAREH_ID = g.WAREH_ID
+                        AND S.PROD_ID = d.PROD_ID
+                        AND S.LOC_ID = NVL(D.LOC_ID,#{locId}))
+  </insert>
+  
+  <!-- 更新货位库存(入库单) -->
+<!--   <update id="updateStkDtlByGrn" parameterType="mb.erp.dr.soa.bean.WarehBean" > -->
+<!--         UPDATE STK_DTL SET STK_CHANGE_DATE=SYSTIMESTAMP,STK_ON_HAND = (SELECT NVL(STK_DTL.STK_ON_HAND,0)  -->
+<!--                 <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose> -->
+<!--                  NVL(B.QUANTITY,0) -->
+<!--                FROM GRN_DTL B WHERE B.UNIT_ID = #{unitId}  -->
+<!--                AND B.GRN_NUM = #{grnNum} -->
+<!--                 AND STK_DTL.PROD_ID = B.PROD_ID -->
+<!--                 AND 1= CASE WHEN B.RCPT_LOC_ID IS NOT NULL THEN  -->
+<!--                CASE WHEN  B.RCPT_LOC_ID = STK_DTL.LOC_ID THEN 1 ELSE 0 END -->
+<!--                ELSE CASE WHEN  STK_DTL.LOC_ID = #{locId} -->
+<!--                THEN 1 ELSE 0 END -->
+<!--                END) -->
+<!--          WHERE WAREH_ID = #{warehId} -->
+<!--            AND EXISTS (SELECT 1 FROM GRN_DTL B WHERE B.UNIT_ID = #{unitId}  -->
+<!--                AND B.GRN_NUM = #{grnNum} -->
+<!--                AND STK_DTL.PROD_ID = B.PROD_ID -->
+<!--                AND 1= CASE WHEN B.RCPT_LOC_ID IS NOT NULL THEN  -->
+<!--                CASE WHEN  B.RCPT_LOC_ID = STK_DTL.LOC_ID THEN 1 ELSE 0 END -->
+<!--                ELSE CASE WHEN  STK_DTL.LOC_ID = #{locId} -->
+<!--                THEN 1 ELSE 0 END -->
+<!--                END) -->
+<!--   </update> -->
+  <!-- 更新货位库存(入库单) -->
+  <update id="updateStkDtlByGrn" parameterType="java.util.Map" >
+        UPDATE STK_DTL S 
+        SET STK_ON_HAND = CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN NVL(STK_ON_HAND,0) + (SELECT 
+                                                                                NVL(d.QUANTITY,0) 
+                                                                                FROM GRN g
+                                                                                INNER JOIN GRN_DTL d
+                                                                                ON g.UNIT_ID = d.UNIT_ID
+                                                                                AND g.GRN_NUM = d.GRN_NUM
+                                                                                WHERE g.UNIT_ID = #{unitId}
+                                                                                  AND g.GRN_NUM = #{docNum}
+                                                                                  AND S.WAREH_ID = g.WAREH_ID 
+                                                                                  AND S.PROD_ID = d.PROD_ID)
+                            ELSE NVL(STK_ON_HAND,0) - (SELECT 
+                                                            NVL(d.QUANTITY,0) 
+                                                            FROM GRN g
+                                                            INNER JOIN GRN_DTL d
+                                                            ON g.UNIT_ID = d.UNIT_ID
+                                                            AND g.GRN_NUM = d.GRN_NUM
+                                                            WHERE g.UNIT_ID = #{unitId}
+                                                            AND g.GRN_NUM = #{docNum}
+                                                            AND S.WAREH_ID = g.WAREH_ID 
+                                                            AND S.PROD_ID = d.PROD_ID)
+                            END
+            ,STK_CHANGE_DATE = sysdate
+         WHERE EXISTS(
+          SELECT 
+          1
+          FROM GRN g
+          INNER JOIN GRN_DTL d
+          ON g.UNIT_ID = d.UNIT_ID
+          AND g.GRN_NUM = d.GRN_NUM
+          WHERE g.UNIT_ID = #{unitId}
+            AND g.GRN_NUM = #{docNum}
+            AND S.WAREH_ID = g.WAREH_ID 
+            AND S.PROD_ID = d.PROD_ID
+            AND S.LOC_ID = NVL(D.RCPT_LOC_ID,#{locId}))
+  </update>
+  
+  <!-- 插入货位库存(入库单) -->
+<!--   <insert id="insertStkDtlByGrn" parameterType="mb.erp.dr.soa.bean.WarehBean" > -->
+<!--     INSERT INTO STK_DTL(WAREH_ID,LOC_ID,PROD_ID,STK_ON_HAND,ALLOC_QTY,EXPD_QTY) -->
+<!--         SELECT #{warehId},CASE WHEN A.RCPT_LOC_ID IS NOT NULL THEN A.RCPT_LOC_ID ELSE #{locId} -->
+<!--         END ,A.PROD_ID, <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose> NVL(A.QUANTITY,0), 0, 0 -->
+<!--           FROM GRN_DTL A -->
+<!--          WHERE A.UNIT_ID = #{unitId}  -->
+<!--          AND A.GRN_NUM = #{grnNum} -->
+<!--            AND NOT EXISTS(SELECT 1 FROM STK_DTL B -->
+<!--                WHERE B.WAREH_ID =#{warehId} -->
+<!--                  AND A.PROD_ID = B.PROD_ID  AND 1= CASE WHEN A.RCPT_LOC_ID IS NOT NULL THEN  -->
+<!--                CASE WHEN  A.RCPT_LOC_ID = B.LOC_ID THEN 1 ELSE 0 END -->
+<!--                ELSE CASE WHEN  B.LOC_ID = #{locId} -->
+<!--                THEN 1 ELSE 0 END END ) -->
+<!--   </insert> -->
+  <!-- 插入货位库存(入库单) -->
+   <insert id="insertStkDtlByGrn" parameterType="java.util.Map" >
+    INSERT INTO STK_DTL(WAREH_ID,LOC_ID,PROD_ID,STK_ON_HAND,STK_CHANGE_DATE,ALLOC_QTY,EXPD_QTY)
+        SELECT
+            g.WAREH_ID ,
+            NVL(d.RCPT_LOC_ID,#{locId}),
+            d.PROD_ID,
+            CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+            SYSDATE,
+            0,0
+        FROM GRN g
+        INNER JOIN GRN_DTL d
+        ON g.UNIT_ID = d.UNIT_ID
+        AND g.GRN_NUM = d.GRN_NUM
+        WHERE g.UNIT_ID = #{unitId}
+        AND g.GRN_NUM = #{docNum}
+        AND NOT EXISTS (SELECT 1 FROM STK_DTL S
+                        WHERE S.WAREH_ID = g.WAREH_ID
+                        AND S.PROD_ID = d.PROD_ID
+                        AND S.LOC_ID = NVL(D.RCPT_LOC_ID,#{locId}))
+  </insert>
+    <!-- 操作已实物库存====================================================================== -->
+  
+  <!-- 根据出库单更新实物库存 -->
+  <update id="updateWarehProdByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+        UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, STK_ON_HAND = (SELECT NVL(WAREH_PROD.STK_ON_HAND,0) 
+              <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+             NVL(B.QUANTITY,0)
+            FROM GDN_DTL B WHERE B.UNIT_ID = #{unitId}  AND B.GDN_NUM = #{gdnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+      WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM GDN_DTL B
+            WHERE B.UNIT_ID = #{unitId} AND B.GDN_NUM = #{gdnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+  <!-- 根据出库单插入实物库存 -->
+  <insert id="insertWarehProdByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, STK_ON_HAND, QTY_ON_ORDER, QTY_IN_TRANSIT,
+            QTY_COMMITTED, QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID, <if test="! isIncrease">-</if>NVL(A.QUANTITY,0), 0, 0, 0, 0, 0, 0
+       FROM GDN_DTL A
+      WHERE A.UNIT_ID = #{unitId}  AND A.GDN_NUM = #{gdnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+  <!-- 根据入库单更新实物库存 -->
+  <update id="updateWarehProdByGrn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+        UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, STK_ON_HAND = (SELECT NVL(WAREH_PROD.STK_ON_HAND,0) 
+            <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+             NVL(B.QUANTITY,0)
+            FROM GRN_DTL B WHERE B.UNIT_ID = #{unitId}  AND B.GRN_NUM = #{grnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+            WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM GRN_DTL B
+            WHERE B.UNIT_ID = #{unitId} AND B.GRN_NUM = #{grnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+  <!-- 根据入库单插入实物库存 -->
+  <insert id="insertWarehProdByGrn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, STK_ON_HAND, QTY_ON_ORDER, QTY_IN_TRANSIT,
+            QTY_COMMITTED, QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID, <if test="! isIncrease">-</if>NVL(A.QUANTITY,0), 0, 0, 0, 0, 0, 0
+       FROM GRN_DTL A
+      WHERE A.UNIT_ID = #{unitId}  AND A.GRN_NUM = #{grnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+  <!-- 操作已分配库存====================================================================== -->
+  
+     <!-- 根据计划配货单更新已分配库存 -->
+  <update id="updateWarehCommitProdByAdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, QTY_COMMITTED = (SELECT NVL(WAREH_PROD.QTY_COMMITTED,0) 
+            <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+             NVL(B.adm_Qty,0)
+            FROM ADN_DTL B WHERE B.vender_Id = #{unitId}  AND B.ADN_NUM = #{adnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+      WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM ADN_DTL B
+            WHERE B.vender_Id = #{unitId} AND B.ADN_NUM = #{adnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+  <!-- 根据计划配货单单插入已分配库存 -->
+  <insert id="insertWarehCommitProdByAdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, QTY_COMMITTED, STK_ON_HAND,QTY_ON_ORDER, QTY_IN_TRANSIT,
+            QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID,<if test="! isIncrease">-</if>NVL(A.adm_Qty,0), 0, 0, 0, 0, 0, 0
+       FROM ADN_DTL A
+      WHERE A.vender_Id = #{unitId}  AND A.ADN_NUM = #{adnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+  <!-- 根据调配单更新已分配库存 -->
+  <update id="updateWarehCommitProdByTbn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+        UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, QTY_COMMITTED = (SELECT NVL(WAREH_PROD.QTY_COMMITTED,0) 
+        <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+         NVL(B.expd_Qty,0)
+            FROM TBN_DTL B WHERE B.vender_Id = #{unitId}  AND B.TBN_NUM = #{tbnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+      WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM TBN_DTL B
+            WHERE B.vender_Id = #{unitId} AND B.TBN_NUM = #{tbnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+   <!-- 根据调配单插入已分配库存 -->
+  <insert id="insertWarehCommitProdByTbn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, QTY_COMMITTED, STK_ON_HAND,QTY_ON_ORDER, QTY_IN_TRANSIT,
+             QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID,<if test="! isIncrease">-</if>NVL(A.expd_Qty,0), 0, 0, 0, 0, 0, 0
+       FROM TBN_DTL A
+      WHERE A.vender_Id = #{unitId}  AND A.TBN_NUM = #{tbnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+   <!-- 根据出库单更新已分配库存 -->
+  <update id="updateWarehCommitProdByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, QTY_COMMITTED = (SELECT NVL(WAREH_PROD.QTY_COMMITTED,0) 
+            <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+             NVL(B.QUANTITY,0)
+            FROM GDN_DTL B WHERE B.UNIT_ID = #{unitId}  AND B.GDN_NUM = #{gdnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+      WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM GDN_DTL B
+            WHERE B.UNIT_ID = #{unitId} AND B.GDN_NUM = #{gdnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+  <!-- 根据出库单插入已分配库存 -->
+  <insert id="insertWarehCommitProdByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, QTY_COMMITTED, STK_ON_HAND,QTY_ON_ORDER, QTY_IN_TRANSIT,
+             QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID, <if test="! isIncrease">-</if>NVL(A.QUANTITY,0), 0, 0, 0, 0, 0, 0
+       FROM GDN_DTL A
+      WHERE A.UNIT_ID = #{unitId}  AND A.GDN_NUM = #{gdnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+  
+  <!-- 在途库存 ====================================================================== -->
+  
+  <!-- 根据出库单更新在途库存 -->
+  <update id="updateWarehTransitByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, QTY_IN_TRANSIT = (SELECT NVL(WAREH_PROD.QTY_IN_TRANSIT,0) 
+            <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+             NVL(B.QUANTITY,0)
+            FROM GDN_DTL B WHERE B.UNIT_ID = #{unitId}  AND B.GDN_NUM = #{gdnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+      WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM GDN_DTL B
+            WHERE B.UNIT_ID = #{unitId} AND B.GDN_NUM = #{gdnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+  <!-- 根据出库单插入在途库存 -->
+  <insert id="insertWarehTransitByGdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, QTY_IN_TRANSIT, STK_ON_HAND,QTY_ON_ORDER, QTY_COMMITTED,
+             QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID, <if test="! isIncrease">-</if>NVL(A.QUANTITY,0), 0, 0, 0, 0, 0, 0
+       FROM GDN_DTL A
+      WHERE A.UNIT_ID = #{unitId}  AND A.GDN_NUM = #{gdnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+  <!-- 根据入库单更新在途库存 -->
+  <update id="updateWarehTransitByGrn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+        UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, QTY_IN_TRANSIT = (SELECT NVL(WAREH_PROD.QTY_IN_TRANSIT,0) 
+            <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+             NVL(B.QUANTITY,0)
+            FROM GRN_DTL B WHERE B.UNIT_ID = #{unitId}  AND B.GRN_NUM = #{grnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+            WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM GRN_DTL B
+            WHERE B.UNIT_ID = #{unitId} AND B.GRN_NUM = #{grnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+  <!-- 根据入库单插入在途库存 -->
+  <insert id="insertWarehTransitByGrn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, QTY_IN_TRANSIT, QTY_ON_ORDER, STK_ON_HAND,
+            QTY_COMMITTED, QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID, <if test="! isIncrease">-</if>NVL(A.QUANTITY,0), 0, 0, 0, 0, 0, 0
+       FROM GRN_DTL A
+      WHERE A.UNIT_ID = #{unitId}  AND A.GRN_NUM = #{grnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+  <!-- 查询虚拟仓库 -->
+  <select id="searchVirtualWarehouse" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT MAX(VIRTUAL_WAREH) FROM (
+		    SELECT MAX(T.DESCRIPTION) AS VIRTUAL_WAREH
+		              FROM mtsbw.SYS_CODE T,mtsbw.SYS_UNIT S,mtsbw.SYS_BRAND C
+		              WHERE T.CODE_CLASS='CC_VITURAL_BRAND_WAREH' 
+		                AND S.OWNER_ID=#{venderId,jdbcType=VARCHAR}
+		              AND T.DESCRIPTION = S.UNIT_ID
+		              AND T.SEQ_NUM=C.BRAND_CODE 
+		              AND C.BRAND_ID = #{brandId,jdbcType=VARCHAR}
+		              AND ROWNUM &lt; 2
+		              AND EXISTS (SELECT 1 FROM mtsbw.SYS_UNIT_CLSF A
+		              WHERE A.UNIT_ID = S.UNIT_ID AND A.STATUS = 'A')
+		    UNION ALL
+		    SELECT MAX(T.GDS_CTR_ID) AS VIRTUAL_WAREH
+		               FROM mtsbw.GDS_CTR T, mtsbw.SYS_UNIT S
+		               WHERE T.GDS_CTR_ID = S.UNIT_ID
+		               AND T.IS_VIRTUAL = 'T'
+		               AND S.OWNER_ID = #{venderId,jdbcType=VARCHAR}
+		               AND ROWNUM &lt; 2
+		               AND EXISTS (SELECT 1 FROM mtsbw.SYS_UNIT_CLSF A
+		                  WHERE A.UNIT_ID = S.UNIT_ID AND A.STATUS = 'A')
+		)           
+  </select>
+  
+  <!-- 保存在购库存事务 -->
+    <insert id="saveWarehOrderTran" parameterType="java.util.List" >
+           insert into WAREH_ORDER_TRAN (WAREH_ID, ORDER_TRAN_ID, PROD_ID, 
+          TRAN_DATE, TRAN_TIME, DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE
+          )
+          <foreach collection="list" item="warehOrderTranVo" index="index"  separator="UNION ALL" > 
+          SELECT 
+            #{warehOrderTranVo.warehId},
+            #{warehOrderTranVo.orderTranId},
+            #{warehOrderTranVo.prodId},
+            TRUNC(SYSDATE) ,
+            SYSDATE,
+            #{warehOrderTranVo.docType},
+            #{warehOrderTranVo.docNum},
+            #{warehOrderTranVo.tranQty},
+            #{warehOrderTranVo.balance}
+          from dual 
+        </foreach> 
+      </insert>
+      <!-- 根据计划配货单更新在购库存 -->
+     <update id="updateWarehOrderProdByAdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+        UPDATE WAREH_PROD SET  STK_CHANGE_DATE=SYSTIMESTAMP, QTY_ON_ORDER = (SELECT NVL(WAREH_PROD.QTY_ON_ORDER,0) 
+            <choose><when test="isIncrease">+</when><otherwise>-</otherwise></choose>
+             NVL(B.adm_Qty,0)
+            FROM ADN_DTL B WHERE B.vender_Id = #{unitId}  AND B.ADN_NUM = #{adnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+      WHERE WAREH_ID = #{warehId} AND EXISTS (SELECT 1 FROM ADN_DTL B
+            WHERE B.vender_Id = #{unitId} AND B.ADN_NUM = #{adnNum} AND WAREH_PROD.PROD_ID = B.PROD_ID)
+  </update>
+  
+      <!-- 根据计划配货单插入在购库存 -->
+  <insert id="insertWarehOrderProdByAdn" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+   INSERT INTO WAREH_PROD (WAREH_ID, PROD_ID, QTY_ON_ORDER, STK_ON_HAND,QTY_COMMITTED, QTY_IN_TRANSIT,
+            QTY_IN_DOUBT, STK_PUBLISHED,QTY_FUC_COMM)
+     SELECT #{warehId} , A.PROD_ID,<if test="! isIncrease">-</if>NVL(A.adm_Qty,0), 0, 0, 0, 0, 0, 0
+       FROM ADN_DTL A
+      WHERE A.vender_Id = #{unitId}  AND A.ADN_NUM = #{adnNum}
+        AND NOT EXISTS (SELECT 1 FROM WAREH_PROD B
+            WHERE B.WAREH_ID =  #{warehId}  AND A.PROD_ID = B.PROD_ID)
+  </insert>
+  
+  <!--  添加货位商品事务 - 根据出库单  -->
+    <insert id="insertLocTranByGdn" parameterType="java.util.Map">
+            INSERT INTO LOC_TRAN (LOC_TRAN_ID, WAREH_ID, LOC_ID, PROD_ID,
+                TRAN_DATE, TRAN_TIME,DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE  )
+            SELECT
+            PCK_SYS_SHARE.FUNC_GET_NEXT_NUM(g.WAREH_ID,'LOC_TRAN_ID') ,
+            g.WAREH_ID ,
+            NVL(D.LOC_ID,#{locId}) ,
+            d.PROD_ID,
+            TRUNC(SYSDATE),
+            SYSDATE,
+            #{docType},
+            g.GDN_NUM,
+            CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+            (select s.stk_on_hand from STK_DTL s where s.loc_id =NVL(D.LOC_ID,#{locId}) and s.wareh_id = g.wareh_id and s.prod_id = d.prod_id)
+            FROM GDN g
+            INNER JOIN GDN_DTL d
+            ON g.UNIT_ID = d.UNIT_ID
+            AND g.GDN_NUM = d.GDN_NUM
+            WHERE g.UNIT_ID = #{unitId}
+            and g.GDN_NUM = #{docNum}     
+     </insert>
+     
+     <!--  添加货位商品事务 - 根据入库单  -->
+    <insert id="insertLocTranByGrn" parameterType="java.util.Map">
+            INSERT INTO LOC_TRAN (LOC_TRAN_ID, WAREH_ID, LOC_ID, PROD_ID,
+                TRAN_DATE, TRAN_TIME,DOC_TYPE, DOC_NUM, TRAN_QTY, BALANCE  )
+            SELECT
+            PCK_SYS_SHARE.FUNC_GET_NEXT_NUM(g.WAREH_ID,'LOC_TRAN_ID') ,
+            g.WAREH_ID ,
+            NVL(D.RCPT_LOC_ID,#{locId}) ,
+            d.PROD_ID,
+            TRUNC(SYSDATE),
+            SYSDATE,
+            #{docType},
+            g.GRN_NUM,
+            CASE #{isAdd,jdbcType=DECIMAL} WHEN 1 THEN d.QUANTITY ELSE 0-NVL(d.QUANTITY,0) END,
+            (select s.stk_on_hand from STK_DTL s where s.loc_id =NVL(D.RCPT_LOC_ID,#{locId}) and s.wareh_id = g.wareh_id and s.prod_id = d.prod_id)
+            FROM GRN g
+            INNER JOIN GRN_DTL d
+            ON g.UNIT_ID = d.UNIT_ID
+            AND g.GRN_NUM = d.GRN_NUM
+            WHERE g.UNIT_ID = #{unitId}
+            and g.GRN_NUM = #{docNum}     
+     </insert>
+     
+    <select id="selectLocByWarehIdAndLocId" resultType="java.lang.Long" parameterType="mb.erp.dr.soa.bean.WarehBean" >
+    select 1
+    from WAREH_LOC
+    where WAREH_ID = #{warehId}
+    and LOC_ID = #{locId}
+  </select>
+     
+</mapper>

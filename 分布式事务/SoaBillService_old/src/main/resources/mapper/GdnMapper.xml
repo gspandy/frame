@@ -1,0 +1,881 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.GdnMapper" >
+  <resultMap id="gdnMap" type="mb.erp.dr.soa.old.vo.GdnVo" >
+    <result column="UNIT_ID" property="unitId"/>
+    <result column="GDN_NUM" property="gdnNum"/>
+    <result column="DOC_DATE" property="docDate" />
+    <result column="DELIV_MODE" property="delivMode"/>
+    <result column="WAREH_ID" property="warehId"/>
+    <result column="RCV_UNIT_ID" property="rcvUnitId"/>
+    <result column="OPR_ID" property="oprId"/>
+    <result column="CTRLR_ID" property="ctrlrId"/>
+    <result column="CONTACT_ID" property="contactId"/>
+    <result column="SRC_DOC_TYPE" property="srcDocType"/>
+    <result column="SRC_UNIT_ID" property="srcUnitId"/>
+    <result column="SRC_DOC_NUM" property="srcDocNum"/>
+    <result column="CURRENCY" property="currency"/>
+    <result column="TTL_QTY" property="ttlQty" />
+    <result column="TTL_VAL" property="ttlVal" />
+    <result column="TAX_RATE" property="taxRate" />
+    <result column="TAX_VAL" property="taxVal" />
+    <result column="PSN_VAL" property="psnVal" />
+    <result column="ADDT_COST" property="addtCost" />
+    <result column="COST" property="cost" />
+    <result column="REQD_AT" property="reqdAt" />
+    <result column="PICK_STR_AT" property="pickStrAt" />
+    <result column="PICK_COMP_AT" property="pickCompAt" />
+    <result column="DISP_TIME" property="dispTime" />
+    <result column="DELIV_MTHD" property="delivMthd"/>
+    <result column="DELIV_ADDR" property="delivAddr"/>
+    <result column="DELIV_PSTD" property="delivPstd"/>
+    <result column="CSB_NUM" property="csbNum"/>
+    <result column="EFFICIENT" property="efficient"/>
+    <result column="STRUCK" property="struck"/>
+    <result column="COST_CHG" property="costChg"/>
+    <result column="PROGRESS" property="progress"/>
+    <result column="SUSPENDED" property="suspended"/>
+    <result column="CANCELLED" property="cancelled"/>
+    <result column="REMARK" property="remark"/>
+    <result column="SCAN_TBL_NUM" property="scanTblNum"/>
+    <result column="GRAD_ID" property="gradId"/>
+    <result column="PRODUCT_COUNT" property="productCount" />
+    <result column="SREG_UNIT_ID" property="sregUnitId"/>
+    <result column="PDA_PROGRESS" property="pdaProgress"/>
+    <result column="EFFICIENT_TIME" property="efficientTime" />
+    <result column="COST_TIME" property="costTime" />
+    <result column="BUSINESS_CONTRACT_NUM" property="businessContractNum"/>
+    <result column="PRE_PROGRESS" property="preProgress"/>
+    <result column="K3_READ_FLAG" property="k3ReadFlag"/>
+    <result column="LOC_ID" property="locId"/>
+    <result column="NEED_SEND" property="needSend"/>
+    <result column="SHMT_NBR" property="shmtNbr"/>
+    <result column="WIF_NUM" property="wifNum"/>
+    <result column="TSP_COM_ID" property="tspComId"/>
+    <result column="GOODCODE" property="goodcode"/>
+    <result column="BRAND_ID" property="brandId"/>
+    <result column="RCV_STATE" property="rcvState"/>
+    <result column="IMPORT_WMOS_DMODE" property="importWmosDmode"/>
+    <result column="RCV_WAREH_ID" property="rcvWarehId"/>
+    <result column="DATA_TYPE" property="dataType"/>
+    <result column="OUTER_ORDERNO" property="outerOrderno"/>
+    <result column="SAP_FLAG" property="sapFlag"/>
+    <result column="SAP_INVOICE_FLAG" property="sapInvoiceFlag"/>
+    <result column="CRE_DATE" property="creDate" />
+    <result column="IS_CROSS" property="isCross"/>
+    <result column="INNER_ORDERNO" property="innerOrderno"/>
+    <result column="BOX_COUNT" property="boxCount" />
+    <result column="PRODUCT_VOL" property="productVol" />
+    <result column="NEW_GDNNUM" property="newGdnnum"/>
+    <result column="NEW_FLAG" property="newFlag"/>
+    <result column="BOX_GEN" property="boxGen"/>
+    <result column="IS_BS" property="isBs"/>
+    <result column="ISUNIFORM" property="isuniform"/>
+    <result column="TRANS_STATE" property="transState"/>
+    <result column="DATA_SOURCE" property="dataSource"/>
+    <result column="APPROVED" property="approved"/>
+    <result column="OS_DOC_CODE" property="osDocCode"/>
+  </resultMap>
+  <resultMap id="gdnDtlMap" type="mb.erp.dr.soa.old.vo.GdnDtlVo" >
+    <result column="UNIT_ID" property="unitId"/>
+    <result column="GDN_NUM" property="gdnNum"/>
+    <result column="PROD_ID" property="prodId"/>
+    <result column="QUANTITY" property="quantity" />
+    <result column="UNIT_PRICE" property="unitPrice" />
+    <result column="DISC_RATE" property="discRate" />
+    <result column="UNIT_ADDT_COST" property="unitAddtCost" jdbcType="DECIMAL"/>
+    <result column="UNIT_COST" property="unitCost" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark"/>
+    <result column="OLD_DISC_RATE" property="oldDiscRate" />
+    <result column="PRE_QTY" property="preQty" />
+    <result column="REMARK1" property="remark1"/>
+    <result column="CANCEL_QTY" property="cancelQty" />
+    <result column="DOC_DATE" property="docDate" />
+    <result column="FLAG" property="flag"/>
+    <result column="AMOUNT" property="amount" />
+    <result column="LINE_NO" property="lineNo"/>
+    <result column="REMARK2" property="remark2"/>
+    <result column="SAP_QTY" property="sapQty" />
+    <result column="UNION_QTY" property="unionQty" />
+    <result column="QTY_COMMITED" property="qtyCommited" />
+    <result column="LOC_ID" property="locId"/>
+  </resultMap>
+  
+  <sql id="Gdn_del_List" >
+    UNIT_ID, GDN_NUM, PROD_ID, QUANTITY, UNIT_PRICE, DISC_RATE, UNIT_ADDT_COST, UNIT_COST, 
+    REMARK, OLD_DISC_RATE, PRE_QTY, REMARK1, CANCEL_QTY, DOC_DATE, FLAG, AMOUNT, LINE_NO, 
+    REMARK2, SAP_QTY, UNION_QTY, QTY_COMMITED, LOC_ID
+  </sql>
+  <select id="searchGdnDtl" resultMap="gdnDtlMap" parameterType="mb.erp.dr.soa.bean.OrderSearchBean" >
+    select 
+    <include refid="Gdn_del_List" />
+    from MTSBW.GDN_DTL
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+    <if test="docNum != null and docNum != ''" >
+      and GDN_NUM = #{docNum,jdbcType=VARCHAR}
+      </if>
+      <if test="prodId != null and prodId != ''" >
+	      and PROD_ID = #{prodId,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <insert id="saveDtl" parameterType="mb.erp.dr.soa.old.vo.GdnDtlVo" >
+    insert into MTSBW.GDN_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="gdnNum != null and gdnNum != ''" >
+        GDN_NUM,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="quantity != null" >
+        QUANTITY,
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE,
+      </if>
+      <if test="unitAddtCost != null " >
+        UNIT_ADDT_COST,
+      </if>
+      <if test="unitCost != null " >
+        UNIT_COST,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="oldDiscRate != null" >
+        OLD_DISC_RATE,
+      </if>
+      <if test="preQty != null" >
+        PRE_QTY,
+      </if>
+      <if test="remark1 != null and remark1 != ''" >
+        REMARK1,
+      </if>
+      <if test="cancelQty != null" >
+        CANCEL_QTY,
+      </if>
+        DOC_DATE,
+      <if test="flag != null and flag != ''" >
+        FLAG,
+      </if>
+      <if test="amount != null and amount != ''" >
+        AMOUNT,
+      </if>
+      <if test="lineNo != null and lineNo != ''" >
+        LINE_NO,
+      </if>
+      <if test="remark2 != null and remark2 != ''" >
+        REMARK2,
+      </if>
+      <if test="sapQty != null" >
+        SAP_QTY,
+      </if>
+      <if test="unionQty != null" >
+        UNION_QTY,
+      </if>
+      <if test="qtyCommited != null and qtyCommited != ''" >
+        QTY_COMMITED,
+      </if>
+      <if test="locId != null and locId != ''" >
+        LOC_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId},
+      </if>
+      <if test="gdnNum != null and gdnNum != ''" >
+        #{gdnNum},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId},
+      </if>
+      <if test="quantity != null" >
+        #{quantity},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice},
+      </if>
+      <if test="discRate != null" >
+        #{discRate},
+      </if>
+      <if test="unitAddtCost != null " >
+        #{unitAddtCost,jdbcType=DECIMAL},
+      </if>
+      <if test="unitCost != null " >
+        #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark},
+      </if>
+      <if test="oldDiscRate != null" >
+        #{oldDiscRate},
+      </if>
+      <if test="preQty != null" >
+        #{preQty},
+      </if>
+      <if test="remark1 != null and remark1 != ''" >
+        #{remark1},
+      </if>
+      <if test="cancelQty != null" >
+        #{cancelQty},
+      </if>
+       TRUNC(SYSDATE),
+      <if test="flag != null and flag != ''" >
+        #{flag},
+      </if>
+      <if test="amount != null and amount != ''" >
+        #{amount},
+      </if>
+      <if test="lineNo != null and lineNo != ''" >
+        #{lineNo},
+      </if>
+      <if test="remark2 != null and remark2 != ''" >
+        #{remark2},
+      </if>
+      <if test="sapQty != null" >
+        #{sapQty},
+      </if>
+      <if test="unionQty != null" >
+        #{unionQty},
+      </if>
+      <if test="qtyCommited != null and qtyCommited != ''" >
+        #{qtyCommited},
+      </if>
+      <if test="locId != null and locId != ''" >
+        #{locId},
+      </if>
+    </trim>
+  </insert>
+ 
+  <insert id="save" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    insert into MTSBW.GDN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="gdnNum != null and gdnNum != ''" >
+        GDN_NUM,
+      </if>
+        DOC_DATE,
+      <if test="delivMode != null and delivMode != ''" >
+        DELIV_MODE,
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        WAREH_ID,
+      </if>
+      <if test="rcvUnitId != null and rcvUnitId != ''" >
+        RCV_UNIT_ID,
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        OPR_ID,
+      </if>
+      <if test="ctrlrId != null and ctrlrId != ''" >
+        CTRLR_ID,
+      </if>
+      <if test="contactId != null and contactId != ''" >
+        CONTACT_ID,
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        SRC_DOC_TYPE,
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        SRC_UNIT_ID,
+      </if>
+      <if test="srcDocNum != null and srcDocNum != ''" >
+        SRC_DOC_NUM,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="ttlQty != null and ttlQty != ''" >
+        TTL_QTY,
+      </if>
+      <if test="ttlVal != null and ttlVal != ''" >
+        TTL_VAL,
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE,
+      </if>
+      <if test="taxVal != null" >
+        TAX_VAL,
+      </if>
+      <if test="psnVal != null" >
+        PSN_VAL,
+      </if>
+      <if test="addtCost != null" >
+        ADDT_COST,
+      </if>
+      <if test="cost != null" >
+        COST,
+      </if>
+      <if test="reqdAt != null and reqdAt != ''" >
+        REQD_AT,
+      </if>
+      <if test="pickStrAt != null and pickStrAt != ''" >
+        PICK_STR_AT,
+      </if>
+      <if test="pickCompAt != null and pickCompAt != ''" >
+        PICK_COMP_AT,
+      </if>
+        DISP_TIME,
+      <if test="delivMthd != null and delivMthd != ''" >
+        DELIV_MTHD,
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        DELIV_ADDR,
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        DELIV_PSTD,
+      </if>
+      <if test="csbNum != null and csbNum != ''" >
+        CSB_NUM,
+      </if>
+      <if test="efficient != null and efficient != ''" >
+        EFFICIENT,
+      </if>
+      <if test="struck != null and struck != ''" >
+        STRUCK,
+      </if>
+      <if test="costChg != null and costChg != ''" >
+        COST_CHG,
+      </if>
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        SUSPENDED,
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        CANCELLED,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="scanTblNum != null and scanTblNum != ''" >
+        SCAN_TBL_NUM,
+      </if>
+      <if test="gradId != null and gradId != ''" >
+        GRAD_ID,
+      </if>
+      <if test="productCount != null and productCount != ''" >
+        PRODUCT_COUNT,
+      </if>
+      <if test="sregUnitId != null and sregUnitId != ''" >
+        SREG_UNIT_ID,
+      </if>
+      <if test="pdaProgress != null and pdaProgress != ''" >
+        PDA_PROGRESS,
+      </if>
+        EFFICIENT_TIME,
+      <if test="costTime != null and costTime != ''" >
+        COST_TIME,
+      </if>
+      <if test="businessContractNum != null and businessContractNum != ''" >
+        BUSINESS_CONTRACT_NUM,
+      </if>
+      <if test="preProgress != null and preProgress != ''" >
+        PRE_PROGRESS,
+      </if>
+      <if test="k3ReadFlag != null and k3ReadFlag != ''" >
+        K3_READ_FLAG,
+      </if>
+      <if test="locId != null and locId != ''" >
+        LOC_ID,
+      </if>
+      <if test="needSend != null and needSend != ''" >
+        NEED_SEND,
+      </if>
+      <if test="shmtNbr != null and shmtNbr != ''" >
+        SHMT_NBR,
+      </if>
+      <if test="wifNum != null and wifNum != ''" >
+        WIF_NUM,
+      </if>
+      <if test="tspComId != null and tspComId != ''" >
+        TSP_COM_ID,
+      </if>
+      <if test="goodcode != null and goodcode != ''" >
+        GOODCODE,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="rcvState != null and rcvState != ''" >
+        RCV_STATE,
+      </if>
+      <if test="importWmosDmode != null and importWmosDmode != ''" >
+        IMPORT_WMOS_DMODE,
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        RCV_WAREH_ID,
+      </if>
+      <if test="dataType != null and dataType != ''" >
+        DATA_TYPE,
+      </if>
+      <if test="outerOrderno != null and outerOrderno != ''" >
+        OUTER_ORDERNO,
+      </if>
+      <if test="sapFlag != null and sapFlag != ''" >
+        SAP_FLAG,
+      </if>
+      <if test="sapInvoiceFlag != null and sapInvoiceFlag != ''" >
+        SAP_INVOICE_FLAG,
+      </if>
+      <if test="creDate != null and creDate != ''" >
+        CRE_DATE,
+      </if>
+      <if test="isCross != null and isCross != ''" >
+        IS_CROSS,
+      </if>
+      <if test="innerOrderno != null and innerOrderno != ''" >
+        INNER_ORDERNO,
+      </if>
+      <if test="boxCount != null and boxCount != ''" >
+        BOX_COUNT,
+      </if>
+      <if test="productVol != null and productVol != ''" >
+        PRODUCT_VOL,
+      </if>
+      <if test="newGdnnum != null and newGdnnum != ''" >
+        NEW_GDNNUM,
+      </if>
+      <if test="newFlag != null and newFlag != ''" >
+        NEW_FLAG,
+      </if>
+      <if test="boxGen != null and boxGen != ''" >
+        BOX_GEN,
+      </if>
+      <if test="isBs != null and isBs != ''" >
+        IS_BS,
+      </if>
+      <if test="isuniform != null and isuniform != ''" >
+        ISUNIFORM,
+      </if>
+      <if test="transState != null and transState != ''" >
+        TRANS_STATE,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="approved != null and approved != ''" >
+        APPROVED,
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId},
+      </if>
+      <if test="gdnNum != null and gdnNum != ''" >
+        #{gdnNum},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="delivMode != null and delivMode != ''" >
+        #{delivMode},
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        #{warehId},
+      </if>
+      <if test="rcvUnitId != null and rcvUnitId != ''" >
+        #{rcvUnitId},
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        #{oprId},
+      </if>
+      <if test="ctrlrId != null and ctrlrId != ''" >
+        #{ctrlrId},
+      </if>
+      <if test="contactId != null and contactId != ''" >
+        #{contactId},
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        #{srcDocType},
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        #{srcUnitId},
+      </if>
+      <if test="srcDocNum != null and srcDocNum != ''" >
+        #{srcDocNum},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency},
+      </if>
+      <if test="ttlQty != null and ttlQty != ''" >
+        #{ttlQty},
+      </if>
+      <if test="ttlVal != null and ttlVal != ''" >
+        #{ttlVal},
+      </if>
+      <if test="taxRate != null" >
+        #{taxRate},
+      </if>
+      <if test="taxVal != null" >
+        #{taxVal},
+      </if>
+      <if test="psnVal != null" >
+        #{psnVal},
+      </if>
+      <if test="addtCost != null" >
+        #{addtCost},
+      </if>
+      <if test="cost != null" >
+        #{cost},
+      </if>
+      <if test="reqdAt != null and reqdAt != ''" >
+        #{reqdAt},
+      </if>
+      <if test="pickStrAt != null and pickStrAt != ''" >
+        #{pickStrAt},
+      </if>
+      <if test="pickCompAt != null and pickCompAt != ''" >
+        #{pickCompAt},
+      </if>
+        SYSDATE,
+      <if test="delivMthd != null and delivMthd != ''" >
+        #{delivMthd},
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        #{delivAddr},
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        #{delivPstd},
+      </if>
+      <if test="csbNum != null and csbNum != ''" >
+        #{csbNum},
+      </if>
+      <if test="efficient != null and efficient != ''" >
+        #{efficient},
+      </if>
+      <if test="struck != null and struck != ''" >
+        #{struck},
+      </if>
+      <if test="costChg != null and costChg != ''" >
+        #{costChg},
+      </if>
+      <if test="progress != null and progress != ''" >
+        #{progress},
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        #{suspended},
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        #{cancelled},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark},
+      </if>
+      <if test="scanTblNum != null and scanTblNum != ''" >
+        #{scanTblNum},
+      </if>
+      <if test="gradId != null and gradId != ''" >
+        #{gradId},
+      </if>
+      <if test="productCount != null and productCount != ''" >
+        #{productCount},
+      </if>
+      <if test="sregUnitId != null and sregUnitId != ''" >
+        #{sregUnitId},
+      </if>
+      <if test="pdaProgress != null and pdaProgress != ''" >
+        #{pdaProgress},
+      </if>
+        SYSTIMESTAMP,
+      <if test="costTime != null and costTime != ''" >
+        #{costTime},
+      </if>
+      <if test="businessContractNum != null and businessContractNum != ''" >
+        #{businessContractNum},
+      </if>
+      <if test="preProgress != null and preProgress != ''" >
+        #{preProgress},
+      </if>
+      <if test="k3ReadFlag != null and k3ReadFlag != ''" >
+        #{k3ReadFlag},
+      </if>
+      <if test="locId != null and locId != ''" >
+        #{locId},
+      </if>
+      <if test="needSend != null and needSend != ''" >
+        #{needSend},
+      </if>
+      <if test="shmtNbr != null and shmtNbr != ''" >
+        #{shmtNbr},
+      </if>
+      <if test="wifNum != null and wifNum != ''" >
+        #{wifNum},
+      </if>
+      <if test="tspComId != null and tspComId != ''" >
+        #{tspComId},
+      </if>
+      <if test="goodcode != null and goodcode != ''" >
+        #{goodcode},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId},
+      </if>
+      <if test="rcvState != null and rcvState != ''" >
+        #{rcvState},
+      </if>
+      <if test="importWmosDmode != null and importWmosDmode != ''" >
+        #{importWmosDmode},
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        #{rcvWarehId},
+      </if>
+      <if test="dataType != null and dataType != ''" >
+        #{dataType},
+      </if>
+      <if test="outerOrderno != null and outerOrderno != ''" >
+        #{outerOrderno},
+      </if>
+      <if test="sapFlag != null and sapFlag != ''" >
+        #{sapFlag},
+      </if>
+      <if test="sapInvoiceFlag != null and sapInvoiceFlag != ''" >
+        #{sapInvoiceFlag},
+      </if>
+      <if test="creDate != null and creDate != ''" >
+        #{creDate},
+      </if>
+      <if test="isCross != null and isCross != ''" >
+        #{isCross},
+      </if>
+      <if test="innerOrderno != null and innerOrderno != ''" >
+        #{innerOrderno},
+      </if>
+      <if test="boxCount != null and boxCount != ''" >
+        #{boxCount},
+      </if>
+      <if test="productVol != null and productVol != ''" >
+        #{productVol},
+      </if>
+      <if test="newGdnnum != null and newGdnnum != ''" >
+        #{newGdnnum},
+      </if>
+      <if test="newFlag != null and newFlag != ''" >
+        #{newFlag},
+      </if>
+      <if test="boxGen != null and boxGen != ''" >
+        #{boxGen},
+      </if>
+      <if test="isBs != null and isBs != ''" >
+        #{isBs},
+      </if>
+      <if test="isuniform != null and isuniform != ''" >
+        #{isuniform},
+      </if>
+      <if test="transState != null and transState != ''" >
+        #{transState},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource},
+      </if>
+      <if test="approved != null and approved != ''" >
+        #{approved},
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        #{osDocCode},
+      </if>
+    </trim>
+  </insert>
+  
+    <!-- 验证出库单的状态 -->
+  <select id="selectProcess" resultType="java.lang.String" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    select PROGRESS
+    from MTSBW.GDN
+    where UNIT_ID = #{unitId}
+      and GDN_NUM = #{gdnNum}
+  </select>
+  
+  <!-- 查询出库单 -->
+  <select id="selectGdn" resultMap="gdnMap" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    select *
+    from GDN
+    where UNIT_ID = #{unitId}
+      and GDN_NUM = #{gdnNum}
+  </select>
+  
+  <!-- 查询出库单详情 -->
+  <select id="selectGdnDtl" resultMap="gdnDtlMap" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    select *
+    from GDN_DTL
+    where UNIT_ID = #{unitId}
+      and GDN_NUM = #{gdnNum}
+  </select>
+  
+  <!-- 更新出库单状态 -->
+  <update id="updateProcess" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    update MTSBW.GDN
+    set 
+      PROGRESS = #{progress}
+    where UNIT_ID = #{unitId}
+      and GDN_NUM = #{gdnNum}
+       <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+       </if>
+  </update>
+  
+  <!-- 撤销出库单 -->
+  <update id="cancel" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    update MTSBW.GDN
+    set 
+      CANCELLED = #{cancelled}
+    where UNIT_ID = #{unitId}
+      and GDN_NUM = #{gdnNum}
+  </update>
+  
+  <!-- 更新出库单 成本核算标志位F 成本为0 -->
+<!--   <update id="updateCost" parameterType="mb.erp.dr.soa.old.vo.GdnVo" > -->
+<!--     update MTSBW.GDN -->
+<!--     set  -->
+<!--       COST_CHG= #{costChg}, -->
+<!--       COST = #{cost} -->
+<!--     where UNIT_ID = #{unitId} -->
+<!--       and GDN_NUM = #{gdnNum} -->
+<!--   </update> -->
+  
+  <!-- 更新出库单成本-->
+    <update id="updateCost" parameterType="java.util.Map" >
+    UPDATE GDN A
+    SET 
+      COST_CHG = CASE #{isCost} WHEN 1 THEN 'T' ELSE 'F' END,
+      COST = CASE #{isCost} WHEN 1 THEN (SELECT NVL(ROUND(SUM(NVL(B.UNIT_COST,0) * NVL(B.QUANTITY,0)),4),0) AS COST
+             FROM GDN_DTL B WHERE A.UNIT_ID = B.UNIT_ID AND A.GDN_NUM = B.GDN_NUM)
+             ELSE 0 END
+    WHERE A.UNIT_ID = #{unitId}
+    AND A.GDN_NUM = #{gdnNum}
+  </update>
+  
+  
+  <!-- 更新出库单明细 单位成本为0 -->
+<!--   <update id="updateUnitCost" parameterType="mb.erp.dr.soa.old.vo.GdnVo" > -->
+<!--     update MTSBW.GDN_DTL -->
+<!--     set  -->
+<!--       UNIT_COST = #{cost} -->
+<!--     where UNIT_ID = #{unitId} -->
+<!--       and GDN_NUM = #{gdnNum} -->
+<!--   </update> -->
+  
+  <!-- 更新出库单明细成本 -->
+  <update id="updateUnitCost" parameterType="java.util.Map" >
+    UPDATE GDN_DTL A
+    SET 
+      UNIT_COST =  CASE #{isCost} WHEN 1 THEN(SELECT  ROUND(A.UNIT_PRICE * A.DISC_RATE / (100 + B.TAX_RATE) + A.UNIT_ADDT_COST, 4)
+            FROM GDN B  WHERE A.UNIT_ID = B.UNIT_ID AND A.GDN_NUM = B.GDN_NUM) 
+             ELSE 0 END
+    WHERE A.UNIT_ID = #{unitId}
+    AND A.GDN_NUM = #{gdnNum}
+  </update>
+  
+  <!-- 根据出库单更新总金额-->
+   <update id="updateTtlVal"  parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    update GDN A
+    set A.TTL_VAL = #{ttlVal} 
+    where A.GDN_NUM = #{gdnNum}
+  </update>
+  <!-- 根据出库单明细更新单价和折率-->
+   <update id="updatePriceAndDiscRate"  parameterType="mb.erp.dr.soa.old.vo.GdnDtlVo" >
+    update GDN_DTL A
+    set A.UNIT_PRICE = #{unitPrice} , A.DISC_RATE=#{discRate}
+    where A.GDN_NUM = #{gdnNum} 
+    AND A.UNIT_ID = #{unitId}
+    AND A.PROD_ID = #{prodId}
+   </update>
+   
+   <!-- 更新出库单原因-->
+   <update id="updateRcvState"  parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+       UPDATE GDN A 
+       SET RCV_STATE =DECODE(DELIV_MODE,'TRAN','YD','SHOR','YA','SHCR','YB')       
+       WHERE UNIT_ID = #{unitId} AND GDN_NUM = #{gdnNum}           
+       AND EXISTS (SELECT 1 FROM OUPT_CODE_DTL B,OUPT_CODE_DTL C WHERE B.CODE_CLASS='PLANT_WAREH_CODE'  
+                            AND A.WAREH_ID=B.CODE_MBERP_2 AND A.UNIT_ID=B.CODE_MBERP_1
+                            AND C.CODE_CLASS = 'PLANT_WAREH_CODE'
+                            AND A.RCV_WAREH_ID = C.CODE_MBERP_2 AND A.UNIT_ID=C.CODE_MBERP_1
+                            AND B.CODE_OUPT_1 != C.CODE_OUPT_1)
+   </update>
+   
+   <update id="updateSapFlagOne"  parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+     UPDATE  GDN B SET SAP_FLAG=1 
+     WHERE EXISTS(SELECT 1 FROM SYS_CODE A 
+                             WHERE A.CODE_CLASS='SAP_UNIT_TO' AND A.CODE=B.WAREH_ID)  
+     AND UNIT_ID =  #{unitId} AND GDN_NUM = #{gdnNum}  
+     AND NVL(SAP_FLAG,0)=0   
+     AND EXISTS(SELECT 1 FROM SYS_CODE A 
+                         WHERE A.CODE_CLASS='SAP_DELIV_MODE' AND A.CODE=B.DELIV_MODE)    
+     AND EXISTS (SELECT 1 FROM SYS_CODE A 
+                          WHERE A.CODE_CLASS='SAP_UNIT_TO' AND A.CODE=B.RCV_WAREH_ID)
+   </update>
+   
+    <update id="updateSapFlagTwo"  parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    UPDATE  GDN B  SET SAP_FLAG=1   
+    WHERE EXISTS (SELECT 1 FROM SYS_CODE A 
+                            WHERE A.CODE_CLASS='SAP_UNIT_TO' AND A.CODE=B.WAREH_ID)
+    AND UNIT_ID =  #{unitId} AND GDN_NUM = #{gdnNum} 
+    AND NVL(SAP_FLAG,0)=0
+    AND EXISTS(SELECT 1 FROM SYS_CODE A 
+                        WHERE A.CODE_CLASS='SAP_DELIV_MODE' AND A.CODE=B.DELIV_MODE)
+   </update>
+   
+    <update id="updateSapFlagForH"  parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    UPDATE GDN T SET T.SAP_FLAG='H'  
+    WHERE EXISTS ( SELECT 1 FROM OUPT_CODE_DTL T2 
+                              WHERE T.WAREH_ID=T2.CODE_MBERP_2 AND T2.CODE_CLASS='WAREH_GDN_VALVE' 
+                                 AND T.DELIV_MODE=T2.CODE_MBERP_1 )
+     AND T.UNIT_ID=#{unitId} AND T.GDN_NUM=#{gdnNum} 
+   </update>
+    
+    <update id="updateNewFlag"  parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    UPDATE GDN B SET NEW_FLAG=1 
+    WHERE EXISTS (SELECT 1 FROM SYS_CODE 
+                            WHERE CODE=B.WAREH_ID  AND CODE_CLASS='B2C_UNIT_TO' )
+    AND UNIT_ID = #{unitId} AND GDN_NUM = #{gdnNum}  
+    AND NVL(NEW_FLAG,0)=0
+    AND EXISTS(SELECT 1 FROM SYS_CODE A 
+                        WHERE A.CODE_CLASS='B2C_DELIV_MODE' AND A.CODE=B.DELIV_MODE)
+   </update>
+     
+   <select id="transNewFlag" statementType="CALLABLE" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+        <![CDATA[
+            {CALL PCK_DR_INTERFACE.PROC_DR_INTERFACE(#{unitId,mode=IN,jdbcType=VARCHAR},#{gdnNum,mode=IN,jdbcType=VARCHAR},'GDN','01')}
+        ]]>
+   </select>
+   
+   <select id="selectGdnDtlWithOutLocId" resultMap="gdnDtlMap" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    select *
+    from GDN_DTL
+    where UNIT_ID = #{unitId}
+      and GDN_NUM = #{gdnNum}
+      and LOC_ID is NULL
+  </select>
+  
+   <!-- 根据出库单是否有成本组-->
+   <select id="checkCostGrpByGdn" parameterType="java.util.Map" resultType="java.lang.Integer">
+       SELECT COUNT(1) 
+       FROM GDN A,WAREHOUSE B ,WAREHOUSE C  WHERE A.DELIV_MODE IN ('TRAN','SHOR','SHCR')
+       AND A.WAREH_ID=B.WAREH_ID AND NVL(A.RCV_WAREH_ID,A.RCV_UNIT_ID)=C.WAREH_ID
+       AND B.COST_GRP_ID IS NOT NULL AND C.COST_GRP_ID IS NOT NULL
+       AND B.COST_GRP_ID != C.COST_GRP_ID AND A.UNIT_ID=#{unitId} AND A.GDN_NUM=#{gdnNum}
+   </select>
+   
+   <!-- 将新ERP的现货订单单号写入到老ERP现货订单 -->
+  <update id="updateNewErpGdnCode" parameterType="mb.erp.dr.soa.old.vo.GdnVo" >
+    update MTSBW.GDN
+    set 
+      NEW_GDNNUM = #{newGdnnum}
+    where UNIT_ID = #{unitId}
+      and GDN_NUM = #{gdnNum}
+  </update>
+</mapper>

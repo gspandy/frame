@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.center.dao.TaxRateEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.TaxRateEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="taxcode" property="taxcode" jdbcType="VARCHAR" />
+    <result column="taxrate" property="taxrate" jdbcType="DECIMAL" />
+    <result column="taxname" property="taxname" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, start_date, end_date, taxcode, taxrate, taxname, remarks, isvalid, create_oper, 
+    create_time, modify_oper, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from taxrate
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from taxrate
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="mb.mba.core.entity.TaxRateEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taxrate (start_date, end_date, taxcode, 
+      taxrate, taxname, remarks, 
+      isvalid, create_oper, create_time, 
+      modify_oper, modify_time)
+    values (#{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, #{taxcode,jdbcType=VARCHAR}, 
+      #{taxrate,jdbcType=DECIMAL}, #{taxname,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{isvalid,jdbcType=CHAR}, #{createOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyOper,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="mb.mba.core.entity.TaxRateEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taxrate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="taxcode != null" >
+        taxcode,
+      </if>
+      <if test="taxrate != null" >
+        taxrate,
+      </if>
+      <if test="taxname != null" >
+        taxname,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="isvalid != null" >
+        isvalid,
+      </if>
+      <if test="createOper != null" >
+        create_oper,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="startDate != null" >
+        #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="taxcode != null" >
+        #{taxcode,jdbcType=VARCHAR},
+      </if>
+      <if test="taxrate != null" >
+        #{taxrate,jdbcType=DECIMAL},
+      </if>
+      <if test="taxname != null" >
+        #{taxname,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.mba.core.entity.TaxRateEntity" >
+    update taxrate
+    <set >
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="taxcode != null" >
+        taxcode = #{taxcode,jdbcType=VARCHAR},
+      </if>
+      <if test="taxrate != null" >
+        taxrate = #{taxrate,jdbcType=DECIMAL},
+      </if>
+      <if test="taxname != null" >
+        taxname = #{taxname,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        isvalid = #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        create_oper = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mb.mba.core.entity.TaxRateEntity" >
+    update taxrate
+    set start_date = #{startDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      taxcode = #{taxcode,jdbcType=VARCHAR},
+      taxrate = #{taxrate,jdbcType=DECIMAL},
+      taxname = #{taxname,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      isvalid = #{isvalid,jdbcType=CHAR},
+      create_oper = #{createOper,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

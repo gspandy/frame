@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="tbnSave" packages="rules.tbn.save" >
+        <ksession name="tbn-rules-save" />
+    </kbase>
+    <kbase name="tbnAudit" packages="rules.tbn.audit" >
+        <ksession name="tbn-rules-audit" />
+    </kbase>
+    <kbase name="idtSave" packages="rules.idt.save" >
+        <ksession name="idt-rules-save" />
+    </kbase>
+    <kbase name="idtAudit" packages="rules.idt.audit" >
+        <ksession name="idt-rules-audit" />
+    </kbase>
+        <kbase name="adnConfirm" packages="rules.adn.confirm" >
+        <ksession name="adn-rules-confirm" />
+    </kbase>
+    <kbase name="gdnOut" packages="rules.gdn.out" >
+        <ksession name="gdn-rules-out" />
+    </kbase>
+    <kbase name="grnIn" packages="rules.grn.in" >
+        <ksession name="grn-rules-in" />
+    </kbase>
+    <kbase name="gddl" packages="rules.gddl" >
+        <ksession name="gddl-rules" />
+    </kbase>
+    <kbase name="gdrv" packages="rules.gdrv" >
+        <ksession name="gdrv-rules" />
+    </kbase>
+    <!-- 新ERP START -->
+    <kbase name="sfIdtSave" packages="rules.sfIdt.save" >
+    	<ksession name="sfIdt-rules-save" />
+    </kbase>
+    <kbase name="sfIdtAudit" packages="rules.sfIdt.audit" >
+        <ksession name="sfIdt-rules-audit" />
+    </kbase>
+    <kbase name="sfDgnAudit" packages="rules.sfDgn.audit" >
+        <ksession name="sfDgn-rules-audit" />
+    </kbase>
+    <kbase name="sfGdnOut" packages="rules.sfGdn.out" >
+        <ksession name="sfGdn-rules-out" />
+    </kbase>
+     <kbase name="sfGrnIn" packages="rules.sfGrn.in" >
+        <ksession name="sfGrn-rules-in" />
+    </kbase>
+    <kbase name="newTbnSave" packages="rules.newTbn.save" >
+        <ksession name="newTbn-rules-save" />
+    </kbase>
+    <kbase name="newTbnAudit" packages="rules.newTbn.audit" >
+        <ksession name="newTbn-rules-audit" />
+    </kbase>
+    <!-- 新ERP END -->
+</kmodule>

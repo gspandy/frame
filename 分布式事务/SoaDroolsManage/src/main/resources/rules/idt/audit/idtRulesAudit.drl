@@ -1,0 +1,115 @@
+package mb.erp.dr.o2o.drools.rules.idt;
+
+import mb.erp.dr.soa.old.service.price.SettlementPriceRateService;
+import mb.erp.dr.soa.old.vo.IdtVo;
+import mb.erp.dr.soa.old.vo.IdtDtlVo;
+import mb.erp.dr.soa.vo.common.MsgVo;
+import mb.erp.dr.soa.vo.common.MsgListVo;
+import java.util.ArrayList;
+import java.util.List;
+import mb.erp.dr.soa.bean.BalanceBean;
+import mb.erp.dr.soa.service.balance.NewBalanceService;
+import mb.erp.dr.soa.constant.O2OBillConstant.BillType;
+import mb.erp.dr.soa.old.service.balance.BalanceService;
+import mb.erp.dr.soa.old.service.impl.bill.IdtService;
+import mb.erp.dr.soa.utils.SoaBillUtils;
+
+rule "是否需要判断结转日期"
+    lock-on-active true
+    salience 100
+    when
+        $idt : IdtVo( controlStatus matches "^1{1}.*" )
+        $idtService : IdtService()
+    then
+        // System.out.println( "判断结转日期" );
+        $idtService.isSettle($idt.getVendeeId());
+        
+end
+
+rule "是否需要重算单价"
+    lock-on-active true
+    salience 90
+    when
+        $idt : IdtVo( controlStatus matches "^[0-1][1].*" )
+        $settlementPriceRateService : SettlementPriceRateService()
+        $soaUtil : SoaBillUtils()
+    then
+        // System.out.println( "是否需要重算单价");
+        List<IdtDtlVo> idtDtlVos = $idt.getIdtDtlVos();
+        List<String> prod_numlist = new ArrayList<String>();
+        for(int i=0;i<idtDtlVos.size();i++){
+            prod_numlist.add(idtDtlVos.get(i).getProdId());
+        }
+        List<MsgListVo> msgList= $settlementPriceRateService.bulkGetSettlementPriceRateByProdIdList(prod_numlist,$idt.getVenderId(),$idt.getVendeeId(),$idt.getCurrency());
+        for(int i=0;i<msgList.size();i++){
+            for(int j=0;j<idtDtlVos.size();j++){
+                if("success".equals(msgList.get(i).getCode())){
+                    if(msgList.get(i).getProdId().equals(idtDtlVos.get(j).getProdId())){
+                        idtDtlVos.get(j).setUnitPrice(msgList.get(i).getPrice());
+                        idtDtlVos.get(j).setDiscRate(msgList.get(i).getDiscRate());
+                        // System.out.println( "价格 " +msgList.get(i).getPrice());
+                        // System.out.println( "折率 " +msgList.get(i).getDiscRate());
+                    }
+                }
+            }
+        }
+        //重算现货订单总金额
+        $soaUtil.resetOrderVal($idt);
+        $idt.setIdtDtlVos(idtDtlVos);
+        update($idt);
+end
+
+
+rule "是否需要冻结金额"
+    lock-on-active true
+    salience 80
+    when
+        $idt : IdtVo( controlStatus matches "^[0-1]{2}[1].*" )
+    then
+        // System.out.println( "现货订单冻结金额" );
+        if($idt.getVenderId().equals($idt.getVendeeId())){
+            $idt.getRulesGroup().add("rule1");
+            // System.out.println( "调拨订单不需要冻结金额" );
+        }
+end
+
+rule "冻结金额是否允许为负数-负数冻结"
+    lock-on-active true
+    salience 70
+    when
+        $idt : IdtVo( controlStatus matches "^[0-1]{2}[1].*" && controlStatus matches "^[0-1]{3}[1].*",$rulesGroup : rulesGroup )
+        $balanceService : BalanceService()
+    then
+        if (!$rulesGroup.contains("rule1")) {
+	        // System.out.println( "现货订单负数冻结" );
+	        BalanceBean balanceBean = new BalanceBean();
+	        balanceBean.setUid($idt.getVenderId()); // 供货方（发货组织）
+	        balanceBean.setCpdUid($idt.getVendeeId()); // 购货方(接收方)
+	        balanceBean.setBalance($idt.getOrderVal());// 总金额
+	        balanceBean.setDocType(BillType.IDT);
+	        balanceBean.setDocNum($idt.getIdtNum());
+	        $balanceService.increaseFreezeNegative(balanceBean);
+	    }
+end
+
+rule "冻结金额是否允许为负数-正数冻结"
+    lock-on-active true
+    salience 60
+    when
+        $idt : IdtVo( controlStatus matches "^[0-1]{2}[1].*" && controlStatus matches "^[0-1]{3}[0].*" ,$rulesGroup : rulesGroup)
+        $balanceService : BalanceService()
+    then
+        if (!$rulesGroup.contains("rule1")) {
+	        // System.out.println( "现货订单正数冻结" );
+	        BalanceBean balanceBean = new BalanceBean();
+	        balanceBean.setUid($idt.getVenderId()); // 供货方（发货组织）
+	        balanceBean.setCpdUid($idt.getVendeeId()); // 购货方(接收方)
+	        List<IdtDtlVo> idtDtlVos = $idt.getIdtDtlVos();
+	        balanceBean.setBalance($idt.getOrderVal()); // 总金额
+	        balanceBean.setDocDate($idt.getDocDate()); // 单据日期，查询可支配金额用到
+	        // System.out.println( "现货 - 专项资金单据日期："+$idt.getDocDate() );
+	        balanceBean.setDocType(BillType.IDT);
+	        balanceBean.setDocNum($idt.getIdtNum());
+	        $balanceService.increaseFreezePositive(balanceBean);
+        }
+end

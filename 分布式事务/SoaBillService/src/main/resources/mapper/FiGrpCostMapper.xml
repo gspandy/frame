@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.FiGrpCostMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.FiGrpCostVo" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="COST_GRP_ID" property="costGrpId" jdbcType="DECIMAL" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="UNIT_COST" property="unitCost" jdbcType="DECIMAL" />
+    <result column="STOCK" property="stock" jdbcType="DECIMAL" />
+    <result column="CALC_AT" property="calcAt" jdbcType="DATE" />
+    <result column="INIT_UNIT_COST" property="initUnitCost" jdbcType="DECIMAL" />
+    <result column="INIT_STK" property="initStk" jdbcType="DECIMAL" />
+    <result column="CALC_MARGIN" property="calcMargin" jdbcType="VARCHAR" />
+    <result column="PROD_NUM" property="prodNum" jdbcType="VARCHAR" />
+    <result column="MOVE_TTL_COST" property="moveTtlCost" jdbcType="DECIMAL" />
+    <result column="OP_MODE" property="opMode" jdbcType="CHAR" />
+  </resultMap>
+  
+  <select id="SelectByUnitIDProdId" resultMap="BaseResultMap" parameterType="map">
+  	    SELECT * FROM(  
+            SELECT A.UNIT_COST,
+            1 AS DATASORT FROM FI_GRP_COST A
+            INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID=B.ID
+            WHERE B.UNIT_ID IN (SELECT C.ID FROM BF_ORG C WHERE C.CODE=#{unit_id})
+            AND A.PROD_ID IN (SELECT D.ID FROM BF_PRODUCT D WHERE D.PROD_NUM=#{prod_num})
+            UNION
+             SELECT A.UNIT_COST,
+            2 AS DATASORT FROM FI_GRP_COST A
+            INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID=B.ID
+            WHERE B.UNIT_ID IN (SELECT C.ID FROM BF_ORG C WHERE C.CODE=#{unit_id})
+            AND A.PROD_ID IN (SELECT D.BF_PROD_CLS_ID FROM BF_PRODUCT D WHERE D.PROD_NUM=#{prod_num})
+            ) ORDER BY DATASORT
+  </select>
+  
+  <select id="selectByUnitIDProdIdWarethID" resultMap="BaseResultMap" parameterType="map">
+        SELECT * FROM(  
+          SELECT A.UNIT_COST,
+          1 AS DATASORT FROM FI_GRP_COST A
+          INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID=B.ID
+          WHERE B.UNIT_ID IN (SELECT C.ID FROM BF_ORG C WHERE C.CODE=#{unit_id})
+          AND A.PROD_ID IN (SELECT D.ID FROM BF_PRODUCT D WHERE D.PROD_NUM=#{prod_num})
+          AND EXISTS (SELECT 1 FROM BF_ORG C,SF_WAREHOUSE D WHERE 
+           C.OWNER_ID=B.Unit_Id AND  C.Code=#{code}
+          AND C.ID=D.BF_ORG_ID  AND D.COST_GRP_ID=A.COST_GRP_ID)
+          UNION
+           SELECT A.UNIT_COST,
+          2 AS DATASORT FROM FI_GRP_COST A
+          INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID=B.ID
+          WHERE B.UNIT_ID IN (SELECT C.ID FROM BF_ORG C WHERE C.CODE=#{unit_id})
+          AND A.PROD_ID IN (SELECT D.BF_PROD_CLS_ID FROM BF_PRODUCT D WHERE D.PROD_NUM=#{prod_num})
+           AND EXISTS (SELECT 1 FROM BF_ORG C,SF_WAREHOUSE D WHERE 
+           C.OWNER_ID=B.UNIT_ID AND C.Code=#{code}
+           AND C.ID=D.BF_ORG_ID  AND D.COST_GRP_ID=A.COST_GRP_ID)
+           )
+           ORDER BY DATASORT
+  </select>
+  
+  <select id="buklGetByUnitIDProdId" resultMap="BaseResultMap" parameterType="map">
+        SELECT TTT.PROD_NUM, TTT.UNIT_COST
+		  FROM (SELECT TT.PROD_NUM,
+		               TT.UNIT_COST,
+		               ROW_NUMBER() OVER(PARTITION BY TT.PROD_NUM ORDER BY TT.DATASORT) RN1
+		          FROM (SELECT A.PROD_ID, D.PROD_NUM, A.UNIT_COST, 1 AS DATASORT
+		                  FROM FI_GRP_COST A
+		                 INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID = B.ID
+		                 INNER JOIN BF_PRODUCT D ON A.PROD_ID = D.ID
+		                 WHERE EXISTS (SELECT 1
+		                          FROM BF_ORG C
+		                         WHERE B.UNIT_ID = C.ID
+		                           AND C.CODE = #{unit_id})
+		                   AND EXISTS (SELECT 1
+		                          FROM TMP_BF_ORG_CODE T
+		                         WHERE D.PROD_NUM = T.BF_ORG_CODE)
+		                UNION
+		                SELECT A.PROD_ID, D.PROD_NUM, A.UNIT_COST, 2 AS DATASORT
+		                  FROM FI_GRP_COST A
+		                 INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID = B.ID
+		                 INNER JOIN BF_PRODUCT D ON A.PROD_ID = D.BF_PROD_CLS_ID
+		                 WHERE EXISTS (SELECT 1
+		                          FROM BF_ORG C
+		                         WHERE B.UNIT_ID = C.ID
+		                           AND C.CODE = #{unit_id})
+		                   AND EXISTS (SELECT 1
+		                          FROM TMP_BF_ORG_CODE T
+		                         WHERE D.PROD_NUM = T.BF_ORG_CODE)) TT) TTT
+		 WHERE RN1 = 1
+  </select>
+  
+  <select id="buklGetByUnitIDProdIdWarehID" resultMap="BaseResultMap" parameterType="map">
+		SELECT TTT.PROD_NUM, TTT.UNIT_COST
+		  FROM (SELECT TT.PROD_NUM,
+		               TT.UNIT_COST,
+		               ROW_NUMBER() OVER(PARTITION BY TT.PROD_NUM ORDER BY TT.DATASORT) RN1
+		          FROM (SELECT D.PROD_NUM, A.UNIT_COST, 1 AS DATASORT
+		                  FROM FI_GRP_COST A
+		                 INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID = B.ID
+		                 INNER JOIN BF_PRODUCT D ON A.PROD_ID = D.ID
+		                 WHERE EXISTS (SELECT 1
+		                          FROM BF_ORG C
+		                         WHERE B.UNIT_ID = C.ID
+		                           AND C.CODE = #{unit_id})
+		                   AND EXISTS (SELECT 1
+		                          FROM TMP_BF_ORG_CODE T
+		                         WHERE T.BF_ORG_CODE = D.PROD_NUM)
+		                   AND EXISTS
+		                 (SELECT 1
+		                          FROM BF_ORG C, SF_WAREHOUSE D
+		                         WHERE C.OWNER_ID = B.UNIT_ID
+		                           AND C.CODE = #{wareh_code}
+		                           AND C.ID = D.BF_ORG_ID
+		                           AND D.COST_GRP_ID = A.COST_GRP_ID)
+		                UNION
+		                SELECT D.PROD_NUM, A.UNIT_COST, 2 AS DATASORT
+		                  FROM FI_GRP_COST A
+		                 INNER JOIN FI_COST_GRP B ON A.COST_GRP_ID = B.ID
+		                 INNER JOIN BF_PRODUCT D ON A.PROD_ID = D.BF_PROD_CLS_ID
+		                 WHERE EXISTS (SELECT 1
+		                          FROM BF_ORG C
+		                         WHERE B.UNIT_ID = C.ID
+		                           AND C.CODE = #{unit_id})
+		                   AND EXISTS (SELECT 1
+		                          FROM TMP_BF_ORG_CODE T
+		                         WHERE T.BF_ORG_CODE = D.PROD_NUM)
+		                   AND EXISTS
+		                 (SELECT 1
+		                          FROM BF_ORG C, SF_WAREHOUSE D
+		                         WHERE C.OWNER_ID = B.UNIT_ID
+		                           AND C.CODE = #{wareh_code}
+		                           AND C.ID = D.BF_ORG_ID
+		                           AND D.COST_GRP_ID = A.COST_GRP_ID)) TT) TTT
+		 WHERE TTT.RN1 = 1
+  </select>
+  
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.FiGrpCostVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into FI_GRP_COST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="costGrpId != null and costGrpId != ''" >
+        COST_GRP_ID,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="unitCost != null and unitCost != ''" >
+        UNIT_COST,
+      </if>
+      <if test="stock != null and stock != ''" >
+        STOCK,
+      </if>
+      <if test="calcAt != null and calcAt != ''" >
+        CALC_AT,
+      </if>
+      <if test="initUnitCost != null and initUnitCost != ''" >
+        INIT_UNIT_COST,
+      </if>
+      <if test="initStk != null and initStk != ''" >
+        INIT_STK,
+      </if>
+      <if test="calcMargin != null and calcMargin != ''" >
+        CALC_MARGIN,
+      </if>
+      <if test="prodNum != null and prodNum != ''" >
+        PROD_NUM,
+      </if>
+      <if test="moveTtlCost != null and moveTtlCost != ''" >
+        MOVE_TTL_COST,
+      </if>
+      <if test="opMode != null and opMode != ''" >
+        OP_MODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="costGrpId != null and costGrpId != ''" >
+        #{costGrpId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitCost != null and unitCost != ''" >
+        #{unitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null and stock != ''" >
+        #{stock,jdbcType=DECIMAL},
+      </if>
+      <if test="calcAt != null and calcAt != ''" >
+        #{calcAt,jdbcType=DATE},
+      </if>
+      <if test="initUnitCost != null and initUnitCost != ''" >
+        #{initUnitCost,jdbcType=DECIMAL},
+      </if>
+      <if test="initStk != null and initStk != ''" >
+        #{initStk,jdbcType=DECIMAL},
+      </if>
+      <if test="calcMargin != null and calcMargin != ''" >
+        #{calcMargin,jdbcType=VARCHAR},
+      </if>
+      <if test="prodNum != null and prodNum != ''" >
+        #{prodNum,jdbcType=VARCHAR},
+      </if>
+      <if test="moveTtlCost != null and moveTtlCost != ''" >
+        #{moveTtlCost,jdbcType=DECIMAL},
+      </if>
+      <if test="opMode != null and opMode != ''" >
+        #{opMode,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

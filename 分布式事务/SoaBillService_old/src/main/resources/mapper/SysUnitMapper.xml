@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.SysUnitMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.SysUnitVo" >
+    <id column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <result column="OWNER_ID" property="ownerId" jdbcType="VARCHAR" />
+    <result column="HIERARCHY" property="hierarchy" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="INPUT_CODE" property="inputCode" jdbcType="VARCHAR" />
+    <result column="SORT_CODE" property="sortCode" jdbcType="VARCHAR" />
+    <result column="POSTCODE" property="postcode" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="PH_NUM" property="phNum" jdbcType="VARCHAR" />
+    <result column="FAX_NUM" property="faxNum" jdbcType="VARCHAR" />
+    <result column="EMAIL_ADDR" property="emailAddr" jdbcType="VARCHAR" />
+    <result column="WEBSITE" property="website" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="OLD_ID" property="oldId" jdbcType="VARCHAR" />
+    <result column="REGION_CODE" property="regionCode" jdbcType="VARCHAR" />
+    <result column="SIMPLE_ADDR" property="simpleAddr" jdbcType="VARCHAR" />
+    <result column="DETA_ADDRESS" property="detaAddress" jdbcType="VARCHAR" />
+    <result column="CONTACT_NAME" property="contactName" jdbcType="VARCHAR" />
+    <result column="OPR_REMARK" property="oprRemark" jdbcType="VARCHAR" />
+    <result column="IDT_COUNT" property="idtCount" jdbcType="DECIMAL" />
+    <result column="NEED_SEND" property="needSend" jdbcType="VARCHAR" />
+    <result column="UNIT_SHORT_ID" property="unitShortId" jdbcType="VARCHAR" />
+    <result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="DISP_TSP_COM_ID" property="dispTspComId" jdbcType="VARCHAR" />
+    <result column="DISP_RCV_WAREH_ID" property="dispRcvWarehId" jdbcType="VARCHAR" />
+    <result column="UNIT_NUM" property="unitNum" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    <result column="SAP_UNIT_ID" property="sapUnitId" jdbcType="VARCHAR" />
+    <result column="IS_PROJECT" property="isProject" jdbcType="VARCHAR" />
+    <result column="PROFIT_CENTER" property="profitCenter" jdbcType="VARCHAR" />
+    <result column="BUSINESS_RANGE" property="businessRange" jdbcType="VARCHAR" />
+    <result column="COUNTY" property="county" jdbcType="VARCHAR" />
+    <result column="LOCATION" property="location" jdbcType="VARCHAR" />
+    <result column="FLAG" property="flag" jdbcType="CHAR" />
+    <!-- 上级组织的贸易供货方 -->
+    <result column="CUS_ID" property="cusId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    UNIT_ID, OWNER_ID, HIERARCHY, NAME, INPUT_CODE, SORT_CODE, POSTCODE, ADDRESS, PH_NUM, 
+    FAX_NUM, EMAIL_ADDR, WEBSITE, REMARK, OLD_ID, REGION_CODE, SIMPLE_ADDR, 
+    DETA_ADDRESS, CONTACT_NAME, OPR_REMARK, IDT_COUNT, NEED_SEND, UNIT_SHORT_ID, COUNTRY, 
+    PROVINCE, CITY, DISP_TSP_COM_ID, DISP_RCV_WAREH_ID, UNIT_NUM, UPDATE_TIME, SAP_UNIT_ID, 
+    IS_PROJECT, PROFIT_CENTER, BUSINESS_RANGE, COUNTY, LOCATION, FLAG
+  </sql>
+  <select id="getByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.SYS_UNIT
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询上级组织 -->
+  <select id="selectOwnerID" parameterType="map"  resultType="java.lang.String">
+  	SELECT distinct A.OWNER_ID
+  	FROM SYS_UNIT A
+ 	INNER JOIN SYS_UNIT_CLSF B ON A.UNIT_ID = B.UNIT_ID
+	WHERE A.UNIT_ID = #{wunit_id}
+   	AND B.STATUS = 'A'
+   	AND (B.UNIT_TYPE = 'GC' OR B.UNIT_TYPE = 'SH')
+  </select>
+  
+  <!-- 查询贸易供货方和上级组织 -->
+  <select id="selectCusIDAndOwnerID" parameterType="map"  resultMap="BaseResultMap">
+  	SELECT B.UNIT_ID AS CUS_ID, A.OWNER_ID AS OWNER_ID
+	  FROM SYS_CUS B, SYS_UNIT A, SYS_UNIT C
+	 WHERE A.UNIT_ID = #{unit_id}
+	   AND A.OWNER_ID = B.OWNER_ID
+	   AND B.STATUS = 'A'
+	   AND B.RELATION_TYPE = 'RP'
+	   AND A.OWNER_ID = C.UNIT_ID
+	   AND C.OWNER_ID = B.UNIT_ID
+	UNION
+	SELECT B.OWNER_ID AS CUS_ID, A.OWNER_ID AS OWNER_ID
+	  FROM SYS_UNIT B, SYS_UNIT A
+	 WHERE A.UNIT_ID = #{unit_id}
+	   AND A.OWNER_ID = B.UNIT_ID
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from MTSBW.SYS_UNIT
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.old.vo.SysUnitVo" >
+    insert into MTSBW.SYS_UNIT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="ownerId != null and ownerId != ''" >
+        OWNER_ID,
+      </if>
+      <if test="hierarchy != null and hierarchy != ''" >
+        HIERARCHY,
+      </if>
+      <if test="name != null and name != ''" >
+        NAME,
+      </if>
+      <if test="inputCode != null and inputCode != ''" >
+        INPUT_CODE,
+      </if>
+      <if test="sortCode != null and sortCode != ''" >
+        SORT_CODE,
+      </if>
+      <if test="postcode != null and postcode != ''" >
+        POSTCODE,
+      </if>
+      <if test="address != null and address != ''" >
+        ADDRESS,
+      </if>
+      <if test="phNum != null and phNum != ''" >
+        PH_NUM,
+      </if>
+      <if test="faxNum != null and faxNum != ''" >
+        FAX_NUM,
+      </if>
+      <if test="emailAddr != null and emailAddr != ''" >
+        EMAIL_ADDR,
+      </if>
+      <if test="website != null and website != ''" >
+        WEBSITE,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="oldId != null and oldId != ''" >
+        OLD_ID,
+      </if>
+      <if test="regionCode != null and regionCode != ''" >
+        REGION_CODE,
+      </if>
+      <if test="simpleAddr != null and simpleAddr != ''" >
+        SIMPLE_ADDR,
+      </if>
+      <if test="detaAddress != null and detaAddress != ''" >
+        DETA_ADDRESS,
+      </if>
+      <if test="contactName != null and contactName != ''" >
+        CONTACT_NAME,
+      </if>
+      <if test="oprRemark != null and oprRemark != ''" >
+        OPR_REMARK,
+      </if>
+      <if test="idtCount != null and idtCount != ''" >
+        IDT_COUNT,
+      </if>
+      <if test="needSend != null and needSend != ''" >
+        NEED_SEND,
+      </if>
+      <if test="unitShortId != null and unitShortId != ''" >
+        UNIT_SHORT_ID,
+      </if>
+      <if test="country != null and country != ''" >
+        COUNTRY,
+      </if>
+      <if test="province != null and province != ''" >
+        PROVINCE,
+      </if>
+      <if test="city != null and city != ''" >
+        CITY,
+      </if>
+      <if test="dispTspComId != null and dispTspComId != ''" >
+        DISP_TSP_COM_ID,
+      </if>
+      <if test="dispRcvWarehId != null and dispRcvWarehId != ''" >
+        DISP_RCV_WAREH_ID,
+      </if>
+      <if test="unitNum != null and unitNum != ''" >
+        UNIT_NUM,
+      </if>
+      <if test="updateTime != null and updateTime != ''" >
+        UPDATE_TIME,
+      </if>
+      <if test="sapUnitId != null and sapUnitId != ''" >
+        SAP_UNIT_ID,
+      </if>
+      <if test="isProject != null and isProject != ''" >
+        IS_PROJECT,
+      </if>
+      <if test="profitCenter != null and profitCenter != ''" >
+        PROFIT_CENTER,
+      </if>
+      <if test="businessRange != null and businessRange != ''" >
+        BUSINESS_RANGE,
+      </if>
+      <if test="county != null and county != ''" >
+        COUNTY,
+      </if>
+      <if test="location != null and location != ''" >
+        LOCATION,
+      </if>
+      <if test="flag != null and flag != ''" >
+        FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerId != null and ownerId != ''" >
+        #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="hierarchy != null and hierarchy != ''" >
+        #{hierarchy,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null and name != ''" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCode != null and inputCode != ''" >
+        #{inputCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sortCode != null and sortCode != ''" >
+        #{sortCode,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null and postcode != ''" >
+        #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null and address != ''" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phNum != null and phNum != ''" >
+        #{phNum,jdbcType=VARCHAR},
+      </if>
+      <if test="faxNum != null and faxNum != ''" >
+        #{faxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="emailAddr != null and emailAddr != ''" >
+        #{emailAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null and website != ''" >
+        #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="oldId != null and oldId != ''" >
+        #{oldId,jdbcType=VARCHAR},
+      </if>
+      <if test="regionCode != null and regionCode != ''" >
+        #{regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="simpleAddr != null and simpleAddr != ''" >
+        #{simpleAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="detaAddress != null and detaAddress != ''" >
+        #{detaAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null and contactName != ''" >
+        #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="oprRemark != null and oprRemark != ''" >
+        #{oprRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="idtCount != null and idtCount != ''" >
+        #{idtCount,jdbcType=DECIMAL},
+      </if>
+      <if test="needSend != null and needSend != ''" >
+        #{needSend,jdbcType=VARCHAR},
+      </if>
+      <if test="unitShortId != null and unitShortId != ''" >
+        #{unitShortId,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null and country != ''" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null and province != ''" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null and city != ''" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="dispTspComId != null and dispTspComId != ''" >
+        #{dispTspComId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispRcvWarehId != null and dispRcvWarehId != ''" >
+        #{dispRcvWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNum != null and unitNum != ''" >
+        #{unitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null and updateTime != ''" >
+        #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="sapUnitId != null and sapUnitId != ''" >
+        #{sapUnitId,jdbcType=VARCHAR},
+      </if>
+      <if test="isProject != null and isProject != ''" >
+        #{isProject,jdbcType=VARCHAR},
+      </if>
+      <if test="profitCenter != null and profitCenter != ''" >
+        #{profitCenter,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRange != null and businessRange != ''" >
+        #{businessRange,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null and county != ''" >
+        #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null and location != ''" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null and flag != ''" >
+        #{flag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.old.vo.SysUnitVo" >
+    update MTSBW.SYS_UNIT
+    <set >
+      <if test="ownerId != null" >
+        OWNER_ID = #{ownerId,jdbcType=VARCHAR},
+      </if>
+      <if test="hierarchy != null" >
+        HIERARCHY = #{hierarchy,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="inputCode != null" >
+        INPUT_CODE = #{inputCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sortCode != null" >
+        SORT_CODE = #{sortCode,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null" >
+        POSTCODE = #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phNum != null" >
+        PH_NUM = #{phNum,jdbcType=VARCHAR},
+      </if>
+      <if test="faxNum != null" >
+        FAX_NUM = #{faxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="emailAddr != null" >
+        EMAIL_ADDR = #{emailAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="website != null" >
+        WEBSITE = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="oldId != null" >
+        OLD_ID = #{oldId,jdbcType=VARCHAR},
+      </if>
+      <if test="regionCode != null" >
+        REGION_CODE = #{regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="simpleAddr != null" >
+        SIMPLE_ADDR = #{simpleAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="detaAddress != null" >
+        DETA_ADDRESS = #{detaAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
+        CONTACT_NAME = #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="oprRemark != null" >
+        OPR_REMARK = #{oprRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="idtCount != null" >
+        IDT_COUNT = #{idtCount,jdbcType=DECIMAL},
+      </if>
+      <if test="needSend != null" >
+        NEED_SEND = #{needSend,jdbcType=VARCHAR},
+      </if>
+      <if test="unitShortId != null" >
+        UNIT_SHORT_ID = #{unitShortId,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        COUNTRY = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        PROVINCE = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="dispTspComId != null" >
+        DISP_TSP_COM_ID = #{dispTspComId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispRcvWarehId != null" >
+        DISP_RCV_WAREH_ID = #{dispRcvWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNum != null" >
+        UNIT_NUM = #{unitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=DATE},
+      </if>
+      <if test="sapUnitId != null" >
+        SAP_UNIT_ID = #{sapUnitId,jdbcType=VARCHAR},
+      </if>
+      <if test="isProject != null" >
+        IS_PROJECT = #{isProject,jdbcType=VARCHAR},
+      </if>
+      <if test="profitCenter != null" >
+        PROFIT_CENTER = #{profitCenter,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRange != null" >
+        BUSINESS_RANGE = #{businessRange,jdbcType=VARCHAR},
+      </if>
+      <if test="county != null" >
+        COUNTY = #{county,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        LOCATION = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        FLAG = #{flag,jdbcType=CHAR},
+      </if>
+    </set>
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+  </update>
+</mapper>

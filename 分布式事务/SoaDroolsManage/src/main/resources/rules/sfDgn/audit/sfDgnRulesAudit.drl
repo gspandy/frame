@@ -1,0 +1,66 @@
+package mb.erp.dr.o2o.drools.rules.idt;
+
+import mb.erp.dr.soa.service.price.NewSettlementPriceRateService;
+import mb.erp.dr.soa.vo.SfDgnDtlVo;
+import mb.erp.dr.soa.vo.SfDgnVo;
+import mb.erp.dr.soa.vo.common.MsgVo;
+import mb.erp.dr.soa.vo.common.MsgListVo;
+import java.util.ArrayList;
+import java.util.List;
+import mb.erp.dr.soa.bean.BalanceBean;
+import mb.erp.dr.soa.service.balance.NewBalanceService;
+import mb.erp.dr.soa.constant.O2OBillConstant.NewBillType;
+import mb.erp.dr.soa.constant.O2OBillConstant.GdnMode;
+import mb.erp.dr.soa.service.wareh.NewWarehService;
+import mb.erp.dr.soa.bean.WarehBean;
+
+rule "是否需要锁定已分配库存"
+	lock-on-active true
+	salience 100
+    when
+        $sfDgn : SfDgnVo( controlStatus matches "^1.*" )
+        $warehService : NewWarehService()
+    then
+    	// System.out.println( "新ERP锁定已分配库存"+ $sfDgn.getId() +" 配货组织:"+$sfDgn.getVenderCode()+" 发货仓库:"+ $sfDgn.getDispWarehCode()+" , 最终发货仓库:"+$sfDgn.getLastFactDispWarehCode());
+        $warehService.increaseQtyCommittedByDgn($sfDgn.getId());
+end
+
+rule "是否需要锁定在购库存"
+    lock-on-active true
+    salience 90
+    when
+        $sfDgn : SfDgnVo( controlStatus matches "^[0-1][1].*"  &&  srcDocType != "TBN")
+        $warehService : NewWarehService()
+    then
+    	if(GdnMode.SHOR.name().equals($sfDgn.getDelivMode()) || $sfDgn.getBfOrgUnitId().equals($sfDgn.getBfOrgRcvUnitId())){
+    		// System.out.println( "新ERP - 调拨不需要增加在购库存");
+        }else{
+	        // System.out.println( "新ERP增加在购库存"+ $sfDgn.getId() +" 配货组织:"+$sfDgn.getVenderCode()+" 接收仓库:"+ $sfDgn.getRcvWarehCode()+" 单据类型:"+$sfDgn.getSrcDocType());
+	        $warehService.increaseQtyOnOrderByDgn($sfDgn.getId());
+        }
+end
+
+/**
+rule "是否需要冻结金额"
+	lock-on-active true
+	salience 90
+    when
+        $sfDgn : SfDgnVo( controlStatus matches "^[0-1][1].*" )
+    then
+    	// System.out.println( "冻结金额");
+        update($sfDgn);
+end
+
+
+rule "现货订单是否冻结过金额"
+	lock-on-active true
+	salience 80
+    when
+        $sfDgn : SfDgnVo( controlStatus matches "^[0-1]{2}[1].*" )
+    then
+    	// System.out.println( "现货订单冻结金额" );
+        // System.out.println( "释放现货订单冻结金额" );
+        // System.out.println( "按交货单冻结金额" );
+end
+**/
+

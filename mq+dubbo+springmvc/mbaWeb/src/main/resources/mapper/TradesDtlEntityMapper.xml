@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.dao.TradesDtlEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.TradesDtlEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="trades_id" property="tradesId" jdbcType="BIGINT" />
+    <result column="doc_num" property="docNum" jdbcType="VARCHAR" />
+    <result column="goods_owner" property="goodsOwner" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="disrate" property="disrate" jdbcType="DECIMAL" />
+    <result column="intax_amount" property="intaxAmount" jdbcType="DECIMAL" />
+    <result column="goods_income" property="goodsIncome" jdbcType="DECIMAL" />
+    <result column="goods_saletax" property="goodsSaletax" jdbcType="DECIMAL" />
+    <result column="goods_saletaxamount" property="goodsSaletaxamount" jdbcType="DECIMAL" />
+    <result column="goods_saletax_scale" property="goodsSaletaxScale" jdbcType="DECIMAL" />
+    <result column="service_income" property="serviceIncome" jdbcType="DECIMAL" />
+    <result column="service_saletax" property="serviceSaletax" jdbcType="DECIMAL" />
+    <result column="service_saletaxamount" property="serviceSaletaxamount" jdbcType="DECIMAL" />
+    <result column="service_saletax_scale" property="serviceSaletaxScale" jdbcType="DECIMAL" />
+    <result column="tax3_income" property="tax3Income" jdbcType="DECIMAL" />
+    <result column="tax3_saletax" property="tax3Saletax" jdbcType="DECIMAL" />
+    <result column="tax3_saletaxamount" property="tax3Saletaxamount" jdbcType="DECIMAL" />
+    <result column="tax3_saletax_scale" property="tax3SaletaxScale" jdbcType="DECIMAL" />
+    <result column="cost_perunit" property="costPerunit" jdbcType="DECIMAL" />
+    <result column="cost_amount" property="costAmount" jdbcType="DECIMAL" />
+    <result column="dis_amount" property="disAmount" jdbcType="DECIMAL" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, trades_id, doc_num, goods_owner, goods_code, quantity, price, disrate, intax_amount, 
+    goods_income, goods_saletax, goods_saletaxamount, goods_saletax_scale, service_income, 
+    service_saletax, service_saletaxamount, service_saletax_scale, tax3_income, tax3_saletax, 
+    tax3_saletaxamount, tax3_saletax_scale, cost_perunit, cost_amount, dis_amount, remarks, 
+    create_oper, create_time, modify_oper, modify_time, isvalid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades_dtl
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="queryTradesDtlList" resultMap="BaseResultMap" parameterType="mb.mba.core.entity.TradesEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades_dtl
+    where 1=1 
+   <if test="id != null" >
+    trades_id = #{id,jdbcType=BIGINT}
+    </if> 
+    <if test="docNum != null" >
+     and doc_num=#{docNum,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryTradesDtlListCount" resultType="int" parameterType="mb.mba.core.entity.TradesEntity" >
+    select count(1)
+    from trades_dtl
+    where 1=1 
+   <if test="id != null" >
+    trades_id = #{id,jdbcType=BIGINT}
+    </if> 
+    <if test="docNum != null" >
+     and doc_num=#{docNum,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

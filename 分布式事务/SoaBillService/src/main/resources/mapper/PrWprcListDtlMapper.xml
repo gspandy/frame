@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.PrWprcListDtlMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.PrWprcListDtlVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PR_PRN_ID" property="prPrnId" jdbcType="DECIMAL" />
+    <result column="UNIT_ID" property="unitId" jdbcType="DECIMAL" />
+    <result column="PRC_LST_TYPE" property="prcLstType" jdbcType="VARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="DECIMAL" />
+    <result column="PROD_TYPE" property="prodType" jdbcType="VARCHAR" />
+    <result column="PRC_PLCY" property="prcPlcy" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+    <result column="OWNER_ID" property="ownerId" jdbcType="DECIMAL" />
+    <result column="EXEC_DATE" property="execDate" jdbcType="TIMESTAMP" />
+    <result column="BIZ_TYPE" property="bizType" jdbcType="VARCHAR" />
+    <result column="PROD_COLOR_NUM" property="prodColorNum" jdbcType="VARCHAR" />
+    <result column="PROD_NUM" property ="prodNum" jdbcType ="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PR_PRN_ID, UNIT_ID, PRC_LST_TYPE, CURRENCY, PROD_ID, PROD_TYPE, PRC_PLCY, PRICE, 
+    DISC_RATE, EFF_DATE, OWNER_ID, EXEC_DATE, BIZ_TYPE, PROD_COLOR_NUM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from PR_WPRC_LST_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectNewSettlementPriceRateByProdClsNum" resultMap="BaseResultMap" parameterType="map">
+	  	SELECT A.PRICE,
+	       A.PRC_PLCY,
+	       A.DISC_RATE,
+	       A.PRC_LST_TYPE,
+	       A.CURRENCY,
+	       A.PROD_ID,
+	       A.UNIT_ID,
+	       A.OWNER_ID
+		  FROM PR_WPRC_LST_DTL A
+		 INNER JOIN BF_PROD_CLS B ON (A.PROD_ID = B.ID)
+		  LEFT JOIN BF_ORG E ON E.ID = A.UNIT_ID
+		  LEFT JOIN BF_ORG F ON F.ID = A.OWNER_ID
+		 WHERE B.PROD_CLS_NUM = #{prod_cls_num}
+		   AND (E.CODE = F.CODE OR E.CODE = #{unit_id})
+		   AND F.CODE = #{owner_id}
+		   AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+		   AND A.CURRENCY = #{currency}
+		   AND A.PROD_TYPE = 'GEx'
+		 ORDER BY DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2)
+  </select>
+  
+  <select id="selectByPOUC" resultMap="BaseResultMap" parameterType="map">
+	  	SELECT *
+		  FROM (SELECT A.PRICE,
+		               A.PRC_PLCY,
+		               A.DISC_RATE,
+		               A.PRC_LST_TYPE,
+		               A.CURRENCY,
+		               A.PROD_ID,
+		               A.UNIT_ID,
+		               A.OWNER_ID,
+		               A.EXEC_DATE,
+		               DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 1 AS DATASORT
+		          FROM PR_WPRC_LST_DTL A
+		         INNER JOIN BF_PRODUCT C ON (A.PROD_ID = C.ID)
+		          LEFT JOIN BF_ORG E ON E.ID = A.UNIT_ID
+		          LEFT JOIN BF_ORG F ON F.ID = A.OWNER_ID
+		         WHERE C.PROD_NUM = #{prod_id}
+		           AND (E.CODE = F.CODE OR E.CODE = #{unit_id})
+		           AND F.CODE = #{owner_id}
+		           AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+		           AND A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GID'
+		        UNION
+		        SELECT A.PRICE,
+		               A.PRC_PLCY,
+		               A.DISC_RATE,
+		               A.PRC_LST_TYPE,
+		               A.CURRENCY,
+		               A.PROD_ID,
+		               A.UNIT_ID,
+		               A.OWNER_ID,
+		               A.EXEC_DATE,
+		               DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 2 AS DATASORT
+		          FROM PR_WPRC_LST_DTL A
+		         INNER JOIN BF_PROD_CLS PC ON PC.ID = A.PROD_ID
+		         INNER JOIN BF_PRODUCT P ON P.BF_PROD_CLS_ID = PC.ID
+		          LEFT JOIN BF_ORG E ON E.ID = A.UNIT_ID
+		          LEFT JOIN BF_ORG F ON F.ID = A.OWNER_ID
+		         WHERE P.PROD_NUM = #{prod_id}
+		           AND (E.CODE = F.CODE OR E.CODE = #{unit_id})
+		           AND F.CODE = #{owner_id}
+		           AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+		           AND A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GCr'
+		           AND A.PROD_COLOR_NUM = #{prod_color_num}
+		        UNION
+		        SELECT A.PRICE,
+		               A.PRC_PLCY,
+		               A.DISC_RATE,
+		               A.PRC_LST_TYPE,
+		               A.CURRENCY,
+		               A.PROD_ID,
+		               A.UNIT_ID,
+		               A.OWNER_ID,
+		               A.EXEC_DATE,
+		               DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 3 AS DATASORT
+		          FROM PR_WPRC_LST_DTL A
+		         INNER JOIN BF_PROD_CLS PC ON (A.PROD_ID = PC.ID)
+		         INNER JOIN BF_PRODUCT P ON P.BF_PROD_CLS_ID = PC.ID
+		          LEFT JOIN BF_ORG E ON E.ID = A.UNIT_ID
+		          LEFT JOIN BF_ORG F ON F.ID = A.OWNER_ID
+		         WHERE P.PROD_NUM = #{prod_id}
+		           AND (E.CODE = F.CODE OR E.CODE = #{unit_id})
+		           AND F.CODE = #{owner_id}
+		           AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+		           AND A.CURRENCY = #{currency}
+		           AND A.PROD_TYPE = 'GEx')
+		 ORDER BY DATASORT ASC
+  </select>
+  
+    <select id="bulkGetSettlePrice" resultMap="BaseResultMap" parameterType="map">
+	 <![CDATA[
+		 SELECT TTT.PROD_NUM,
+		       TTT.PRICE,
+		       TTT.PRC_PLCY,
+		       TTT.DISC_RATE,
+		       TTT.PRC_LST_TYPE,
+		       TTT.CURRENCY,
+		       TTT.PROD_ID,
+		       TTT.UNIT_ID,
+		       TTT.OWNER_ID,
+		       TTT.EXEC_DATE
+		  FROM (SELECT TT.PROD_NUM,
+		               TT.PRICE,
+		               TT.PRC_PLCY,
+		               TT.DISC_RATE,
+		               TT.PRC_LST_TYPE,
+		               TT.CURRENCY,
+		               TT.PROD_ID,
+		               TT.UNIT_ID,
+		               TT.OWNER_ID,
+		               TT.EXEC_DATE,
+		               ROW_NUMBER() OVER(PARTITION BY TT.PROD_NUM ORDER BY TT.DATASORT ASC) RN
+		          FROM (SELECT P.PROD_NUM,
+		                       A.PRICE,
+		                       A.PRC_PLCY,
+		                       A.DISC_RATE,
+		                       A.PRC_LST_TYPE,
+		                       A.CURRENCY,
+		                       A.PROD_ID,
+		                       A.UNIT_ID,
+		                       A.OWNER_ID,
+		                       A.EXEC_DATE,
+		                       DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 1 AS DATASORT
+		                  FROM PR_WPRC_LST_DTL A
+		                 INNER JOIN BF_PRODUCT P ON (A.PROD_ID = P.ID)
+		                  LEFT JOIN BF_ORG E ON E.ID = A.UNIT_ID
+		                  LEFT JOIN BF_ORG F ON F.ID = A.OWNER_ID
+		                 WHERE EXISTS
+		                 (SELECT 1
+		                          FROM TMP_BF_ORG_CODE T
+		                         WHERE P.PROD_NUM = T.BF_ORG_CODE)
+		                   AND (E.CODE = F.CODE OR E.CODE = #{unit_id})
+		                   AND F.CODE = #{owner_id}
+		                   AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+		                   AND A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GID'
+		                UNION
+		                SELECT P.PROD_NUM,
+		                       A.PRICE,
+		                       A.PRC_PLCY,
+		                       A.DISC_RATE,
+		                       A.PRC_LST_TYPE,
+		                       A.CURRENCY,
+		                       A.PROD_ID,
+		                       A.UNIT_ID,
+		                       A.OWNER_ID,
+		                       A.EXEC_DATE,
+		                       DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 2 AS DATASORT
+		                  FROM PR_WPRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS PC ON PC.ID = A.PROD_ID
+		                 INNER JOIN BF_PRODUCT P ON P.BF_PROD_CLS_ID = PC.ID
+		                  LEFT JOIN BF_ORG E ON E.ID = A.UNIT_ID
+		                  LEFT JOIN BF_ORG F ON F.ID = A.OWNER_ID
+		                 WHERE EXISTS
+		                 (SELECT 1
+		                          FROM TMP_BF_ORG_CODE T
+		                         WHERE P.PROD_NUM = T.BF_ORG_CODE
+		                           AND A.PROD_COLOR_NUM = SUBSTR(T.BF_ORG_CODE, 7, 2))
+		                   AND (E.CODE = F.CODE OR E.CODE = #{unit_id})
+		                   AND F.CODE = #{owner_id}
+		                   AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+		                   AND A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GCr'
+		                UNION
+		                SELECT P.PROD_NUM,
+		                       A.PRICE,
+		                       A.PRC_PLCY,
+		                       A.DISC_RATE,
+		                       A.PRC_LST_TYPE,
+		                       A.CURRENCY,
+		                       A.PROD_ID,
+		                       A.UNIT_ID,
+		                       A.OWNER_ID,
+		                       A.EXEC_DATE,
+		                       DECODE(A.PRC_LST_TYPE, 'AGWS', 1, 'GNWS', 2) || 3 AS DATASORT
+		                  FROM PR_WPRC_LST_DTL A
+		                 INNER JOIN BF_PROD_CLS PC ON (A.PROD_ID = PC.ID)
+		                 INNER JOIN BF_PRODUCT P ON P.BF_PROD_CLS_ID = PC.ID
+		                  LEFT JOIN BF_ORG E ON E.ID = A.UNIT_ID
+		                  LEFT JOIN BF_ORG F ON F.ID = A.OWNER_ID
+		                 WHERE EXISTS
+		                 (SELECT 1
+		                          FROM TMP_BF_ORG_CODE T
+		                         WHERE P.PROD_NUM = T.BF_ORG_CODE)
+		                   AND (E.CODE = F.CODE OR E.CODE = #{unit_id})
+		                   AND F.CODE = #{owner_id}
+		                   AND (A.PRC_LST_TYPE = 'AGWS' OR A.PRC_LST_TYPE = 'GNWS')
+		                   AND A.CURRENCY = #{currency}
+		                   AND A.PROD_TYPE = 'GEx') TT
+		         ORDER BY TT.PROD_NUM) TTT
+		 WHERE TTT.RN = 1
+	]]>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from PR_WPRC_LST_DTL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.PrWprcListDtlVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into PR_WPRC_LST_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prPrnId != null and prPrnId != ''" >
+        PR_PRN_ID,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        PRC_LST_TYPE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="prodType != null and prodType != ''" >
+        PROD_TYPE,
+      </if>
+      <if test="prcPlcy != null and prcPlcy != ''" >
+        PRC_PLCY,
+      </if>
+      <if test="price != null and price != ''" >
+        PRICE,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="effDate != null and effDate != ''" >
+        EFF_DATE,
+      </if>
+      <if test="ownerId != null and ownerId != ''" >
+        OWNER_ID,
+      </if>
+      <if test="execDate != null and execDate != ''" >
+        EXEC_DATE,
+      </if>
+      <if test="bizType != null and bizType != ''" >
+        BIZ_TYPE,
+      </if>
+      <if test="prodColorNum != null and prodColorNum != ''" >
+        PROD_COLOR_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prPrnId != null and prPrnId != ''" >
+        #{prPrnId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcLstType != null and prcLstType != ''" >
+        #{prcLstType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodType != null and prodType != ''" >
+        #{prodType,jdbcType=VARCHAR},
+      </if>
+      <if test="prcPlcy != null and prcPlcy != ''" >
+        #{prcPlcy,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null and price != ''" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="effDate != null and effDate != ''" >
+        #{effDate,jdbcType=DATE},
+      </if>
+      <if test="ownerId != null and ownerId != ''" >
+        #{ownerId,jdbcType=DECIMAL},
+      </if>
+      <if test="execDate != null and execDate != ''" >
+        #{execDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bizType != null and bizType != ''" >
+        #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="prodColorNum != null and prodColorNum != ''" >
+        #{prodColorNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.PrWprcListDtlVo" >
+    update PR_WPRC_LST_DTL
+    <set >
+      <if test="prPrnId != null" >
+        PR_PRN_ID = #{prPrnId,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null" >
+        UNIT_ID = #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="prcLstType != null" >
+        PRC_LST_TYPE = #{prcLstType,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=DECIMAL},
+      </if>
+      <if test="prodType != null" >
+        PROD_TYPE = #{prodType,jdbcType=VARCHAR},
+      </if>
+      <if test="prcPlcy != null" >
+        PRC_PLCY = #{prcPlcy,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="effDate != null" >
+        EFF_DATE = #{effDate,jdbcType=DATE},
+      </if>
+      <if test="ownerId != null" >
+        OWNER_ID = #{ownerId,jdbcType=DECIMAL},
+      </if>
+      <if test="execDate != null" >
+        EXEC_DATE = #{execDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bizType != null" >
+        BIZ_TYPE = #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="prodColorNum != null" >
+        PROD_COLOR_NUM = #{prodColorNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

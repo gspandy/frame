@@ -1,0 +1,165 @@
+package mb.erp.dr.o2o.drools.rules.grn;
+
+import mb.erp.dr.soa.old.vo.GrnVo;
+import mb.erp.dr.soa.old.vo.GrnDtlVo;
+import mb.erp.dr.soa.old.vo.AdnVo;
+import mb.erp.dr.soa.constant.O2OBillConstant.BillType;
+import mb.erp.dr.soa.bean.BalanceBean;
+import mb.erp.dr.soa.old.service.wareh.WarehService;
+import mb.erp.dr.soa.old.service.balance.BalanceService;
+import java.util.List;
+import java.util.ArrayList;
+import mb.erp.dr.soa.bean.ProdBean;
+import mb.erp.dr.soa.old.service.impl.bill.GrnService;
+import mb.erp.dr.soa.bean.WarehBean;
+import mb.erp.dr.soa.bean.OrderSearchBean;
+import mb.erp.dr.soa.old.dao.WarehMapper;
+import mb.erp.dr.soa.old.vo.WarehOrderTranVo;
+
+rule "原始单据类型是否ABG或TBN"
+	salience 100
+	 lock-on-active true
+    when
+    	$grn : GrnVo(srcDocType == BillType.ABG || srcDocType == BillType.TBN)
+    then
+    	// System.out.println( "原始单据类型是ABG或TBN" );
+    	$grn.getRulesGroup().add("rule1");
+end
+
+rule "是否需要增加余额"
+    salience 90
+    lock-on-active true
+    when
+        $grn : GrnVo(controlStatus matches "^1.*", $rulesGroup : rulesGroup)
+    then
+        if (!$rulesGroup.contains("rule1")) {
+          // System.out.println( "需要增加余额" );
+          $grn.getRulesGroup().add("rule2");
+        }
+end
+
+rule "调用增加余额接口"
+    salience 80
+    lock-on-active true
+    when
+        $grn : GrnVo($rulesGroup : rulesGroup)
+        $balanceService:BalanceService()
+    then
+        if ($rulesGroup.contains("rule1") || $rulesGroup.contains("rule2") ) {
+           // System.out.println( "调用增加余额接口，供货方："+$grn.getDispUnitId()+" 购货方："+$grn.getUnitId()+" 总金额"+$grn.getTtlVal()+" 入库单编号："+$grn.getGrnNum() );
+           BalanceBean balanceBean = new BalanceBean();
+           if (BillType.TBN.equals($grn.getSrcDocType())) {
+             balanceBean.setUid($grn.getUnitId()); // 供货方（发货组织）
+             balanceBean.setCpdUid($grn.getDispUnitId()); // 购货方(接收方)
+           } else {
+             balanceBean.setUid($grn.getDispUnitId()); // 供货方（发货组织）
+             balanceBean.setCpdUid($grn.getUnitId()); // 购货方(接收方)
+           }
+           balanceBean.setBalance($grn.getTtlVal()); // 总金额
+           balanceBean.setDocType(BillType.GRN);
+           balanceBean.setDocNum($grn.getGrnNum());
+           $balanceService.increaseBalance(balanceBean);
+        }
+end
+
+rule "原始单据是否增加了在购库存"
+    salience 70
+    lock-on-active true
+    when
+         $grn : GrnVo(controlStatus matches "^[0-1][1].*")
+        $warehMapper:WarehMapper()
+   then
+        // System.out.println( "判断原始单据增加了在购库存"+$grn.getWarehId()+" "+ $grn.getSrcDocNum()+" "+$grn.getSrcDocType());
+        OrderSearchBean orderSearchBean = new OrderSearchBean();
+        orderSearchBean.setWarehId($grn.getWarehId());
+        orderSearchBean.setDocNum($grn.getSrcDocNum());
+        orderSearchBean.setDocType(BillType.AAD.equals($grn.getSrcDocType())?BillType.ADN:$grn.getSrcDocType());
+        //判断计划配货单是否增加过在购库存
+        List<WarehOrderTranVo> warehOrderTranVo = $warehMapper.searchOrderTranInfo(orderSearchBean);
+        if (warehOrderTranVo != null && warehOrderTranVo.size() > 0) {
+          // System.out.println( "原始单据增加了在购库存" );
+          $grn.getRulesGroup().add("rule3");
+        }
+end
+
+rule "接收仓减少在购库存"
+    salience 65
+    lock-on-active true
+    when
+        $grn : GrnVo($rulesGroup : rulesGroup)
+        $warehService:WarehService()
+   then
+        if ($rulesGroup.contains("rule3")) {
+           // System.out.println( "接收仓减少在购库存,仓库编码"+$grn.getWarehId()+" 组织编码："+$grn.getUnitId()+" 配货单编号："+$grn.getSrcDocNum() );
+           AdnVo vo = new AdnVo();
+           vo.setVenderId($grn.getDispUnitId());
+           vo.setTranRcvWarehId($grn.getWarehId());
+           vo.setAdnNum($grn.getSrcDocNum());
+           $warehService.decQtyOnOrderByAdn(vo);
+        }
+end
+
+rule "是否需要增加库存"
+    salience 60
+    lock-on-active true
+    when
+        $grn : GrnVo(controlStatus matches "^[0-1]{2}[1].*")
+        $warehService:WarehService()
+   then
+        // System.out.println( "需要增加库存, 接收仓库编码："+$grn.getWarehId()+" 组织编码："+$grn.getUnitId()+" 入库单编号："+$grn.getGrnNum() );
+        $warehService.increaseQtyByGRN($grn);
+        $grn.getRulesGroup().add("rule4");
+end
+
+rule "入库单上是否存在货位"
+    salience 50
+    lock-on-active true
+    when
+        $grn : GrnVo($rulesGroup : rulesGroup)
+        $warehService:WarehService()
+   then
+        if ($rulesGroup.contains("rule4")) {
+           // System.out.println( "按收货货位或者指定货位增加库存:入库单编号"+$grn.getGrnNum() );
+               $warehService.increaseLocQtyByGRN($grn);
+        }
+end
+
+rule "如果是调拨流程则减少在途库存"
+    salience 45
+    lock-on-active true
+    when
+        $grn : GrnVo( srcDocType != BillType.SSC)
+        $warehService : WarehService()
+   then
+         if($grn.getUnitId().equals($grn.getDispUnitId())) {
+            // System.out.println( "调拨减少在途库存" );
+        	$warehService.reduceTransitQtyByGRN($grn); // 根据入库单减少在途库存
+        }
+end
+
+rule "是否需要传输SAP"
+    salience 40
+    lock-on-active true
+    when
+        $grn : GrnVo(controlStatus matches "^[0-1]{3}[1].*")
+        $warehService : WarehService()
+        $grnService : GrnService()
+   then
+            //SAP出库传输控制
+            // System.out.println( "SAP入库传输控制" );
+            $grnService.sapControl($grn);
+end
+
+rule "是否需要传输新ERP"
+    salience 30
+    lock-on-active true
+    when
+        $grn : GrnVo(controlStatus matches "^[0-1]{4}[1].*")
+        $warehService : WarehService()
+        $grnService : GrnService()
+   then
+            //新ERP出库传输控制
+           // System.out.println( "新ERP入库传输控制" );
+           $grnService.newFlagControl($grn);
+end
+

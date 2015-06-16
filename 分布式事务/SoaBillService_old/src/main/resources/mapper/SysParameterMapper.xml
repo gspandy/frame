@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.SysParameterMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.SysParameterVo" >
+    <id column="PARM_ID" property="parmId" jdbcType="VARCHAR" />
+    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+    <result column="PARM_VAL" property="parmVal" jdbcType="VARCHAR" />
+    <result column="SEQ_NUM" property="seqNum" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PARM_ID, DESCRIPTION, PARM_VAL, SEQ_NUM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.SYS_PARAMETER
+    where PARM_ID = #{parmId,jdbcType=VARCHAR}
+  </select>
+  <!-- 获取系统参数税率SYS_PARAMETER -->
+  <select id="selectSysParamValue" parameterType="map"  resultType="string">
+  	 SELECT P.PARM_VAL FROM SYS_PARAMETER P WHERE P.PARM_ID = #{parm_id}
+  </select>
+  
+  <!-- 获取门店结账允许延迟天数 -->
+  <select id="getSettleDelay" parameterType="java.util.HashMap" resultType="java.lang.String" >
+       SELECT PARM_VAL FROM SYS_PARAMETER D WHERE D.PARM_ID = 'SETTLE_DELAY_PERMITTED'
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from MTSBW.SYS_PARAMETER
+    where PARM_ID = #{parmId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.old.vo.SysParameterVo" >
+    insert into MTSBW.SYS_PARAMETER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="parmId != null and parmId != ''" >
+        PARM_ID,
+      </if>
+      <if test="description != null and description != ''" >
+        DESCRIPTION,
+      </if>
+      <if test="parmVal != null and parmVal != ''" >
+        PARM_VAL,
+      </if>
+      <if test="seqNum != null and seqNum != ''" >
+        SEQ_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="parmId != null and parmId != ''" >
+        #{parmId,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null and description != ''" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parmVal != null and parmVal != ''" >
+        #{parmVal,jdbcType=VARCHAR},
+      </if>
+      <if test="seqNum != null and seqNum != ''" >
+        #{seqNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.old.vo.SysParameterVo" >
+    update MTSBW.SYS_PARAMETER
+    <set >
+      <if test="description != null" >
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="parmVal != null" >
+        PARM_VAL = #{parmVal,jdbcType=VARCHAR},
+      </if>
+      <if test="seqNum != null" >
+        SEQ_NUM = #{seqNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PARM_ID = #{parmId,jdbcType=VARCHAR}
+  </update>
+</mapper>

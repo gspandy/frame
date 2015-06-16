@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.BfTaxRateMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.BfTaxRateVo" >
+    <id column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <result column="TAX_RATE" property="taxRate" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    UNIT_ID, TAX_RATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.BF_TAX_RATE
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据组织查询税率 -->
+  <select id="selectTaxRate" parameterType="map"  resultType="java.lang.Double">
+  	 SELECT NVL(MAX(A.TAX_RATE),-1) FROM BF_TAX_RATE A WHERE A.UNIT_ID = #{unit_id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from MTSBW.BF_TAX_RATE
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.old.vo.BfTaxRateVo" >
+    insert into MTSBW.BF_TAX_RATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="taxRate != null and taxRate != ''" >
+        TAX_RATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="taxRate != null and taxRate != ''" >
+        #{taxRate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.old.vo.BfTaxRateVo" >
+    update MTSBW.BF_TAX_RATE
+    <set >
+      <if test="taxRate != null" >
+        TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.center.dao.TaxratePerEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.TaxratePerEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="unit_code" property="unitCode" jdbcType="VARCHAR" />
+    <result column="relation_unit_code" property="relationUnitCode" jdbcType="VARCHAR" />
+    <result column="rate1" property="rate1" jdbcType="DECIMAL" />
+    <result column="rate2" property="rate2" jdbcType="DECIMAL" />
+    <result column="rate3" property="rate3" jdbcType="DECIMAL" />
+    <result column="rate1_sacle" property="rate1Sacle" jdbcType="DECIMAL" />
+    <result column="rate2_sacle" property="rate2Sacle" jdbcType="DECIMAL" />
+    <result column="rate3_sacle" property="rate3Sacle" jdbcType="DECIMAL" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, unit_code, relation_unit_code, rate1, rate2, rate3, rate1_sacle, rate2_sacle, 
+    rate3_sacle, isvalid, create_oper, create_time, modify_oper, modify_time, remarks
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from taxrate_per
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from taxrate_per
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="mb.mba.core.entity.TaxratePerEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taxrate_per (unit_code, relation_unit_code, rate1, 
+      rate2, rate3, rate1_sacle, 
+      rate2_sacle, rate3_sacle, isvalid, 
+      create_oper, create_time, modify_oper, 
+      modify_time, remarks)
+    values (#{unitCode,jdbcType=VARCHAR}, #{relationUnitCode,jdbcType=VARCHAR}, #{rate1,jdbcType=DECIMAL}, 
+      #{rate2,jdbcType=DECIMAL}, #{rate3,jdbcType=DECIMAL}, #{rate1Sacle,jdbcType=DECIMAL}, 
+      #{rate2Sacle,jdbcType=DECIMAL}, #{rate3Sacle,jdbcType=DECIMAL}, #{isvalid,jdbcType=CHAR}, 
+      #{createOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyOper,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="mb.mba.core.entity.TaxratePerEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taxrate_per
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitCode != null" >
+        unit_code,
+      </if>
+      <if test="relationUnitCode != null" >
+        relation_unit_code,
+      </if>
+      <if test="rate1 != null" >
+        rate1,
+      </if>
+      <if test="rate2 != null" >
+        rate2,
+      </if>
+      <if test="rate3 != null" >
+        rate3,
+      </if>
+      <if test="rate1Sacle != null" >
+        rate1_sacle,
+      </if>
+      <if test="rate2Sacle != null" >
+        rate2_sacle,
+      </if>
+      <if test="rate3Sacle != null" >
+        rate3_sacle,
+      </if>
+      <if test="isvalid != null" >
+        isvalid,
+      </if>
+      <if test="createOper != null" >
+        create_oper,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitCode != null" >
+        #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="relationUnitCode != null" >
+        #{relationUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="rate1 != null" >
+        #{rate1,jdbcType=DECIMAL},
+      </if>
+      <if test="rate2 != null" >
+        #{rate2,jdbcType=DECIMAL},
+      </if>
+      <if test="rate3 != null" >
+        #{rate3,jdbcType=DECIMAL},
+      </if>
+      <if test="rate1Sacle != null" >
+        #{rate1Sacle,jdbcType=DECIMAL},
+      </if>
+      <if test="rate2Sacle != null" >
+        #{rate2Sacle,jdbcType=DECIMAL},
+      </if>
+      <if test="rate3Sacle != null" >
+        #{rate3Sacle,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.mba.core.entity.TaxratePerEntity" >
+    update taxrate_per
+    <set >
+      <if test="unitCode != null" >
+        unit_code = #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="relationUnitCode != null" >
+        relation_unit_code = #{relationUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="rate1 != null" >
+        rate1 = #{rate1,jdbcType=DECIMAL},
+      </if>
+      <if test="rate2 != null" >
+        rate2 = #{rate2,jdbcType=DECIMAL},
+      </if>
+      <if test="rate3 != null" >
+        rate3 = #{rate3,jdbcType=DECIMAL},
+      </if>
+      <if test="rate1Sacle != null" >
+        rate1_sacle = #{rate1Sacle,jdbcType=DECIMAL},
+      </if>
+      <if test="rate2Sacle != null" >
+        rate2_sacle = #{rate2Sacle,jdbcType=DECIMAL},
+      </if>
+      <if test="rate3Sacle != null" >
+        rate3_sacle = #{rate3Sacle,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalid != null" >
+        isvalid = #{isvalid,jdbcType=CHAR},
+      </if>
+      <if test="createOper != null" >
+        create_oper = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mb.mba.core.entity.TaxratePerEntity" >
+    update taxrate_per
+    set unit_code = #{unitCode,jdbcType=VARCHAR},
+      relation_unit_code = #{relationUnitCode,jdbcType=VARCHAR},
+      rate1 = #{rate1,jdbcType=DECIMAL},
+      rate2 = #{rate2,jdbcType=DECIMAL},
+      rate3 = #{rate3,jdbcType=DECIMAL},
+      rate1_sacle = #{rate1Sacle,jdbcType=DECIMAL},
+      rate2_sacle = #{rate2Sacle,jdbcType=DECIMAL},
+      rate3_sacle = #{rate3Sacle,jdbcType=DECIMAL},
+      isvalid = #{isvalid,jdbcType=CHAR},
+      create_oper = #{createOper,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByUnitIdAndCpdUnitId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from taxrate_per
+    where 1=1 and unit_code = #{unitId,jdbcType=VARCHAR} and relation_unit_code = #{cpdunitId,jdbcType=VARCHAR}
+  </select>
+</mapper>

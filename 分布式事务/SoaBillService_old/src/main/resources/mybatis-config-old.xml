@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- <settings> <setting name="cacheEnabled" value="true" /> <setting name="lazyLoadingEnabled" 
+		value="true" /> <setting name="multipleResultSetsEnabled" value="true" /> 
+		<setting name="useColumnLabel" value="true" /> <setting name="useGeneratedKeys" 
+		value="false" /> <setting name="enhancementEnabled" value="false" /> <setting 
+		name="defaultExecutorType" value="SIMPLE" /> </settings> -->
+	<mappers>
+		<mapper resource="mapper/CommnMapper.xml" />
+		<mapper resource="mapper/IdtMapper.xml" />
+		<mapper resource="mapper/TbnMapper.xml" />
+		<mapper resource="mapper/GdnMapper.xml" />
+		<mapper resource="mapper/GrnMapper.xml" />
+		<mapper resource="mapper/TmpInvalidDefMapper.xml" />
+		<mapper resource="mapper/AdnMapper.xml" />
+		<mapper resource="mapper/SysUnitMapper.xml" />
+		<mapper resource="mapper/WprcLstDtlMapper.xml" />
+		<mapper resource="mapper/AgentBrandRateListMapper.xml" />
+		<mapper resource="mapper/GrpCostMapper.xml" />
+		<mapper resource="mapper/PrcLstDtlMapper.xml" />
+		<mapper resource="mapper/BalanceMapper.xml" />
+		<mapper resource="mapper/WarehMapper.xml" />
+		<mapper resource="mapper/BfTaxRateMapper.xml" />
+		<mapper resource="mapper/ProdClsMapper.xml" />
+		<mapper resource="mapper/SysParameterMapper.xml" />
+		<mapper resource="mapper/PubO2oFlowMapper.xml" />
+		<mapper resource="mapper/BgrMapper.xml" />
+		<mapper resource="mapper/ScnMapper.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    ">
+    
+    <!-- MQ重试策略 -->
+    <bean id="mbaRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+        <property name="maximumRedeliveries" value="${active.mq.retry}" />
+        <property name="maximumRedeliveryDelay" value="3000" />
+    </bean>
+    
+    <!-- MQ factory -->
+    <bean id="mbaActivemqFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL"  value="${active.mq.broker}" />
+        <property name="redeliveryPolicy"  ref="mbaRedeliveryPolicy"/>
+    </bean>
+    
+    <!-- 线程池 -->
+    <bean id="myRegisterMessageExecutor"
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="80" />
+        <property name="maxPoolSize" value="100" />
+        <property name="daemon" value="true" />
+        <property name="keepAliveSeconds" value="120" />
+    </bean>
+    
+    <bean id="jmsConsumer" class="mb.mba.center.mq.JmsConsumer"/>
+    
+    <!-- 声明mq的消息目标，可以是一个队列也可以是一个主题 -->
+    <bean id="myTestDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg  index="0" value="MY.DLQ.MB.ERP.DR.O2O.ADN"/>
+    </bean>
+    
+    <bean id="jmsListenerForTest"
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+        <constructor-arg>
+            <ref bean="jmsConsumer"/>
+        </constructor-arg>
+        <property name="defaultListenerMethod" value="onMessageForTest" />
+<!--         <property name="messageConverter" ref="messageConvert" /> -->
+    </bean>
+    
+    <!-- JMS异步监听容器 Spring jmsContainer for obj -->
+    <bean  class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="mbaActivemqFactory" />
+        <property name="messageListener" ref="jmsListenerForTest" />
+        <property name="destination" ref="myTestDestination" />
+        <property name="taskExecutor" ref="myRegisterMessageExecutor" />
+<!--         <property name="transactionManager" ref="transactionManager" /> 事务控制-->
+        <property name="sessionTransacted" value="true" />
+        <property name="concurrentConsumers" value="3" />
+        <property name="maxConcurrentConsumers" value="5" />
+    </bean>
+</beans>

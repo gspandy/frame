@@ -1,0 +1,40 @@
+package mb.erp.dr.o2o.drools.rules.newERPVo.DrTbn
+ 
+import mb.erp.dr.soa.vo.DrTbnVo;
+import mb.erp.dr.soa.vo.DrTbnDtlVo;
+import java.util.ArrayList;
+import java.util.List;
+import mb.erp.dr.soa.vo.common.MsgListVo;
+import mb.erp.dr.soa.service.price.NewSettlementPriceRateService;
+import mb.erp.dr.soa.utils.SoaBillUtils;
+
+rule "是否需要重新获取结算价格和折率"
+   lock-on-active true
+    when
+        $tbn : DrTbnVo(controlStatus matches "^1{1}.*")
+        $settlementPriceRateService:NewSettlementPriceRateService()
+        $soaUtil : SoaBillUtils()
+    then
+        // System.out.println( "新ERP调配单重新获取结算价格和折率" );
+        List<DrTbnDtlVo> tbnDtlVos = $tbn.getDtlVos();
+        List<String> prod_numlist = new ArrayList<String>();
+        for(int i=0;i<tbnDtlVos.size();i++){
+            prod_numlist.add(tbnDtlVos.get(i).getProdCode());
+        }
+        List<MsgListVo> msgList= $settlementPriceRateService.bulkGetSettlementPriceRateByProdIdList(prod_numlist,$tbn.getVenderCode(),$tbn.getVendeeCode(),$tbn.getCurrency());
+        for(int i=0;i<msgList.size();i++){
+            MsgListVo tempVo = msgList.get(i);
+            for(int j=0;j<tbnDtlVos.size();j++){
+                if("success".equals(tempVo.getCode())){
+                    if(tempVo.getProdId().equals(tbnDtlVos.get(j).getProdCode())){
+                        tbnDtlVos.get(j).setUnitPrice(tempVo.getPrice());
+                        tbnDtlVos.get(j).setDiscRate(tempVo.getDiscRate());
+                    }
+                }
+            }
+        }
+        $soaUtil.resetSfOrderVal($tbn);
+        $tbn.setDtlVos(tbnDtlVos);
+        update($tbn)
+end
+

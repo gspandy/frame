@@ -1,0 +1,118 @@
+package mb.erp.dr.o2o.drools.rules.adn;
+
+import mb.erp.dr.soa.old.vo.AdnVo;
+import mb.erp.dr.soa.old.vo.AdnDtlVo;
+import java.util.List;
+import java.util.ArrayList;
+import mb.erp.dr.soa.old.service.wareh.WarehService;
+import mb.erp.dr.soa.bean.WarehBean;
+import mb.erp.dr.soa.bean.BalanceBean;
+import mb.erp.dr.soa.old.service.balance.BalanceService;
+import mb.erp.dr.soa.constant.O2OBillConstant.BillType;
+import mb.erp.dr.soa.old.vo.FreezeTran;
+import mb.erp.dr.soa.bean.ProdBean;
+
+rule "是否需要冻结金额"
+	lock-on-active true
+	salience 90
+    when
+        $adn : AdnVo( controlStatus matches "^1{1}.*" )
+    then
+        // System.out.println( "计划配货单需要冻结金额" );
+        if($adn.getVenderId().equals($adn.getVendeeId())){
+            $adn.getRulesGroup().add("rule1");
+            // System.out.println( "调拨配货单不需要冻结金额" );
+        }
+end
+
+rule "现货订单是否冻结过金额"
+	lock-on-active true
+	salience 80
+    when
+         $adn : AdnVo( controlStatus matches "^1{1}.*",$rulesGroup : rulesGroup )
+         $balanceService : BalanceService()
+         $amount : Double()
+    then
+        if (!$rulesGroup.contains("rule1")) {
+	       // 查询冻结事务，判断是否冻结过金额
+	         // System.out.println( "现货订单是否冻结过金额" );
+	        List<FreezeTran> list = $balanceService.selectFreezeTranByDocTypeNum($adn.getVenderId(),$adn.getVendeeId(),$adn.getSrcDocType(),$adn.getSrcDocNum());
+	        if (list != null && list.size() > 0) {
+	            // 按原始单据冻结的金额进行释放
+	            // System.out.println( "释放现货订单冻结金额" );
+	            BalanceBean bb = new BalanceBean();
+	            bb.setBalance($amount);
+	            bb.setUid($adn.getVenderId()); // 原始单据供货方
+	            bb.setCpdUid($adn.getVendeeId());// 购货方
+	            bb.setDocType($adn.getSrcDocType());// 现货订单
+	            bb.setDocNum($adn.getSrcDocNum());
+	            $balanceService.reduceFreeze(bb);
+	        }
+        }
+end
+
+rule "冻结金额是否允许为负数-负数冻结"
+    lock-on-active true
+    salience 70
+    when
+        $adn : AdnVo( controlStatus matches "^[0-1][1].*" && controlStatus matches "^1{1}.*" ,$rulesGroup : rulesGroup)
+        $balanceService : BalanceService()
+    then
+        if (!$rulesGroup.contains("rule1")) {
+	        // System.out.println( "计划配货单负数冻结" );
+	        BalanceBean balanceBean = new BalanceBean();
+	        balanceBean.setUid($adn.getVenderId()); // 供货方（发货组织）
+	        balanceBean.setCpdUid($adn.getVendeeId()); // 购货方(接收方)
+	        balanceBean.setBalance($adn.getAdmVal());
+	        balanceBean.setDocType(BillType.AAD);
+	        balanceBean.setDocNum($adn.getAdnNum());
+	        $balanceService.increaseFreezeNegative(balanceBean);
+        }
+end
+
+rule "冻结金额是否允许为负数-正数冻结"
+    lock-on-active true
+    salience 60
+    when
+        $adn : AdnVo( controlStatus matches "^[0-1][0].*" && controlStatus matches "^1{1}.*",$rulesGroup : rulesGroup )
+        $balanceService : BalanceService()
+    then
+        if (!$rulesGroup.contains("rule1")) {
+	        // System.out.println( "计划配货单正数冻结" );
+	        BalanceBean balanceBean = new BalanceBean();
+	        balanceBean.setUid($adn.getVenderId()); // 供货方（发货组织）
+	        balanceBean.setCpdUid($adn.getVendeeId()); // 购货方(接收方)
+	        balanceBean.setBalance($adn.getAdmVal());
+	        balanceBean.setDocDate($adn.getDocDate()); // 单据日期，查询可支配金额用到
+	        // System.out.println( "配货 - 专项资金单据日期："+$adn.getDocDate() );
+	        balanceBean.setDocType(BillType.AAD);
+	        balanceBean.setDocNum($adn.getAdnNum());
+	        $balanceService.increaseFreezePositive(balanceBean);
+        }
+end
+
+rule "锁定已分配库存"
+    lock-on-active true
+    salience 50
+    when
+        $adn : AdnVo( controlStatus matches "^[0-1]{2}[1].*" )
+        $warehService : WarehService()
+    then
+        // System.out.println( "锁定已分配库存"+$adn.getAdnNum() +"配货组织:"+$adn.getVenderId()+"发货仓库:"+$adn.getWarehId()+" , 实际最终发货仓："+$adn.getLastFactDispWarehId());
+        $warehService.increaseCommitQtyByADN($adn);
+end
+
+rule "增加在购库存"
+    lock-on-active true
+    salience 40
+    when
+        $adn : AdnVo( controlStatus matches "^[0-1]{3}[1].*" )
+        $warehService : WarehService()
+    then
+        if($adn.getVendeeId().equals($adn.getVenderId())){
+        	// System.out.println( "调拨不需要增加在购库存");
+        }else{
+	        // System.out.println( "增加在购库存"+$adn.getAdnNum() +"配货组织:"+$adn.getVenderId()+"接收仓库:"+$adn.getTranRcvWarehId());
+        	$warehService.addQtyOnOrderByAdn($adn);
+        }
+end

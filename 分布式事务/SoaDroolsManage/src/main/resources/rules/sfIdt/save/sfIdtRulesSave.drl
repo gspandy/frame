@@ -1,0 +1,43 @@
+package mb.erp.dr.o2o.drools.rules.idt;
+
+import mb.erp.dr.soa.service.price.NewSettlementPriceRateService;
+import mb.erp.dr.soa.vo.SfIdtDtlVo;
+import mb.erp.dr.soa.vo.SfIdtVo;
+import mb.erp.dr.soa.vo.common.MsgVo;
+import mb.erp.dr.soa.vo.common.MsgListVo;
+import mb.erp.dr.soa.utils.SoaBillUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+
+rule "是否需要重新获取单价"
+	lock-on-active true
+	activation-group "idt_save"
+	salience 100
+    when
+    	$sfIdt : SfIdtVo(controlStatus matches "^1{1}.*")
+    	$settlementPriceRateService : NewSettlementPriceRateService()
+    	$soaUtil : SoaBillUtils()
+    then
+    	// System.out.println( "新ERP现货订单重新获取单价" );
+        List<SfIdtDtlVo> idtDtlVos = $sfIdt.getSfIdtDtlVos();
+        List<String> prod_numlist = new ArrayList<String>();
+        for(int i=0;i<idtDtlVos.size();i++){
+            prod_numlist.add(idtDtlVos.get(i).getProdCode());
+        }
+        List<MsgListVo> msgList= $settlementPriceRateService.bulkGetSettlementPriceRateByProdIdList(prod_numlist,$sfIdt.getVenderCode(),$sfIdt.getVendeeCode(),$sfIdt.getCurrency());
+        for(int i=0;i<msgList.size();i++){
+            for(int j=0;j<idtDtlVos.size();j++){
+                if("success".equals(msgList.get(i).getCode())){
+                    if(msgList.get(i).getProdId().equals(idtDtlVos.get(j).getProdCode())){
+                        idtDtlVos.get(j).setUnitPrice(msgList.get(i).getPrice());
+                        idtDtlVos.get(j).setDiscRate(msgList.get(i).getDiscRate());
+                    }
+                }
+            }
+        }
+        $soaUtil.resetSfOrderVal($sfIdt);
+        $sfIdt.setSfIdtDtlVos(idtDtlVos);
+        update($sfIdt);
+end
+

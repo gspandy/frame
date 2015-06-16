@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.BalanceMapper" >
+  <resultMap id="fsclAcMap" type="mb.erp.dr.soa.old.vo.FsclAc" >
+    <id column="UNIT_ID" property="unitId"/>
+    <id column="FSCL_AC_ID" property="fsclAcId"/>
+    <result column="CPD_UNIT_ID" property="cpdUnitId"/>
+    <result column="AC_TYPE" property="acType"/>
+    <result column="AC_NAME" property="acName"/>
+    <result column="CURRENCY" property="currency"/>
+    <result column="BALANCE" property="balance" />
+    <result column="FRZ_BAL" property="frzBal" />
+    <result column="MIN_BAL" property="minBal" />
+    <result column="PSN_BAL" property="psnBal" />
+    <result column="TEMP_LOAN" property="tempLoan" />
+    <result column="TL_DEADLINE" property="tlDeadline"  />
+    <result column="EX_AC_ID" property="exAcId"/>
+    <result column="REGION_CODE" property="regionCode"/>
+    <result column="STATUS" property="status"  />
+    <result column="EV_IN_TRAN" property="evInTran" />
+    <result column="FUC_BAL" property="fucBal" />
+    <result column="DEBIT_VAL" property="debitVal" />
+    <result column="SYN_ACTION" property="synAction"/>
+    <result column="FUND_VAL" property="fundVal" />
+  </resultMap>
+  <resultMap id="freezeTranMap" type="mb.erp.dr.soa.old.vo.FreezeTran" >
+    <id column="TRAN_NUM" property="tranNum" />
+    <id column="UNIT_ID" property="unitId" />
+    <result column="FSCL_AC_ID" property="fsclAcId" />
+    <result column="CURRENCY" property="currency" />
+    <result column="TRAN_AMNT" property="tranAmnt" />
+    <result column="BALANCE" property="balance" />
+    <result column="DOC_TYPE" property="docType" />
+    <result column="DOC_NUM" property="docNum" />
+    <result column="TRAN_DATE" property="tranDate"  />
+    <result column="TRAN_DATETIME" property="tranDatetime"  />
+  </resultMap>
+  
+  <!--专项资金映射map-->
+  <resultMap id="creditLimitUseMap" type="mb.erp.dr.soa.old.vo.CreditLimitUseVo" >
+    <id column="DOC_NUM" property="docNum" />
+    <id column="UNIT_ID" property="unitId" />
+    <result column="VENDEE_ID" property="vendeeId" />
+    <result column="BEGIN_DATE" property="beginDate" />
+    <result column="END_DATE" property="endDate" />
+    <result column="LIMIT_TYPE" property="limitType" />
+    <result column="LIMIT_MONEY" property="limitMoney" />
+    <result column="REMARK" property="remark" />
+    <result column="ALL_LIMIT_MONEY" property="allLimitMoney"  />
+    <result column="DOC_SETUPNUM" property="docSetUpNum"  />
+  </resultMap>
+  
+  <!--信用额度事务映射map-->
+  <resultMap id="creditTranMap" type="mb.erp.dr.soa.old.vo.CreditTranVo" >
+    <id column="CREDIT_TRAN_ID" property="creditTranId" />
+    <id column="UNIT_ID" property="unitId" />
+    <result column="VENDEE_ID" property="vendeeId" />
+    <result column="TRAN_DATE" property="tranDate" />
+    <result column="TRAN_TIME" property="tranTime" />
+    <result column="LIMIT_TYPE" property="limitType" />
+    <result column="LIMIT_MONEY" property="limitMoney" />
+    <result column="BALANCE" property="balance" />
+    <result column="DOC_TYPE" property="docType"  />
+    <result column="DOC_NUM" property="docNum"  />
+   </resultMap>
+  
+   <!-- 信用额度明细事务映射map-->
+    <resultMap id="creditTranDtlMap" type="mb.erp.dr.soa.old.vo.CreditTranDtlVo" >
+    <id column="CREDIT_TRAN_DTL_ID" property="creditTranDtlId" />
+    <id column="UNIT_ID" property="unitId" />
+    <result column="CREDIT_TRAN_ID" property="creditTranId" />
+    <result column="DOC_SETUPNUM" property="docSetUpNum" />
+    <result column="TRAN_MONEY" property="tranMoney" />
+    <result column="DOC_NUM" property="docNum" />
+    </resultMap>
+  
+    <!--借款事务映射map-->
+    <resultMap id="loanTranMap" type="mb.erp.dr.soa.old.vo.LoanTranVo" >
+    <id column="LOAN_TRAN_ID" property="loanTranId" />
+    <id column="UNIT_ID" property="unitId" />
+    <result column="VENDEE_ID" property="vendeeId" />
+    <result column="TRAN_DATE" property="tranDate" />
+    <result column="TRAN_TIME" property="tranTime" />
+    <result column="TRAN_TYPE" property="limitType" />
+    <result column="TRAN_MONEY" property="limitMoney" />
+    <result column="DOC_TYPE" property="docType" />
+    <result column="DOC_NUM" property="docNum"  />
+  </resultMap>
+  
+  <sql id="fsclAc_List" >
+    UNIT_ID, FSCL_AC_ID, CPD_UNIT_ID, AC_TYPE, AC_NAME, CURRENCY, BALANCE, FRZ_BAL, MIN_BAL, 
+    PSN_BAL, TEMP_LOAN, TL_DEADLINE, EX_AC_ID, REGION_CODE, STATUS, EV_IN_TRAN, FUC_BAL, 
+    DEBIT_VAL, SYN_ACTION, FUND_VAL
+  </sql>
+  <select id="getFsclInfo"  parameterType="java.util.HashMap"  resultMap="fsclAcMap">
+    select 
+    <include refid="fsclAc_List" />
+    from MTSBW.FSCL_AC
+    where UNIT_ID = #{unitId}
+      and CPD_UNIT_ID = #{cpdUnitId}
+      and AC_TYPE='CU'
+      and STATUS = 'A'
+      for update
+  </select>
+
+<select id="selectFreezeTranByDocTypeNum" resultMap="freezeTranMap" parameterType="java.util.HashMap" >
+		SELECT TRAN_NUM, UNIT_ID, FSCL_AC_ID, CURRENCY, TRAN_AMNT, BALANCE, DOC_TYPE, DOC_NUM, TRAN_DATE, TRAN_DATETIME  
+		FROM MTSBW.FREEZE_TRAN A 
+		WHERE A.UNIT_ID=#{unitId}
+		AND EXISTS (SELECT 1 FROM MTSBW.FSCL_AC B WHERE B.UNIT_ID=A.UNIT_ID AND A.FSCL_AC_ID=B.FSCL_AC_ID
+            AND B.STATUS='A' AND B.CURRENCY='RMB' AND B.AC_TYPE='CU' AND B.CPD_UNIT_ID=#{cpdUnitId}) 
+        AND A.DOC_TYPE=#{docType} AND A.DOC_NUM=#{docNum}
+  </select>
+  
+    <!-- 查询账户余额 -->
+  <select id="searchBalance" resultType="java.lang.Double" parameterType="mb.erp.dr.soa.old.vo.FsclAc" >
+    select BALANCE
+    from MTSBW.FSCL_AC
+    where UNIT_ID = #{unitId}
+      and FSCL_AC_ID = #{fsclAcId}
+  </select>
+  <!-- 更新账户金额 -->
+  <update id="updateBalance" parameterType="mb.erp.dr.soa.old.vo.FsclAc" >
+    update MTSBW.FSCL_AC
+    set 
+      BALANCE = BALANCE+#{balance},
+      DEBIT_VAL = DEBIT_VAL+#{debitVal}
+    where UNIT_ID = #{unitId}
+      and FSCL_AC_ID = #{fsclAcId}
+  </update>
+  
+  <!-- 更新账户冻结金额 -->
+  <update id="updateFrzbal" parameterType="mb.erp.dr.soa.old.vo.FsclAc" >
+    update MTSBW.FSCL_AC
+    set 
+      FRZ_BAL = FRZ_BAL+#{frzBal}
+    where UNIT_ID = #{unitId}
+      and FSCL_AC_ID = #{fsclAcId}
+  </update>
+  <!-- 保存往来事务 -->
+  <insert id="saveActran" parameterType="mb.erp.dr.soa.old.vo.AcTran" >
+    insert into MTSBW.AC_TRAN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="tranNum != null " >
+        TRAN_NUM,
+      </if>
+        TRAN_DATE,
+      <if test="tranType != null and tranType != ''" >
+        TRAN_TYPE,
+      </if>
+      <if test="docType != null and docType != ''" >
+        DOC_TYPE,
+      </if>
+        TRAN_TIME,
+      <if test="docNum != null and docNum != ''" >
+        DOC_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="tranNum != null " >
+        #{tranNum,jdbcType=DECIMAL},
+      </if>
+        TRUNC(SYSDATE) ,
+      <if test="tranType != null and tranType != ''" >
+        #{tranType,jdbcType=VARCHAR},
+      </if>
+      <if test="docType != null and docType != ''" >
+        #{docType,jdbcType=CHAR},
+      </if>
+        SYSDATE,
+      <if test="docNum != null and docNum != ''" >
+        #{docNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 保存往来事务明细 -->
+  <insert id="saveActranDtl" parameterType="mb.erp.dr.soa.old.vo.AcTranDtl" >
+    insert into MTSBW.AC_TRAN_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="tranNum != null and tranNum != ''" >
+        TRAN_NUM,
+      </if>
+      <if test="lineNum != null and lineNum != ''" >
+        LINE_NUM,
+      </if>
+      <if test="fsclAcId != null and fsclAcId != ''" >
+        FSCL_AC_ID,
+      </if>
+      <if test="debitOrCredit != null and debitOrCredit != ''" >
+        DEBIT_OR_CREDIT,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="tranAmnt != null " >
+        TRAN_AMNT,
+      </if>
+        BALANCE_DATE,
+      <if test="balance != null " >
+        BALANCE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="tranNum != null and tranNum != ''" >
+        #{tranNum,jdbcType=DECIMAL},
+      </if>
+      <if test="lineNum != null and lineNum != ''" >
+        #{lineNum,jdbcType=DECIMAL},
+      </if>
+      <if test="fsclAcId != null and fsclAcId != ''" >
+        #{fsclAcId,jdbcType=VARCHAR},
+      </if>
+      <if test="debitOrCredit != null and debitOrCredit != ''" >
+        #{debitOrCredit,jdbcType=CHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="tranAmnt != null " >
+        #{tranAmnt,jdbcType=DECIMAL},
+      </if>
+       TRUNC(SYSDATE) ,
+      <if test="balance != null " >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 保存冻结事务 -->
+  <insert id="saveFreezeTran" parameterType="mb.erp.dr.soa.old.vo.FreezeTran" >
+    insert into MTSBW.FREEZE_TRAN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tranNum != null and tranNum != ''" >
+        TRAN_NUM,
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="fsclAcId != null and fsclAcId != ''" >
+        FSCL_AC_ID,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="tranAmnt != null " >
+        TRAN_AMNT,
+      </if>
+      <if test="balance != null " >
+        BALANCE,
+      </if>
+      <if test="docType != null and docType != ''" >
+        DOC_TYPE,
+      </if>
+        TRAN_DATETIME,
+        TRAN_DATE,
+      <if test="docNum != null and docNum != ''" >
+        DOC_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tranNum != null and tranNum != ''" >
+        #{tranNum,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=VARCHAR},
+      </if>
+      <if test="fsclAcId != null and fsclAcId != ''" >
+        #{fsclAcId,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="tranAmnt != null " >
+        #{tranAmnt,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null " >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="docType != null and docType != ''" >
+        #{docType,jdbcType=CHAR},
+      </if>
+        SYSDATE,
+       TRUNC(SYSDATE) ,
+      <if test="docNum != null and docNum != ''" >
+        #{docNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 判断余额是否足够 , 输出是可支配金额 -->
+    <select id="judgeBalance" statementType="CALLABLE" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+		<![CDATA[
+		    {CALL PCK_SPECIAL_FOUND.PROC_JUDGE_MONEY (#{p_vender,mode=IN,jdbcType=VARCHAR},#{p_vendee,mode=IN,jdbcType=VARCHAR},#{amount,mode=OUT,jdbcType=DECIMAL},#{errMsg,mode=OUT,jdbcType=VARCHAR})}  
+		]]>
+	</select>
+	<!-- 按新ERP订单号现货冻结 -->
+    <select id="increaseFreezeByIdt" statementType="CALLABLE" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+        <![CDATA[
+            {CALL PCK_SPECIAL_FOUND.PROC_IDT_NEW_FREEZE (#{p_vender,mode=IN,jdbcType=VARCHAR},#{p_vendee,mode=IN,jdbcType=VARCHAR},#{p_docNum,mode=IN,jdbcType=VARCHAR},#{p_amount,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}  
+        ]]>
+    </select>
+    <!-- 按新ERP订单号释放现货冻结 -->
+    <select id="reduceFreezeByIdt" statementType="CALLABLE" parameterType="java.util.HashMap"  resultType="java.util.HashMap">
+        <![CDATA[
+             {CALL PCK_SPECIAL_FOUND.PROC_FREE_IDT_FREEZE (#{p_vender,mode=IN,jdbcType=VARCHAR},#{p_vendee,mode=IN,jdbcType=VARCHAR},#{p_docNum,mode=IN,jdbcType=VARCHAR},#{p_amount,mode=IN,jdbcType=VARCHAR},#{result,mode=OUT,jdbcType=VARCHAR})}  
+        ]]>
+    </select>
+    
+  <!-- 查询可用专项资金数 -->
+   <select id="searchCreditMoney" resultType="java.lang.Double" parameterType="java.util.Map" >
+        select sum(Limit_money) 
+        from CREDIT_LIMIT_USE 
+        where limit_type = 'OO' 
+        AND UNIT_ID = #{unitId}
+        AND VENDEE_ID = #{vendeeId}
+        AND trunc(sysdate) between BEGIN_DATE AND END_DATE
+  </select>
+  
+  <!-- 判断是否启用新ERP -->
+  <select id="isCreditEnable" resultType="java.lang.Integer" >
+  	SELECT COUNT(1) FROM SYS_PARAMETER A WHERE A.PARM_ID='IS_GENLIMIT' AND A.PARM_VAL='T'
+  </select>
+  <!-- 判断帐户余额是否足够 -->
+  <select id="useAmountEnable" resultType="java.lang.Double" parameterType="mb.erp.dr.soa.bean.BalanceBean" >
+	SELECT NVL(BALANCE, 0) + NVL(EV_IN_TRAN, 0) - NVL(FRZ_BAL, 0) -
+	       NVL(MIN_BAL, 0) +
+	       NVL((SELECT SUM(NVL(A.TEMP_LOAN, 0))
+	                          FROM MTSBW.WARRANT_BILL A
+	                         WHERE A.TL_DEADLINE >= #{docDate,jdbcType=DATE} 
+	                           AND A.UNIT_ID = #{uid,jdbcType=VARCHAR} 
+	                           AND A.CPD_UNIT_ID = #{cpdUid,jdbcType=VARCHAR} 
+	                           AND A.PROGRESS = 'AP'
+	                           AND A.CANCELLED = 'F'),
+	           0) - NVL(FUC_BAL, 0) + NVL(PSN_BAL, 0) + NVL(DEBIT_VAL, 0) as LEFT_MOENY
+	  FROM MTSBW.FSCL_AC
+	 WHERE UNIT_ID = #{uid,jdbcType=VARCHAR} 
+	   AND FSCL_AC_ID = #{fsclAcId,jdbcType=VARCHAR}
+	   AND STATUS = 'A'
+	   AND AC_TYPE = 'CU'
+	   AND CPD_UNIT_ID = #{cpdUid,jdbcType=VARCHAR} 
+  </select>
+  
+   <!-- 查询专项资金-->
+    <select id="searchCredit" resultMap="creditLimitUseMap" parameterType="java.util.Map" >
+      select * from CREDIT_LIMIT_USE
+      where limit_type = 'OO' 
+      AND UNIT_ID = #{unitId}
+      AND VENDEE_ID = #{vendeeId}
+      AND trunc(sysdate) between BEGIN_DATE AND END_DATE
+      ORDER BY END_DATE ASC,LIMIT_MONEY ASC
+     </select>
+  
+   <!-- 保存信用额度事务 -->
+   <insert id="saveCreditTran" parameterType="mb.erp.dr.soa.old.vo.CreditTranVo" >
+       INSERT INTO CREDIT_TRAN(CREDIT_TRAN_ID,UNIT_ID,VENDEE_ID,TRAN_DATE,TRAN_TIME,LIMIT_TYPE,
+       LIMIT_MONEY,BALANCE,DOC_TYPE,DOC_NUM)
+       SELECT
+            #{creditTranId},
+            #{unitId},
+            #{vendeeId},
+            TRUNC(SYSDATE),
+            SYSDATE,
+            #{limitType},
+            #{limitMoney},
+            (select sum(Limit_money) from CREDIT_LIMIT_USE WHERE LIMIT_TYPE = 'OO'  AND UNIT_ID = #{unitId}  AND VENDEE_ID = #{vendeeId}  AND trunc(sysdate) between BEGIN_DATE AND END_DATE) ,
+            #{docType},
+            #{docNum}
+       FROM DUAL 
+  </insert>
+  
+    <!-- 保存信用额度明细事务 -->
+   <insert id="saveCreditTranDtl"  parameterType="java.util.Map" >
+       insert into CREDIT_TRAN_DTL(CREDIT_TRAN_DTL_ID,UNIT_ID,CREDIT_TRAN_ID,TRAN_MONEY,DOC_NUM,DOC_SETUPNUM)
+          <foreach collection="creditTran"  item="credit"  index="index"  separator="UNION ALL" > 
+              SELECT
+                    #{credit.creditTranDtlId},
+                    #{credit.unitId},
+                    #{credit.creditTranId},
+                    #{credit.tranMoney},
+                    #{credit.docNum},
+                    #{credit.docSetUpNum}
+              FROM DUAL
+          </foreach>
+  </insert>
+  
+  <!-- 保存借款单 -->
+  <insert id="savePubLoanDoc" parameterType="mb.erp.dr.soa.old.vo.PubLoanDoc" >
+	INSERT INTO 	 PUB_LOAN_DOC 
+	 (LOAN_DOC_NUM,	 DOC_DATE,	UNIT_ID,	VENDEE_ID,	FSCL_ACID,	DOC_TYPE,	DOC_NUM,	LOAN_TYPE,
+	LOAN_AMOUNT,	LOAN_TIME,	GEN_TYPE,	PROGRESS,	APPROVE_USER,	APPROVE_TIME,	CREATE_USER,
+	CREATE_DATE,	LAST_MODIFIED_USER,	LAST_MODIFIED_DATE,	REMARK	 ) 
+	 VALUES( 
+	 PCK_SYS_SHARE.FUNC_GET_NEXT_NUM(#{unitId,jdbcType=VARCHAR} ,'LOAN_DOC_NUM') 
+	 ,TRUNC(SYSDATE) 
+	 ,#{unitId,jdbcType=VARCHAR} 
+	 ,#{vendeeId,jdbcType=VARCHAR} 
+	 ,#{fsclAcid,jdbcType=VARCHAR} 
+	 ,#{docType,jdbcType=VARCHAR} 
+	 ,#{docNum,jdbcType=VARCHAR} 
+	 ,'CRD' 
+	 ,#{loanAmount,jdbcType=DECIMAL} 
+	 ,SYSDATE 
+	 ,'02' 
+	 ,'AP'
+	 ,#{createUser,jdbcType=VARCHAR} 
+	 ,SYSDATE 
+	 ,#{createUser,jdbcType=VARCHAR} 
+	 ,SYSDATE 
+	 ,#{createUser,jdbcType=VARCHAR} 
+	 ,SYSDATE 
+	 ,#{remark,jdbcType=VARCHAR} 
+	 )
+  </insert>
+  
+   <!-- 保存借款事务 -->
+  <insert id="saveLoanTran" parameterType="mb.erp.dr.soa.old.vo.LoanTranVo" >
+        INSERT INTO LOAN_TRAN(LOAN_TRAN_ID,UNIT_ID,VENDEE_ID,TRAN_DATE,TRAN_TIME,
+        TRAN_TYPE,TRAN_MONEY,DOC_TYPE,DOC_NUM)
+        SELECT 
+            #{loanTranId},
+            #{unitId},
+            #{vendeeId},
+            TRUNC(SYSDATE),
+            SYSDATE,
+            #{tranType},
+            #{tranMoney},
+            #{docType},
+            #{docNum}
+        FROM DUAL
+  </insert>
+  
+  <!-- 批量更新专项资金 -->
+  <update id="creditBatchUpdate"  parameterType="java.util.List">
+      update CREDIT_LIMIT_USE SET          
+                     <trim prefix="LIMIT_MONEY = CASE" suffix="END">
+                         <foreach collection="list" item="item" index="index">   
+                              when DOC_NUM=#{item.docNum} 
+                                       AND UNIT_ID =  #{item.unitId}
+                              then #{item.limitMoney}  
+                         </foreach>              
+                    </trim>
+       WHERE 
+       <foreach collection="list" separator="or" item="item" index="index" > 
+             (DOC_NUM = #{item.docNum}
+            and    UNIT_ID =  #{item.unitId})
+       </foreach>    
+  </update> 
+  
+  <!-- 查询冻结信用额度事务 -->
+  <select id="selectCreditTranByDocTypeNum" resultMap="creditTranMap"  parameterType="java.util.Map">
+        select * from CREDIT_TRAN
+        where UNIT_ID = #{unitId}
+        and VENDEE_ID = #{vendeeId}
+        and LIMIT_TYPE = 'OO'
+        and DOC_TYPE = #{docType}
+        and DOC_NUM = #{docNum}
+        and LIMIT_MONEY &lt; 0
+  </select>
+  
+  <!-- 根据信用额度明细更新专项资金 -->
+   <update id="updateCreditLimitUse" parameterType="mb.erp.dr.soa.old.vo.CreditTranVo" >
+        update credit_limit_use a set a.limit_money = a.limit_money+(select abs(c.tran_money) 
+                                               from credit_tran b 
+                                               inner join credit_tran_dtl c 
+                                               on b.credit_tran_id = c.credit_tran_id
+                                               and b.unit_id = c.unit_id
+                                               where b.credit_tran_id = #{creditTranId}
+                                               and b.unit_id = #{unitId}
+                                               and a.doc_num = c.doc_num
+                                               and a.unit_id = c.unit_id)                                               
+        where exists(select 1 from credit_tran b 
+             inner join credit_tran_dtl c
+             on b.credit_tran_id = c.credit_tran_id
+             and b.unit_id = c.unit_id
+             where b.credit_tran_id =  #{creditTranId}
+             and b.unit_id = #{unitId}
+             and a.doc_num = c.doc_num
+            and a.unit_id = c.unit_id)
+   </update>
+   
+    <!-- 保存信用额度事务 -->
+   <insert id="saveCreditTranForIncrease" parameterType="mb.erp.dr.soa.old.vo.CreditTranVo" >
+       insert into CREDIT_TRAN(CREDIT_TRAN_ID,UNIT_ID,VENDEE_ID,TRAN_DATE,TRAN_TIME,LIMIT_TYPE,
+       LIMIT_MONEY,BALANCE,DOC_TYPE,DOC_NUM)
+       SELECT
+            PCK_SYS_SHARE.FUNC_GET_NEXT_NUM(A.UNIT_ID,'CREDIT_TRAN_ID'),
+            A.UNIT_ID,
+            A.VENDEE_ID,
+            TRUNC(SYSDATE),
+            SYSDATE,
+            A.LIMIT_TYPE,
+            abs(A.LIMIT_MONEY),
+            select sum(Limit_money) from CREDIT_LIMIT_USE where limit_type = 'OO' 
+                                                                                         AND UNIT_ID = #{unitId} 
+                                                                                         AND VENDEE_ID = #{vendeeId} 
+                                                                                         AND trunc(sysdate) between BEGIN_DATE AND END_DATE,
+            A.DOC_TYPE,
+            A.DOC_NUM
+       FORM CREDIT_TRAN A
+       WHERE A.CREDIT_TRAN_ID = #{creditTranId}
+       AND A.UNIT_ID = #{unitId}
+  </insert>
+  
+   <!-- 查询信用额度明细事务信息 -->
+   <select id="selectCreditTranDtl" resultMap="creditTranDtlMap"  parameterType="java.util.Map">
+        SELECT * FROM CREDIT_TRAN_DTL
+        WHERE UNIT_ID = #{unitId}
+        AND CREDIT_TRAN_ID = #{creditTranId}
+  </select>
+ </mapper>

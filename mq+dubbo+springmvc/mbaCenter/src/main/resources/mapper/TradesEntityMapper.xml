@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.center.dao.TradesEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.TradesEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="doc_num" property="docNum" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_mod" property="docMod" jdbcType="CHAR" />
+    <result column="doc_date" property="docDate" jdbcType="TIMESTAMP" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="vender_code" property="venderCode" jdbcType="VARCHAR" />
+    <result column="vender_wareh_code" property="venderWarehCode" jdbcType="VARCHAR" />
+    <result column="vendee_code" property="vendeeCode" jdbcType="VARCHAR" />
+    <result column="vendee_wareh_code" property="vendeeWarehCode" jdbcType="VARCHAR" />
+    <result column="inoutwareh_code" property="inoutwarehCode" jdbcType="VARCHAR" />
+    <result column="src_doc_code" property="srcDocCode" jdbcType="VARCHAR" />
+    <result column="src_doc_num" property="srcDocNum" jdbcType="VARCHAR" />
+    <result column="from_doc_code" property="fromDocCode" jdbcType="VARCHAR" />
+    <result column="from_doc_num" property="fromDocNum" jdbcType="VARCHAR" />
+    <result column="deliv_code" property="delivCode" jdbcType="VARCHAR" />
+    <result column="rel_trader_code" property="relTraderCode" jdbcType="VARCHAR" />
+    <result column="rel_trade_wareh_code" property="relTradeWarehCode" jdbcType="VARCHAR" />
+    <result column="tosap" property="tosap" jdbcType="VARCHAR" />
+    <result column="process" property="process" jdbcType="VARCHAR" />
+    <result column="intax_amount" property="intaxAmount" jdbcType="DECIMAL" />
+    <result column="tax1_amount" property="tax1Amount" jdbcType="DECIMAL" />
+    <result column="tax2_amount" property="tax2Amount" jdbcType="DECIMAL" />
+    <result column="tax3_amount" property="tax3Amount" jdbcType="DECIMAL" />
+    <result column="disrate_amount" property="disrateAmount" jdbcType="DECIMAL" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, doc_num, doc_type, doc_mod, doc_date, brand, quantity, vender_code, vender_wareh_code, 
+    vendee_code, vendee_wareh_code, inoutwareh_code, src_doc_code, src_doc_num, from_doc_code, 
+    from_doc_num, deliv_code, rel_trader_code, rel_trade_wareh_code, tosap, process, 
+    intax_amount, tax1_amount, tax2_amount, tax3_amount, disrate_amount, remarks, modify_time, 
+    create_time, create_oper, modify_oper, isvalid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from trades
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="mb.mba.core.entity.TradesEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into trades (doc_num, doc_type, doc_mod, 
+      doc_date, brand, quantity, 
+      vender_code, vender_wareh_code, vendee_code, 
+      vendee_wareh_code, inoutwareh_code, src_doc_code, 
+      src_doc_num, from_doc_code, from_doc_num, 
+      deliv_code, rel_trader_code, rel_trade_wareh_code, 
+      tosap, process, intax_amount, 
+      tax1_amount, tax2_amount, tax3_amount, 
+      disrate_amount, remarks, modify_time, 
+      create_time, create_oper, modify_oper, 
+      isvalid)
+    values (#{docNum,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{docMod,jdbcType=CHAR}, 
+      #{docDate,jdbcType=TIMESTAMP}, #{brand,jdbcType=VARCHAR}, #{quantity,jdbcType=DECIMAL}, 
+      #{venderCode,jdbcType=VARCHAR}, #{venderWarehCode,jdbcType=VARCHAR}, #{vendeeCode,jdbcType=VARCHAR}, 
+      #{vendeeWarehCode,jdbcType=VARCHAR}, #{inoutwarehCode,jdbcType=VARCHAR}, #{srcDocCode,jdbcType=VARCHAR}, 
+      #{srcDocNum,jdbcType=VARCHAR}, #{fromDocCode,jdbcType=VARCHAR}, #{fromDocNum,jdbcType=VARCHAR}, 
+      #{delivCode,jdbcType=VARCHAR}, #{relTraderCode,jdbcType=VARCHAR}, #{relTradeWarehCode,jdbcType=VARCHAR}, 
+      #{tosap,jdbcType=VARCHAR}, #{process,jdbcType=VARCHAR}, #{intaxAmount,jdbcType=DECIMAL}, 
+      #{tax1Amount,jdbcType=DECIMAL}, #{tax2Amount,jdbcType=DECIMAL}, #{tax3Amount,jdbcType=DECIMAL}, 
+      #{disrateAmount,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createOper,jdbcType=VARCHAR}, #{modifyOper,jdbcType=VARCHAR}, 
+      #{isvalid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="mb.mba.core.entity.TradesEntity" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into trades
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="docNum != null" >
+        doc_num,
+      </if>
+      <if test="docType != null" >
+        doc_type,
+      </if>
+      <if test="docMod != null" >
+        doc_mod,
+      </if>
+      <if test="docDate != null" >
+        doc_date,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="venderCode != null" >
+        vender_code,
+      </if>
+      <if test="venderWarehCode != null" >
+        vender_wareh_code,
+      </if>
+      <if test="vendeeCode != null" >
+        vendee_code,
+      </if>
+      <if test="vendeeWarehCode != null" >
+        vendee_wareh_code,
+      </if>
+      <if test="inoutwarehCode != null" >
+        inoutwareh_code,
+      </if>
+      <if test="srcDocCode != null" >
+        src_doc_code,
+      </if>
+      <if test="srcDocNum != null" >
+        src_doc_num,
+      </if>
+      <if test="fromDocCode != null" >
+        from_doc_code,
+      </if>
+      <if test="fromDocNum != null" >
+        from_doc_num,
+      </if>
+      <if test="delivCode != null" >
+        deliv_code,
+      </if>
+      <if test="relTraderCode != null" >
+        rel_trader_code,
+      </if>
+      <if test="relTradeWarehCode != null" >
+        rel_trade_wareh_code,
+      </if>
+      <if test="tosap != null" >
+        tosap,
+      </if>
+      <if test="process != null" >
+        process,
+      </if>
+      <if test="intaxAmount != null" >
+        intax_amount,
+      </if>
+      <if test="tax1Amount != null" >
+        tax1_amount,
+      </if>
+      <if test="tax2Amount != null" >
+        tax2_amount,
+      </if>
+      <if test="tax3Amount != null" >
+        tax3_amount,
+      </if>
+      <if test="disrateAmount != null" >
+        disrate_amount,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createOper != null" >
+        create_oper,
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper,
+      </if>
+      <if test="isvalid != null" >
+        isvalid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="docNum != null" >
+        #{docNum,jdbcType=VARCHAR},
+      </if>
+      <if test="docType != null" >
+        #{docType,jdbcType=VARCHAR},
+      </if>
+      <if test="docMod != null" >
+        #{docMod,jdbcType=CHAR},
+      </if>
+      <if test="docDate != null" >
+        #{docDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="venderCode != null" >
+        #{venderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="venderWarehCode != null" >
+        #{venderWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vendeeCode != null" >
+        #{vendeeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vendeeWarehCode != null" >
+        #{vendeeWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="inoutwarehCode != null" >
+        #{inoutwarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocCode != null" >
+        #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocNum != null" >
+        #{srcDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="fromDocCode != null" >
+        #{fromDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fromDocNum != null" >
+        #{fromDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="delivCode != null" >
+        #{delivCode,jdbcType=VARCHAR},
+      </if>
+      <if test="relTraderCode != null" >
+        #{relTraderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="relTradeWarehCode != null" >
+        #{relTradeWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tosap != null" >
+        #{tosap,jdbcType=VARCHAR},
+      </if>
+      <if test="process != null" >
+        #{process,jdbcType=VARCHAR},
+      </if>
+      <if test="intaxAmount != null" >
+        #{intaxAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax1Amount != null" >
+        #{tax1Amount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax2Amount != null" >
+        #{tax2Amount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Amount != null" >
+        #{tax3Amount,jdbcType=DECIMAL},
+      </if>
+      <if test="disrateAmount != null" >
+        #{disrateAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createOper != null" >
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null" >
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        #{isvalid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.mba.core.entity.TradesEntity" >
+    update trades
+    <set >
+      <if test="docNum != null" >
+        doc_num = #{docNum,jdbcType=VARCHAR},
+      </if>
+      <if test="docType != null" >
+        doc_type = #{docType,jdbcType=VARCHAR},
+      </if>
+      <if test="docMod != null" >
+        doc_mod = #{docMod,jdbcType=CHAR},
+      </if>
+      <if test="docDate != null" >
+        doc_date = #{docDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brand != null" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=DECIMAL},
+      </if>
+      <if test="venderCode != null" >
+        vender_code = #{venderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="venderWarehCode != null" >
+        vender_wareh_code = #{venderWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vendeeCode != null" >
+        vendee_code = #{vendeeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="vendeeWarehCode != null" >
+        vendee_wareh_code = #{vendeeWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="inoutwarehCode != null" >
+        inoutwareh_code = #{inoutwarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocCode != null" >
+        src_doc_code = #{srcDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocNum != null" >
+        src_doc_num = #{srcDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="fromDocCode != null" >
+        from_doc_code = #{fromDocCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fromDocNum != null" >
+        from_doc_num = #{fromDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="delivCode != null" >
+        deliv_code = #{delivCode,jdbcType=VARCHAR},
+      </if>
+      <if test="relTraderCode != null" >
+        rel_trader_code = #{relTraderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="relTradeWarehCode != null" >
+        rel_trade_wareh_code = #{relTradeWarehCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tosap != null" >
+        tosap = #{tosap,jdbcType=VARCHAR},
+      </if>
+      <if test="process != null" >
+        process = #{process,jdbcType=VARCHAR},
+      </if>
+      <if test="intaxAmount != null" >
+        intax_amount = #{intaxAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax1Amount != null" >
+        tax1_amount = #{tax1Amount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax2Amount != null" >
+        tax2_amount = #{tax2Amount,jdbcType=DECIMAL},
+      </if>
+      <if test="tax3Amount != null" >
+        tax3_amount = #{tax3Amount,jdbcType=DECIMAL},
+      </if>
+      <if test="disrateAmount != null" >
+        disrate_amount = #{disrateAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createOper != null" >
+        create_oper = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null" >
+        modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="isvalid != null" >
+        isvalid = #{isvalid,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mb.mba.core.entity.TradesEntity" >
+    update trades
+    set doc_num = #{docNum,jdbcType=VARCHAR},
+      doc_type = #{docType,jdbcType=VARCHAR},
+      doc_mod = #{docMod,jdbcType=CHAR},
+      doc_date = #{docDate,jdbcType=TIMESTAMP},
+      brand = #{brand,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=DECIMAL},
+      vender_code = #{venderCode,jdbcType=VARCHAR},
+      vender_wareh_code = #{venderWarehCode,jdbcType=VARCHAR},
+      vendee_code = #{vendeeCode,jdbcType=VARCHAR},
+      vendee_wareh_code = #{vendeeWarehCode,jdbcType=VARCHAR},
+      inoutwareh_code = #{inoutwarehCode,jdbcType=VARCHAR},
+      src_doc_code = #{srcDocCode,jdbcType=VARCHAR},
+      src_doc_num = #{srcDocNum,jdbcType=VARCHAR},
+      from_doc_code = #{fromDocCode,jdbcType=VARCHAR},
+      from_doc_num = #{fromDocNum,jdbcType=VARCHAR},
+      deliv_code = #{delivCode,jdbcType=VARCHAR},
+      rel_trader_code = #{relTraderCode,jdbcType=VARCHAR},
+      rel_trade_wareh_code = #{relTradeWarehCode,jdbcType=VARCHAR},
+      tosap = #{tosap,jdbcType=VARCHAR},
+      process = #{process,jdbcType=VARCHAR},
+      intax_amount = #{intaxAmount,jdbcType=DECIMAL},
+      tax1_amount = #{tax1Amount,jdbcType=DECIMAL},
+      tax2_amount = #{tax2Amount,jdbcType=DECIMAL},
+      tax3_amount = #{tax3Amount,jdbcType=DECIMAL},
+      disrate_amount = #{disrateAmount,jdbcType=DECIMAL},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_oper = #{createOper,jdbcType=VARCHAR},
+      modify_oper = #{modifyOper,jdbcType=VARCHAR},
+      isvalid = #{isvalid,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="queryTradesList" resultMap="BaseResultMap" parameterType="mb.mba.core.entity.TradesEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades
+    where 1=1 
+    <if test="createTime != null" >
+       and doc_date &lt;= #{createTime,jdbcType=BIGINT}
+    </if>
+    <if test="modifyTime != null" >
+       and doc_date &gt;= #{modifyTime,jdbcType=BIGINT}
+    </if>
+    <if test="docType != null" >
+       and doc_type=#{docType,jdbcType=BIGINT}
+    </if>
+    <if test="inoutwarehCode != null" >
+       and inoutwareh_code=#{inoutwarehCode,jdbcType=BIGINT}
+    </if>
+    <if test="venderCode != null" >
+       and vender_code=#{venderCode,jdbcType=BIGINT}
+    </if>
+    <if test="vendeeCode != null" >
+       and vendee_code=#{vendeeCode,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="queryTradesListCount" resultType="int" parameterType="mb.mba.core.entity.TradesEntity" >
+    select count(1)
+    from trades
+    where 1=1 
+    <if test="createTime != null" >
+       and doc_date &lt;= #{modifyTime,jdbcType=BIGINT}
+    </if>
+    <if test="modifyTime != null" >
+       and doc_date &gt;= #{modifyTime,jdbcType=BIGINT}
+    </if>
+    <if test="docType != null" >
+       and doc_type=#{docType,jdbcType=BIGINT}
+    </if>
+    <if test="inoutwarehCode != null" >
+       and inoutwareh_code=#{inoutwarehCode,jdbcType=BIGINT}
+    </if>
+    <if test="venderCode != null" >
+       and vender_code=#{venderCode,jdbcType=BIGINT}
+    </if>
+    <if test="vendeeCode != null" >
+       and vendee_code=#{vendeeCode,jdbcType=BIGINT}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,80 @@
+package mb.erp.dr.o2o.drools.rules.grn;
+
+import mb.erp.dr.soa.old.vo.GrnVo;
+import mb.erp.dr.soa.constant.O2OBillConstant.BillType;
+import mb.erp.dr.soa.bean.WarehBean;
+import mb.erp.dr.soa.beanan.BalanceBean;
+import mb.erp.dr.soa.old.service.wareh.WarehService;
+import mb.erp.dr.soa.old.service.balance.BalanceService;
+import java.util.List;
+
+// 入库冲单规则
+
+rule "原始单据类型是否ABG或TBN"
+    salience 100
+    no-loop true
+    when
+        $grn : GrnVo(srcDocType == BillType.ABG || srcDocType == BillType.TBN)
+    then
+        // System.out.println( "原始单据类型是ABG或TBN" );
+        $grn.getRulesGroup().add("rule1");
+        update($grn);
+end
+
+rule "是否增加过余额"
+    salience 90
+    no-loop true
+    when
+        $grn : GrnVo(controlStatus matches "^1.*" ,$rulesGroup:rulesGroup)
+    then
+        if(!$rulesGroup.contains("rule1")){
+	        // System.out.println( "增加过余额" );
+	        $grn.getRulesGroup().add("rule2");
+        }
+end
+
+rule "调用扣减余额接口"
+    salience 80
+    no-loop true
+    when
+        $grn : GrnVo($rulesGroup:rulesGroup )
+        $balanceService:BalanceService()
+    then
+        if($rulesGroup.contains("rule1") || $rulesGroup.contains("rule2")){
+	        // System.out.println( "调用增加余额接口，供货方："+$grn.getDispUnitId()+" 购货方："+$grn.getUnitId()+" 总金额"+$grn.getTtlVal()+" 入库单编号："+$grn.getGrnNum() );
+	        BalanceBean balanceBean = new BalanceBean();
+	        balanceBean.setUid($grn.getDispUnitId()); // 供货方（发货组织）
+	        balanceBean.setCpdUid($grn.getUnitId()); // 购货方(接收方)
+	        balanceBean.setBalance($grn.getTtlVal()); // 总金额
+	        balanceBean.setDocType(BillType.GRN);
+	        balanceBean.setDocNum($grn.getGrnNum());
+	        $balanceService.reduceBalanceNegative(balanceBean);
+        }
+end
+
+rule "需要增加过库存"
+    salience 70
+    no-loop true
+    when
+        $grn : GrnVo(controlStatus matches "^[0-1][1].*")
+        $warehService:WarehService()
+   then
+        // System.out.println( "增加过库存, 接收仓库编码："+$grn.getWarehId()+" 组织编码："+$grn.getUnitId()+" 入库单编号："+$grn.getGrnNum() );
+        $grn.getRulesGroup().add("rule3");
+        WarehBean warehBean = new WarehBean();
+        warehBean.setGrnNum($grn.getGrnNum()); // 入库单流水号
+        warehBean.setUnitId($grn.getUnitId()); // 组织编码
+        warehBean.setWarehId($grn.getWarehId()); // 接收仓库编码
+        $warehService.reduceQtyByGRN(warehBean);
+end
+
+rule "是否需要传输sap"
+    salience 60
+    no-loop true
+    when
+        $grn : GrnVo(controlStatus matches "^[0-1][2].*" ,$rulesGroup:rulesGroup)
+    then
+        // System.out.println( "需要传输sap" );
+        $grn.getRulesGroup().add("rule2");
+        //updateSapFlag
+end

@@ -1,0 +1,943 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.BgrMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.BgrVo" >
+    <id column="VENDEE_ID" property="vendeeId" jdbcType="VARCHAR" />
+    <id column="BGR_NUM" property="bgrNum" jdbcType="VARCHAR" />
+    <result column="DOC_DATE" property="docDate" jdbcType="DATE" />
+    <result column="VENDER_ID" property="venderId" jdbcType="VARCHAR" />
+    <result column="DISP_WAREH_ID" property="dispWarehId" jdbcType="VARCHAR" />
+    <result column="RCV_WAREH_ID" property="rcvWarehId" jdbcType="VARCHAR" />
+    <result column="CR_TYPE" property="crType" jdbcType="CHAR" />
+    <result column="OPR_ID" property="oprId" jdbcType="VARCHAR" />
+    <result column="BUYER_ID" property="buyerId" jdbcType="VARCHAR" />
+    <result column="SELLER_ID" property="sellerId" jdbcType="VARCHAR" />
+    <result column="INVSG_ID" property="invsgId" jdbcType="VARCHAR" />
+    <result column="DELIV_MTHD" property="delivMthd" jdbcType="VARCHAR" />
+    <result column="DELIV_ADDR" property="delivAddr" jdbcType="VARCHAR" />
+    <result column="DELIV_PSTD" property="delivPstd" jdbcType="VARCHAR" />
+    <result column="REQD_AT" property="reqdAt" jdbcType="DATE" />
+    <result column="DISP_TIME" property="dispTime" />
+    <result column="RCV_TIME" property="rcvTime"  />
+    <result column="TAX_RATE" property="taxRate" jdbcType="DECIMAL" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="CR_QTY" property="crQty" jdbcType="DECIMAL" />
+    <result column="CR_VAL" property="crVal" jdbcType="DECIMAL" />
+    <result column="DELIV_QTY" property="delivQty" jdbcType="DECIMAL" />
+    <result column="DELIV_VAL" property="delivVal" jdbcType="DECIMAL" />
+    <result column="GROSS_QTY" property="grossQty" jdbcType="DECIMAL" />
+    <result column="TRANS_PLAN" property="transPlan" jdbcType="VARCHAR" />
+    <result column="RCV_QTY" property="rcvQty" jdbcType="DECIMAL" />
+    <result column="RCV_VAL" property="rcvVal" jdbcType="DECIMAL" />
+    <result column="ACC_QTY" property="accQty" jdbcType="DECIMAL" />
+    <result column="ACC_VAL" property="accVal" jdbcType="DECIMAL" />
+    <result column="PROGRESS" property="progress" jdbcType="CHAR" />
+    <result column="SUSPENDED" property="suspended" jdbcType="CHAR" />
+    <result column="CANCELLED" property="cancelled" jdbcType="CHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="INVSG_TIME" property="invsgTime" />
+    <result column="BOX_COUNT" property="boxCount" jdbcType="DECIMAL" />
+    <result column="CHECK_TIME" property="checkTime" />
+    <result column="CHECK_TIEM_END" property="checkTiemEnd" />
+    <result column="BGR_CHECKER_ID" property="bgrCheckerId" jdbcType="VARCHAR" />
+    <result column="BGR_OPR_ID" property="bgrOprId" jdbcType="VARCHAR" />
+    <result column="RECV_QTY" property="recvQty" jdbcType="DECIMAL" />
+    <result column="PRODUCT_COUNT" property="productCount" jdbcType="DECIMAL" />
+    <result column="DISP_OPR_ID" property="dispOprId" jdbcType="VARCHAR" />
+    <result column="ACPT_START_TIME" property="acptStartTime" />
+    <result column="ACPT_END_TIME" property="acptEndTime"/>
+    <result column="CLASS_REMARK" property="classRemark" jdbcType="VARCHAR" />
+    <result column="PLAN_END_TIME" property="planEndTime" />
+    <result column="LOC_ID" property="locId" jdbcType="VARCHAR" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <result column="BGR_KIND" property="bgrKind" jdbcType="CHAR" />
+    <result column="BACK_GOODS_TYPE" property="backGoodsType" jdbcType="CHAR" />
+    <result column="HAVEBOX" property="havebox" jdbcType="CHAR" />
+    <result column="IS_INCLUDEPASSED" property="isIncludepassed" jdbcType="CHAR" />
+    <result column="NEW_BGR_NUM" property="newBgrNum" jdbcType="VARCHAR" />
+    <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+    <result column="APPROVED" property="approved" jdbcType="VARCHAR" />
+    <result column="IS_SORTED" property="isSorted" jdbcType="CHAR" />
+    <result column="VERSION_FLAG" property="versionFlag" jdbcType="CHAR" />
+  </resultMap>
+  
+   <resultMap id="BgrDtlMap" type="mb.erp.dr.soa.old.vo.BgrDtlVo" >
+    <id column="VENDEE_ID" property="vendeeId" jdbcType="VARCHAR" />
+    <id column="BGR_NUM" property="bgrNum" jdbcType="VARCHAR" />
+    <id column="PROD_ID" property="prodId" jdbcType="CHAR" />
+    <result column="CR_QTY" property="crQty" jdbcType="DECIMAL" />
+    <result column="DELIV_QTY" property="delivQty" jdbcType="DECIMAL" />
+    <result column="RCV_QTY" property="rcvQty" jdbcType="DECIMAL" />
+    <result column="IDTF_QLGD_QTY" property="idtfQlgdQty" jdbcType="DECIMAL" />
+    <result column="IDTF_FXRQ_QTY" property="idtfFxrqQty" jdbcType="DECIMAL" />
+    <result column="IDTF_DMGD_QTY" property="idtfDmgdQty" jdbcType="DECIMAL" />
+    <result column="IDTF_INFR_QTY" property="idtfInfrQty" jdbcType="DECIMAL" />
+    <result column="ACC_QTY" property="accQty" jdbcType="DECIMAL" />
+    <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="FEE" property="fee" jdbcType="DECIMAL" />
+    <result column="VENDEE_REMARK" property="vendeeRemark" jdbcType="VARCHAR" />
+    <result column="VENDER_REMARK" property="venderRemark" jdbcType="VARCHAR" />
+    <result column="PASSED_QTY" property="passedQty" jdbcType="DECIMAL" />
+    <result column="ISZP" property="iszp" jdbcType="CHAR" />
+    <result column="ISZPCL" property="iszpcl" jdbcType="CHAR" />
+    <result column="ISCP" property="iscp" jdbcType="CHAR" />
+    <result column="ISWSP" property="iswsp" jdbcType="CHAR" />
+    <result column="DOC_DATE" property="docDate" jdbcType="DATE" />
+    <result column="IDTF_LAAC_QTY" property="idtfLaacQty" jdbcType="DECIMAL" />
+    <result column="LOCK_QTY" property="lockQty" jdbcType="DECIMAL" />
+    <result column="CH_QTY" property="chQty" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    VENDEE_ID, BGR_NUM, DOC_DATE, VENDER_ID, DISP_WAREH_ID, RCV_WAREH_ID, CR_TYPE, OPR_ID, 
+    BUYER_ID, SELLER_ID, INVSG_ID, DELIV_MTHD, DELIV_ADDR, DELIV_PSTD, REQD_AT, DISP_TIME, 
+    RCV_TIME, TAX_RATE, CURRENCY, CR_QTY, CR_VAL, DELIV_QTY, DELIV_VAL, GROSS_QTY, TRANS_PLAN, 
+    RCV_QTY, RCV_VAL, ACC_QTY, ACC_VAL, PROGRESS, SUSPENDED, CANCELLED, REMARK, INVSG_TIME, 
+    BOX_COUNT, CHECK_TIME, CHECK_TIEM_END, BGR_CHECKER_ID, BGR_OPR_ID, RECV_QTY, PRODUCT_COUNT, 
+    DISP_OPR_ID, ACPT_START_TIME, ACPT_END_TIME, CLASS_REMARK, PLAN_END_TIME, LOC_ID, 
+    BRAND_ID, BGR_KIND, BACK_GOODS_TYPE, HAVEBOX, IS_INCLUDEPASSED, NEW_BGR_NUM, DATA_SOURCE, 
+    APPROVED, IS_SORTED, VERSION_FLAG
+  </sql>
+  <select id="select" resultMap="BaseResultMap" parameterType="mb.erp.dr.soa.old.vo.BgrVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.BGR
+    where VENDEE_ID = #{vendeeId,jdbcType=VARCHAR}
+      and BGR_NUM = #{bgrNum,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="save" parameterType="mb.erp.dr.soa.old.vo.BgrVo" >
+    insert into MTSBW.BGR
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null" >
+        VENDEE_ID,
+      </if>
+      <if test="bgrNum != null" >
+        BGR_NUM,
+      </if>
+      <if test="docDate != null" >
+        DOC_DATE,
+      </if>
+      <if test="venderId != null" >
+        VENDER_ID,
+      </if>
+      <if test="dispWarehId != null" >
+        DISP_WAREH_ID,
+      </if>
+      <if test="rcvWarehId != null" >
+        RCV_WAREH_ID,
+      </if>
+      <if test="crType != null" >
+        CR_TYPE,
+      </if>
+      <if test="oprId != null" >
+        OPR_ID,
+      </if>
+      <if test="buyerId != null" >
+        BUYER_ID,
+      </if>
+      <if test="sellerId != null" >
+        SELLER_ID,
+      </if>
+      <if test="invsgId != null" >
+        INVSG_ID,
+      </if>
+      <if test="delivMthd != null" >
+        DELIV_MTHD,
+      </if>
+      <if test="delivAddr != null" >
+        DELIV_ADDR,
+      </if>
+      <if test="delivPstd != null" >
+        DELIV_PSTD,
+      </if>
+        REQD_AT,
+      <if test="dispTime != null" >
+        DISP_TIME,
+      </if>
+      <if test="rcvTime != null" >
+        RCV_TIME,
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE,
+      </if>
+      <if test="currency != null" >
+        CURRENCY,
+      </if>
+      <if test="crQty != null" >
+        CR_QTY,
+      </if>
+      <if test="crVal != null" >
+        CR_VAL,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL,
+      </if>
+      <if test="grossQty != null" >
+        GROSS_QTY,
+      </if>
+      <if test="transPlan != null" >
+        TRANS_PLAN,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL,
+      </if>
+      <if test="accQty != null" >
+        ACC_QTY,
+      </if>
+      <if test="accVal != null" >
+        ACC_VAL,
+      </if>
+      <if test="progress != null" >
+        PROGRESS,
+      </if>
+      <if test="suspended != null" >
+        SUSPENDED,
+      </if>
+      <if test="cancelled != null" >
+        CANCELLED,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="invsgTime != null" >
+        INVSG_TIME,
+      </if>
+      <if test="boxCount != null" >
+        BOX_COUNT,
+      </if>
+      <if test="checkTime != null" >
+        CHECK_TIME,
+      </if>
+      <if test="checkTiemEnd != null" >
+        CHECK_TIEM_END,
+      </if>
+      <if test="bgrCheckerId != null" >
+        BGR_CHECKER_ID,
+      </if>
+      <if test="bgrOprId != null" >
+        BGR_OPR_ID,
+      </if>
+      <if test="recvQty != null" >
+        RECV_QTY,
+      </if>
+      <if test="productCount != null" >
+        PRODUCT_COUNT,
+      </if>
+      <if test="dispOprId != null" >
+        DISP_OPR_ID,
+      </if>
+      <if test="acptStartTime != null" >
+        ACPT_START_TIME,
+      </if>
+      <if test="acptEndTime != null" >
+        ACPT_END_TIME,
+      </if>
+      <if test="classRemark != null" >
+        CLASS_REMARK,
+      </if>
+      <if test="planEndTime != null" >
+        PLAN_END_TIME,
+      </if>
+      <if test="locId != null" >
+        LOC_ID,
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID,
+      </if>
+      <if test="bgrKind != null" >
+        BGR_KIND,
+      </if>
+      <if test="backGoodsType != null" >
+        BACK_GOODS_TYPE,
+      </if>
+      <if test="havebox != null" >
+        HAVEBOX,
+      </if>
+      <if test="isIncludepassed != null" >
+        IS_INCLUDEPASSED,
+      </if>
+      <if test="newBgrNum != null" >
+        NEW_BGR_NUM,
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE,
+      </if>
+      <if test="approved != null" >
+        APPROVED,
+      </if>
+      <if test="isSorted != null" >
+        IS_SORTED,
+      </if>
+      <if test="versionFlag != null" >
+        VERSION_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null" >
+        #{vendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="bgrNum != null" >
+        #{bgrNum,jdbcType=VARCHAR},
+      </if>
+      <if test="docDate != null" >
+        #{docDate,jdbcType=DATE},
+      </if>
+      <if test="venderId != null" >
+        #{venderId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispWarehId != null" >
+        #{dispWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvWarehId != null" >
+        #{rcvWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="crType != null" >
+        #{crType,jdbcType=CHAR},
+      </if>
+      <if test="oprId != null" >
+        #{oprId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerId != null" >
+        #{buyerId,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerId != null" >
+        #{sellerId,jdbcType=VARCHAR},
+      </if>
+      <if test="invsgId != null" >
+        #{invsgId,jdbcType=VARCHAR},
+      </if>
+      <if test="delivMthd != null" >
+        #{delivMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="delivAddr != null" >
+        #{delivAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="delivPstd != null" >
+        #{delivPstd,jdbcType=VARCHAR},
+      </if>
+        sysdate,
+      <if test="dispTime != null" >
+        #{dispTime},
+      </if>
+      <if test="rcvTime != null" >
+        #{rcvTime},
+      </if>
+      <if test="taxRate != null" >
+        #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="crQty != null" >
+        #{crQty,jdbcType=DECIMAL},
+      </if>
+      <if test="crVal != null" >
+        #{crVal,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivVal != null" >
+        #{delivVal,jdbcType=DECIMAL},
+      </if>
+      <if test="grossQty != null" >
+        #{grossQty,jdbcType=DECIMAL},
+      </if>
+      <if test="transPlan != null" >
+        #{transPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvVal != null" >
+        #{rcvVal,jdbcType=DECIMAL},
+      </if>
+      <if test="accQty != null" >
+        #{accQty,jdbcType=DECIMAL},
+      </if>
+      <if test="accVal != null" >
+        #{accVal,jdbcType=DECIMAL},
+      </if>
+      <if test="progress != null" >
+        #{progress,jdbcType=CHAR},
+      </if>
+      <if test="suspended != null" >
+        #{suspended,jdbcType=CHAR},
+      </if>
+      <if test="cancelled != null" >
+        #{cancelled,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="invsgTime != null" >
+        #{invsgTime},
+      </if>
+      <if test="boxCount != null" >
+        #{boxCount,jdbcType=DECIMAL},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime},
+      </if>
+      <if test="checkTiemEnd != null" >
+        #{checkTiemEnd},
+      </if>
+      <if test="bgrCheckerId != null" >
+        #{bgrCheckerId,jdbcType=VARCHAR},
+      </if>
+      <if test="bgrOprId != null" >
+        #{bgrOprId,jdbcType=VARCHAR},
+      </if>
+      <if test="recvQty != null" >
+        #{recvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="productCount != null" >
+        #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="dispOprId != null" >
+        #{dispOprId,jdbcType=VARCHAR},
+      </if>
+      <if test="acptStartTime != null" >
+        #{acptStartTime},
+      </if>
+      <if test="acptEndTime != null" >
+        #{acptEndTime},
+      </if>
+      <if test="classRemark != null" >
+        #{classRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="planEndTime != null" >
+        #{planEndTime},
+      </if>
+      <if test="locId != null" >
+        #{locId,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null" >
+        #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="bgrKind != null" >
+        #{bgrKind,jdbcType=CHAR},
+      </if>
+      <if test="backGoodsType != null" >
+        #{backGoodsType,jdbcType=CHAR},
+      </if>
+      <if test="havebox != null" >
+        #{havebox,jdbcType=CHAR},
+      </if>
+      <if test="isIncludepassed != null" >
+        #{isIncludepassed,jdbcType=CHAR},
+      </if>
+      <if test="newBgrNum != null" >
+        #{newBgrNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="approved != null" >
+        #{approved,jdbcType=VARCHAR},
+      </if>
+      <if test="isSorted != null" >
+        #{isSorted,jdbcType=CHAR},
+      </if>
+      <if test="versionFlag != null" >
+        #{versionFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="mb.erp.dr.soa.old.vo.BgrVo" >
+    update MTSBW.BGR
+    <set >
+      <if test="docDate != null" >
+        DOC_DATE = #{docDate,jdbcType=DATE},
+      </if>
+      <if test="venderId != null" >
+        VENDER_ID = #{venderId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispWarehId != null" >
+        DISP_WAREH_ID = #{dispWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvWarehId != null" >
+        RCV_WAREH_ID = #{rcvWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="crType != null" >
+        CR_TYPE = #{crType,jdbcType=CHAR},
+      </if>
+      <if test="oprId != null" >
+        OPR_ID = #{oprId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerId != null" >
+        BUYER_ID = #{buyerId,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerId != null" >
+        SELLER_ID = #{sellerId,jdbcType=VARCHAR},
+      </if>
+      <if test="invsgId != null" >
+        INVSG_ID = #{invsgId,jdbcType=VARCHAR},
+      </if>
+      <if test="delivMthd != null" >
+        DELIV_MTHD = #{delivMthd,jdbcType=VARCHAR},
+      </if>
+      <if test="delivAddr != null" >
+        DELIV_ADDR = #{delivAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="delivPstd != null" >
+        DELIV_PSTD = #{delivPstd,jdbcType=VARCHAR},
+      </if>
+      <if test="reqdAt != null" >
+        REQD_AT = #{reqdAt,jdbcType=DATE},
+      </if>
+      <if test="dispTime != null" >
+        DISP_TIME = #{dispTime},
+      </if>
+      <if test="rcvTime != null" >
+        RCV_TIME = #{rcvTime},
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE = #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="crQty != null" >
+        CR_QTY = #{crQty,jdbcType=DECIMAL},
+      </if>
+      <if test="crVal != null" >
+        CR_VAL = #{crVal,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY = #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL = #{delivVal,jdbcType=DECIMAL},
+      </if>
+      <if test="grossQty != null" >
+        GROSS_QTY = #{grossQty,jdbcType=DECIMAL},
+      </if>
+      <if test="transPlan != null" >
+        TRANS_PLAN = #{transPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY = #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL = #{rcvVal,jdbcType=DECIMAL},
+      </if>
+      <if test="accQty != null" >
+        ACC_QTY = #{accQty,jdbcType=DECIMAL},
+      </if>
+      <if test="accVal != null" >
+        ACC_VAL = #{accVal,jdbcType=DECIMAL},
+      </if>
+      <if test="progress != null" >
+        PROGRESS = #{progress,jdbcType=CHAR},
+      </if>
+      <if test="suspended != null" >
+        SUSPENDED = #{suspended,jdbcType=CHAR},
+      </if>
+      <if test="cancelled != null" >
+        CANCELLED = #{cancelled,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="invsgTime != null" >
+        INVSG_TIME = #{invsgTime},
+      </if>
+      <if test="boxCount != null" >
+        BOX_COUNT = #{boxCount,jdbcType=DECIMAL},
+      </if>
+      <if test="checkTime != null" >
+        CHECK_TIME = #{checkTime},
+      </if>
+      <if test="checkTiemEnd != null" >
+        CHECK_TIEM_END = #{checkTiemEnd},
+      </if>
+      <if test="bgrCheckerId != null" >
+        BGR_CHECKER_ID = #{bgrCheckerId,jdbcType=VARCHAR},
+      </if>
+      <if test="bgrOprId != null" >
+        BGR_OPR_ID = #{bgrOprId,jdbcType=VARCHAR},
+      </if>
+      <if test="recvQty != null" >
+        RECV_QTY = #{recvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="productCount != null" >
+        PRODUCT_COUNT = #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="dispOprId != null" >
+        DISP_OPR_ID = #{dispOprId,jdbcType=VARCHAR},
+      </if>
+      <if test="acptStartTime != null" >
+        ACPT_START_TIME = #{acptStartTime},
+      </if>
+      <if test="acptEndTime != null" >
+        ACPT_END_TIME = #{acptEndTime,jdbcType=DATE},
+      </if>
+      <if test="classRemark != null" >
+        CLASS_REMARK = #{classRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="planEndTime != null" >
+        PLAN_END_TIME = #{planEndTime},
+      </if>
+      <if test="locId != null" >
+        LOC_ID = #{locId,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="bgrKind != null" >
+        BGR_KIND = #{bgrKind,jdbcType=CHAR},
+      </if>
+      <if test="backGoodsType != null" >
+        BACK_GOODS_TYPE = #{backGoodsType,jdbcType=CHAR},
+      </if>
+      <if test="havebox != null" >
+        HAVEBOX = #{havebox,jdbcType=CHAR},
+      </if>
+      <if test="isIncludepassed != null" >
+        IS_INCLUDEPASSED = #{isIncludepassed,jdbcType=CHAR},
+      </if>
+      <if test="newBgrNum != null" >
+        NEW_BGR_NUM = #{newBgrNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="approved != null" >
+        APPROVED = #{approved,jdbcType=VARCHAR},
+      </if>
+      <if test="isSorted != null" >
+        IS_SORTED = #{isSorted,jdbcType=CHAR},
+      </if>
+      <if test="versionFlag != null" >
+        VERSION_FLAG = #{versionFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where VENDEE_ID = #{vendeeId,jdbcType=VARCHAR}
+      and BGR_NUM = #{bgrNum,jdbcType=VARCHAR}
+      <if test="progressList != null and progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  
+  <!--保存退货申请单明细 -->
+   <insert id="saveDtl" parameterType="mb.erp.dr.soa.old.vo.BgrDtlVo" >
+    insert into MTSBW.BGR_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null" >
+        VENDEE_ID,
+      </if>
+      <if test="bgrNum != null" >
+        BGR_NUM,
+      </if>
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="crQty != null" >
+        CR_QTY,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="idtfQlgdQty != null" >
+        IDTF_QLGD_QTY,
+      </if>
+      <if test="idtfFxrqQty != null" >
+        IDTF_FXRQ_QTY,
+      </if>
+      <if test="idtfDmgdQty != null" >
+        IDTF_DMGD_QTY,
+      </if>
+      <if test="idtfInfrQty != null" >
+        IDTF_INFR_QTY,
+      </if>
+      <if test="accQty != null" >
+        ACC_QTY,
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE,
+      </if>
+      <if test="fee != null" >
+        FEE,
+      </if>
+      <if test="vendeeRemark != null" >
+        VENDEE_REMARK,
+      </if>
+      <if test="venderRemark != null" >
+        VENDER_REMARK,
+      </if>
+      <if test="passedQty != null" >
+        PASSED_QTY,
+      </if>
+      <if test="iszp != null" >
+        ISZP,
+      </if>
+      <if test="iszpcl != null" >
+        ISZPCL,
+      </if>
+      <if test="iscp != null" >
+        ISCP,
+      </if>
+      <if test="iswsp != null" >
+        ISWSP,
+      </if>
+      <if test="docDate != null" >
+        DOC_DATE,
+      </if>
+      <if test="idtfLaacQty != null" >
+        IDTF_LAAC_QTY,
+      </if>
+      <if test="lockQty != null" >
+        LOCK_QTY,
+      </if>
+      <if test="chQty != null" >
+        CH_QTY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null" >
+        #{vendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="bgrNum != null" >
+        #{bgrNum,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        #{prodId,jdbcType=CHAR},
+      </if>
+      <if test="crQty != null" >
+        #{crQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfQlgdQty != null" >
+        #{idtfQlgdQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfFxrqQty != null" >
+        #{idtfFxrqQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfDmgdQty != null" >
+        #{idtfDmgdQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfInfrQty != null" >
+        #{idtfInfrQty,jdbcType=DECIMAL},
+      </if>
+      <if test="accQty != null" >
+        #{accQty,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="vendeeRemark != null" >
+        #{vendeeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="venderRemark != null" >
+        #{venderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="passedQty != null" >
+        #{passedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="iszp != null" >
+        #{iszp,jdbcType=CHAR},
+      </if>
+      <if test="iszpcl != null" >
+        #{iszpcl,jdbcType=CHAR},
+      </if>
+      <if test="iscp != null" >
+        #{iscp,jdbcType=CHAR},
+      </if>
+      <if test="iswsp != null" >
+        #{iswsp,jdbcType=CHAR},
+      </if>
+      <if test="docDate != null" >
+        #{docDate,jdbcType=DATE},
+      </if>
+      <if test="idtfLaacQty != null" >
+        #{idtfLaacQty,jdbcType=DECIMAL},
+      </if>
+      <if test="lockQty != null" >
+        #{lockQty,jdbcType=DECIMAL},
+      </if>
+      <if test="chQty != null" >
+        #{chQty,jdbcType=DECIMAL},
+      </if>
+    </trim>
+    </insert>
+    
+    <!-- 更新退货申请单明细 -->
+    <update id="updateDtl" parameterType="mb.erp.dr.soa.old.vo.BgrDtlVo" >
+    update MTSBW.BGR_DTL
+    <set >
+      <if test="crQty != null" >
+        CR_QTY = #{crQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY = #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY = #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfQlgdQty != null" >
+        IDTF_QLGD_QTY = #{idtfQlgdQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfFxrqQty != null" >
+        IDTF_FXRQ_QTY = #{idtfFxrqQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfDmgdQty != null" >
+        IDTF_DMGD_QTY = #{idtfDmgdQty,jdbcType=DECIMAL},
+      </if>
+      <if test="idtfInfrQty != null" >
+        IDTF_INFR_QTY = #{idtfInfrQty,jdbcType=DECIMAL},
+      </if>
+      <if test="accQty != null" >
+        ACC_QTY = #{accQty,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="fee != null" >
+        FEE = #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="vendeeRemark != null" >
+        VENDEE_REMARK = #{vendeeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="venderRemark != null" >
+        VENDER_REMARK = #{venderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="passedQty != null" >
+        PASSED_QTY = #{passedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="iszp != null" >
+        ISZP = #{iszp,jdbcType=CHAR},
+      </if>
+      <if test="iszpcl != null" >
+        ISZPCL = #{iszpcl,jdbcType=CHAR},
+      </if>
+      <if test="iscp != null" >
+        ISCP = #{iscp,jdbcType=CHAR},
+      </if>
+      <if test="iswsp != null" >
+        ISWSP = #{iswsp,jdbcType=CHAR},
+      </if>
+      <if test="docDate != null" >
+        DOC_DATE = #{docDate,jdbcType=DATE},
+      </if>
+      <if test="idtfLaacQty != null" >
+        IDTF_LAAC_QTY = #{idtfLaacQty,jdbcType=DECIMAL},
+      </if>
+      <if test="lockQty != null" >
+        LOCK_QTY = #{lockQty,jdbcType=DECIMAL},
+      </if>
+      <if test="chQty != null" >
+        CH_QTY = #{chQty,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where VENDEE_ID = #{vendeeId,jdbcType=VARCHAR}
+        and BGR_NUM = #{bgrNum,jdbcType=VARCHAR}
+      <if test="prodId != null and prodId != ''">
+        and PROD_ID = #{prodId,jdbcType=CHAR}
+      </if>
+  </update>
+   
+   <!-- 批量保存退货申请单明细 --> 
+   <insert id="saveDtlForBatch" parameterType="java.util.Map">
+    insert into MTSBW.BGR_DTL(VENDEE_ID,BGR_NUM,PROD_ID,CR_QTY,LOCK_QTY,DISC_RATE,UNIT_PRICE)
+     <foreach collection="bgrDtlList" item="item" index="index"  separator="UNION ALL" > 
+          SELECT 
+            #{item.vendeeId},
+            #{item.bgrNum},
+            #{item.prodId},
+            #{item.crQty},
+            #{item.lockQty},
+            #{item.discRate},
+            #{item.unitPrice}
+          from dual 
+        </foreach> 
+    </insert>
+  
+    <!-- 查询退货申请单单进度 -->
+  <select id="selectProgress" parameterType="mb.erp.dr.soa.old.vo.BgrVo"  resultType="string">
+    SELECT PROGRESS FROM BGR
+    <where>
+      <if test="vendeeId != null and vendeeId !=''">
+            AND VENDEE_ID = #{vendeeId}
+      </if>
+      <if test="bgrNum != null and bgrNum !=''">
+            AND BGR_NUM = #{bgrNum}
+      </if>
+    </where>
+  </select>
+  
+  <!-- 更新退货申请单的 发货数量为出库单出库数量，发货金额为出库单出库金额 -->
+  <update id="updateBgrByGdn" parameterType="mb.erp.dr.soa.old.vo.BgrVo" >
+    update BGR B
+    set disp_time = sysdate,
+    (DELIV_QTY,DELIV_VAL)=(SELECT G.TTL_QTY,G.TTL_VAL FROM GDN G WHERE  G.UNIT_ID = B.VENDEE_ID
+                                  AND G.SRC_DOC_TYPE = 'SBG'  AND G.SRC_DOC_NUM=B.BGR_NUM)
+     where  B.BGR_NUM = #{bgrNum} AND B.VENDEE_ID = #{vendeeId}  
+  </update>
+  
+    <!-- 更新退货申请单明细上的发货数量为出库单出库数量 -->
+  <update id="updateBgrDtlByGdn" parameterType="mb.erp.dr.soa.old.vo.BgrVo" >
+    update BGR_DTL B 
+    set  DELIV_QTY=NVL((SELECT GD.QUANTITY FROM GDN_DTL GD INNER JOIN GDN G ON G.UNIT_ID = GD.UNIT_ID AND G.GDN_NUM = GD.GDN_NUM 
+                                        WHERE G.SRC_DOC_TYPE='SBG'
+                                        AND GD.PROD_ID = B.PROD_ID
+                                        AND G.UNIT_ID = B.VENDEE_ID
+                                        AND G.SRC_DOC_NUM=B.BGR_NUM),0)
+     where B.BGR_NUM = #{bgrNum} AND B.VENDEE_ID = #{vendeeId}
+  </update>
+  
+   <!-- 更新退货申请单的 收货数量为入库单入库数量，收货金额为入库单出库金额 -->
+  <update id="updateBgrByGrn" parameterType="mb.erp.dr.soa.old.vo.BgrVo" >
+    update BGR B
+   set rcv_time = sysdate,
+       (ACC_QTY,ACC_VAL, RCV_QTY, RCV_VAL) = (SELECT G.TTL_QTY, G.TTL_VAL,G.TTL_QTY, G.TTL_VAL
+                                      FROM GRN G
+                                     INNER JOIN SCN S ON G.SRC_UNIT_ID = S.VENDEE_ID
+                                                     AND G.SRC_DOC_NUM = S.SCN_NUM
+                                                     AND G.SRC_DOC_TYPE = 'SSC'
+                                     WHERE S.BGR_NUM = #{bgrNum}  AND S.VENDEE_ID = #{vendeeId})
+ where B.BGR_NUM = #{bgrNum} AND B.VENDEE_ID = #{vendeeId}
+  </update>
+  
+    <!-- 更新退货申请单明细上的收货数量为入库单入库数量 -->
+  <update id="updateBgrDtlByGrn" parameterType="mb.erp.dr.soa.old.vo.BgrVo" >
+   update BGR_DTL B 
+    set  (ACC_QTY,RCV_QTY)=(SELECT GD.QUANTITY,GD.QUANTITY FROM GRN_DTL GD INNER JOIN GRN G ON G.UNIT_ID = GD.UNIT_ID AND G.GRN_NUM = GD.GRN_NUM 
+                       INNER JOIN SCN S ON G.SRC_UNIT_ID = S.VENDEE_ID AND G.SRC_DOC_NUM = S.SCN_NUM AND G.SRC_DOC_TYPE = 'SSC'                    
+                    WHERE GD.PROD_ID = B.PROD_ID AND S.BGR_NUM = #{bgrNum}  AND S.VENDEE_ID = #{vendeeId})
+     where B.BGR_NUM = #{bgrNum} AND B.VENDEE_ID = #{vendeeId}
+  </update>
+  
+  
+</mapper>

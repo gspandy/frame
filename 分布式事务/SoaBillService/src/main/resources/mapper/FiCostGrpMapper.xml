@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.FiCostGrpMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.FiCostGrpVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="UNIT_ID" property="unitId" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <result column="CF_AT" property="cfAt" jdbcType="DATE" />
+    <result column="DOC_STATE" property="docState" jdbcType="DECIMAL" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="LAST_MODIFIED_USER" property="lastModifiedUser" jdbcType="VARCHAR" />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate" jdbcType="TIMESTAMP" />
+    <result column="ACTIVITY" property="activity" jdbcType="CHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CALTYPE" property="caltype" jdbcType="DECIMAL" />
+    <result column="GRNTYPE" property="grntype" jdbcType="VARCHAR" />
+    <result column="GDNTYPE" property="gdntype" jdbcType="VARCHAR" />
+    <result column="OP_MODE" property="opMode" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, UNIT_ID, CODE, NAME, CURRENCY, CF_AT, DOC_STATE, CREATE_USER, CREATE_DATE, LAST_MODIFIED_USER, 
+    LAST_MODIFIED_DATE, ACTIVITY, REMARK, CALTYPE, GRNTYPE, GDNTYPE, OP_MODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from FI_COST_GRP
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from FI_COST_GRP
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="mb.erp.dr.soa.vo.FiCostGrpVo" >
+    <selectKey resultType="java.math.BigDecimal" keyProperty="id" order="AFTER" >
+      ORACLE
+    </selectKey>
+    insert into FI_COST_GRP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        UNIT_ID,
+      </if>
+      <if test="code != null and code != ''" >
+        CODE,
+      </if>
+      <if test="name != null and name != ''" >
+        NAME,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="cfAt != null and cfAt != ''" >
+        CF_AT,
+      </if>
+      <if test="docState != null and docState != ''" >
+        DOC_STATE,
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        CREATE_USER,
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        CREATE_DATE,
+      </if>
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        LAST_MODIFIED_USER,
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        LAST_MODIFIED_DATE,
+      </if>
+      <if test="activity != null and activity != ''" >
+        ACTIVITY,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="caltype != null and caltype != ''" >
+        CALTYPE,
+      </if>
+      <if test="grntype != null and grntype != ''" >
+        GRNTYPE,
+      </if>
+      <if test="gdntype != null and gdntype != ''" >
+        GDNTYPE,
+      </if>
+      <if test="opMode != null and opMode != ''" >
+        OP_MODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitId != null and unitId != ''" >
+        #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="code != null and code != ''" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null and name != ''" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="cfAt != null and cfAt != ''" >
+        #{cfAt,jdbcType=DATE},
+      </if>
+      <if test="docState != null and docState != ''" >
+        #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null and createUser != ''" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null and createDate != ''" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedUser != null and lastModifiedUser != ''" >
+        #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activity != null and activity != ''" >
+        #{activity,jdbcType=CHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="caltype != null and caltype != ''" >
+        #{caltype,jdbcType=DECIMAL},
+      </if>
+      <if test="grntype != null and grntype != ''" >
+        #{grntype,jdbcType=VARCHAR},
+      </if>
+      <if test="gdntype != null and gdntype != ''" >
+        #{gdntype,jdbcType=VARCHAR},
+      </if>
+      <if test="opMode != null and opMode != ''" >
+        #{opMode,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="mb.erp.dr.soa.vo.FiCostGrpVo" >
+    update FI_COST_GRP
+    <set >
+      <if test="unitId != null" >
+        UNIT_ID = #{unitId,jdbcType=DECIMAL},
+      </if>
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="cfAt != null" >
+        CF_AT = #{cfAt,jdbcType=DATE},
+      </if>
+      <if test="docState != null" >
+        DOC_STATE = #{docState,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifiedUser != null" >
+        LAST_MODIFIED_USER = #{lastModifiedUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifiedDate != null" >
+        LAST_MODIFIED_DATE = #{lastModifiedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activity != null" >
+        ACTIVITY = #{activity,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="caltype != null" >
+        CALTYPE = #{caltype,jdbcType=DECIMAL},
+      </if>
+      <if test="grntype != null" >
+        GRNTYPE = #{grntype,jdbcType=VARCHAR},
+      </if>
+      <if test="gdntype != null" >
+        GDNTYPE = #{gdntype,jdbcType=VARCHAR},
+      </if>
+      <if test="opMode != null" >
+        OP_MODE = #{opMode,jdbcType=CHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <!-- 仓库是否参与成本 -->
+  <select id="isHaveCost"  parameterType="java.lang.Long" resultType="java.lang.Integer">
+  	SELECT COUNT(1)
+	FROM FI_COST_GRP A
+	WHERE A.UNIT_ID IN (SELECT B.OWNER_ID 
+	                    FROM BF_ORG B 
+	                    WHERE B.ID = #{unitId})
+  </select>
+  
+  <!-- 根据仓库获取成本组 -->
+  <select id="getByWarehId"  parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	 SELECT *
+	  FROM FI_COST_GRP A
+	  INNER JOIN SF_WAREHOUSE B ON A.ID=B.COST_GRP_ID
+	 WHERE B.BF_ORG_ID=#{unitId}
+  </select>
+</mapper>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- myBatis配置 -->
+	<!-- 新ERP -->
+	<bean id="newERPSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config-new.xml" />
+		<property name="dataSource" ref="newERPDataSource" />
+	</bean>
+    
+    <!-- MQ消息保存 -->
+    <bean id="sfSchTaskExecOosMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfSchTaskExecOosMapper" />
+    </bean>
+    
+    <!-- 公共数据库操作类 -->
+	<bean id="newERPCommonMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.common.NewERPCommonMapper" />
+	</bean>
+    
+    <!-- 新ERP现货订单操作类 -->
+	<bean id="SfIdtMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfIdtMapper" />
+    </bean>
+    
+    <!-- 新ERP调配单操作类 -->
+    <bean id="drTbnMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.DrTbnMapper" />
+    </bean>
+    
+    <!-- 新ERP现货订单分配明细表操作类 -->
+    <bean id="sfIdtAllocDtlMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfIdtAllocDtlMapper" />
+    </bean>
+    
+    <!-- 新ERP交货单表操作类 -->
+    <bean id="sfDgnMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfDgnMapper" />
+    </bean>
+    
+    <!-- 新ERP到货通知单表操作类 -->
+    <bean id="sfRvdMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfRvdMapper" />
+    </bean>
+    
+    <!-- 新ERP临时表校验 -->
+    <bean id="newTmpInvalidDefMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.NewTmpInvalidDefMapper" />
+	</bean>
+	
+	<!-- 新ERP组织表 -->
+    <bean id="bfOrgMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.BfOrgMapper" />
+	</bean>
+	
+	<!-- 新ERP商品结算价格折率表 -->
+    <bean id="prWprcListDtlMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.PrWprcListDtlMapper" />
+	</bean>
+	
+    <!--  -->
+    <bean id="prAgentRateListMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.PrAgentRateListMapper" />
+	</bean>
+	
+    <!-- 新ERP商品零售价格折率表 -->
+    <bean id="prPrcListDtlMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.PrPrcListDtlMapper" />
+	</bean>
+	
+	<!--  -->
+    <bean id="poPrcListDtlMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.PoPrcListDtlMapper" />
+	</bean>
+	
+	<!-- 新ERP成本价格折率表 -->
+    <bean id="fiGrpCostMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+		<property name="mapperInterface" value="mb.erp.dr.soa.dao.FiGrpCostMapper" />
+	</bean>
+	
+	<!-- 利益分享比例 -->
+	<bean id="sfProfitShareRatioListMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfProfitShareRatioListMapper" />
+    </bean>
+    
+    <!-- 新ERP出库单表 -->
+	<bean id="sfGdnMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfGdnMapper" />
+    </bean>
+    
+    <!-- 新ERP入库单操作类 -->
+    <bean id="sfGrnMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfGrnMapper" />
+    </bean>
+    
+    <!-- 新ERP单据流操作类 -->
+    <bean id="sfDocFlowMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfDocFlowMapper" />
+    </bean>
+    
+    <!-- 新ERP单位成本操作类 -->
+    <bean id="rpAgentUnitCostMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.RpAgentUnitCostMapper" />
+    </bean>
+
+    <!-- 新ERP资金接口-->
+    <bean id="newBalanceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.NewBalanceMapper" />
+    </bean>
+    
+    <!-- 新ERP仓库接口 -->
+    <bean id="sfWarehouseMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfWarehouseMapper" />
+    </bean>
+    
+    <!-- 新ERP仓库商品接口 -->
+    <bean id="sfWarehProdMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfWarehProdMapper" />
+    </bean>
+    
+    <!-- 新ERP仓库相关事务接口 -->
+    <bean id="sfWarehTranMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.SfWarehTranMapper" />
+    </bean>
+	
+	<!--  -->
+    <bean id="fiCostGrpMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.FiCostGrpMapper" />
+    </bean>
+    
+    <!--  -->
+    <bean id="fiFsclMonthMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="newERPSqlSessionFactory" />
+        <property name="mapperInterface" value="mb.erp.dr.soa.dao.FiFsclMonthMapper" />
+    </bean>
+</beans>

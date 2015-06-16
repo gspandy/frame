@@ -1,0 +1,14 @@
+package mb.mba.drools.rules;
+
+import mb.mba.bean.Message;
+
+rule "测试规则引擎"
+	lock-on-active true
+	salience 90
+    when
+        $msg : Message( code matches "^[A-Z].*" )
+    then
+        System.out.println( "进入规则" );
+        $msg.setCode($msg.getCode().toLowerCase()); // 大写转小写
+end
+

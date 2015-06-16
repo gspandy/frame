@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.AdnMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.AdnVo" >
+    <id column="VENDER_ID" property="venderId" jdbcType="VARCHAR" />
+    <id column="ADN_NUM" property="adnNum" jdbcType="VARCHAR" />
+    <result column="DOC_DATE" property="docDate" jdbcType="DATE" />
+    <result column="VENDEE_ID" property="vendeeId" jdbcType="VARCHAR" />
+    <result column="IDT_NUM" property="idtNum" jdbcType="VARCHAR" />
+    <result column="WAREH_ID" property="warehId" jdbcType="VARCHAR" />
+    <result column="DISP_UNIT_ID" property="dispUnitId" jdbcType="VARCHAR" />
+    <result column="DISP_UNIT_TYPE" property="dispUnitType" jdbcType="VARCHAR" />
+    <result column="REQD_AT" property="reqdAt" />
+    <result column="CTRLR_ID" property="ctrlrId" jdbcType="VARCHAR" />
+    <result column="DISP_TIME" property="dispTime"  />
+    <result column="RCV_TIME" property="rcvTime" />
+    <result column="ADM_QTY" property="admQty" jdbcType="DECIMAL" />
+    <result column="ADM_VAL" property="admVal" jdbcType="DECIMAL" />
+    <result column="PSN_VAL" property="psnVal" jdbcType="DECIMAL" />
+    <result column="DELIV_QTY" property="delivQty" jdbcType="DECIMAL" />
+    <result column="DELIV_VAL" property="delivVal" jdbcType="DECIMAL" />
+    <result column="RCV_QTY" property="rcvQty" jdbcType="DECIMAL" />
+    <result column="RCV_VAL" property="rcvVal" jdbcType="DECIMAL" />
+    <result column="PROGRESS" property="progress" jdbcType="CHAR" />
+    <result column="SUSPENDED" property="suspended" jdbcType="CHAR" />
+    <result column="CANCELLED" property="cancelled" jdbcType="CHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ADM_AT" property="admAt" />
+    <result column="PRODUCT_COUNT" property="productCount" jdbcType="DECIMAL" />
+    <result column="IS_GENTBN" property="isGentbn" jdbcType="CHAR" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <result column="ALLOCATION_TYPE" property="allocationType" jdbcType="CHAR" />
+    <result column="FACT_WAREH_ID" property="factWarehId" jdbcType="VARCHAR" />
+    <result column="FACT_VENDEE_ID" property="factVendeeId" jdbcType="VARCHAR" />
+    <result column="FACT_IDT_NUM" property="factIdtNum" jdbcType="VARCHAR" />
+    <result column="SRC_UNIT_ID" property="srcUnitId" jdbcType="VARCHAR" />
+    <result column="SRC_DOC_NUM" property="srcDocNum" jdbcType="VARCHAR" />
+    <result column="SRC_DOC_TYPE" property="srcDocType" jdbcType="VARCHAR" />
+    <result column="TRAN_RCV_WAREH_ID" property="tranRcvWarehId" jdbcType="VARCHAR" />
+    <result column="OS_DOC_CODE" property="osDocCode"  jdbcType="VARCHAR" />
+  </resultMap>
+  
+ <resultMap id="AdnDtlVoMap" type="mb.erp.dr.soa.old.vo.AdnDtlVo" >
+    <id column="VENDER_ID" property="venderId" jdbcType="VARCHAR" />
+    <id column="ADN_NUM" property="adnNum" jdbcType="VARCHAR" />
+    <id column="PROD_ID" property="prodId" jdbcType="CHAR" />
+    <result column="UNIT_PRICE" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="ADM_QTY" property="admQty" jdbcType="DECIMAL" />
+    <result column="DELIV_QTY" property="delivQty" jdbcType="DECIMAL" />
+    <result column="RCV_QTY" property="rcvQty" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="QTY_CUR_COMM" property="qtyCurComm" jdbcType="DECIMAL" />
+    <result column="DOC_DATE" property="docDate" jdbcType="DATE" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    VENDER_ID, ADN_NUM, DOC_DATE, VENDEE_ID, IDT_NUM, WAREH_ID, DISP_UNIT_ID, DISP_UNIT_TYPE, 
+    REQD_AT, CTRLR_ID, DISP_TIME, RCV_TIME, ADM_QTY, ADM_VAL, PSN_VAL, DELIV_QTY, DELIV_VAL, 
+    RCV_QTY, RCV_VAL, PROGRESS, SUSPENDED, CANCELLED, REMARK, ADM_AT, PRODUCT_COUNT, 
+    IS_GENTBN, BRAND_ID, ALLOCATION_TYPE, FACT_WAREH_ID, FACT_VENDEE_ID, FACT_IDT_NUM, 
+    SRC_UNIT_ID, SRC_DOC_NUM, SRC_DOC_TYPE, TRAN_RCV_WAREH_ID, OS_DOC_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.ADN
+    where VENDER_ID = #{venderId,jdbcType=VARCHAR}
+      and ADN_NUM = #{adnNum,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    delete from MTSBW.ADN
+    where VENDER_ID = #{venderId,jdbcType=VARCHAR}
+      and ADN_NUM = #{adnNum,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 查询计划配货单 -->
+  <select id="select" parameterType="mb.erp.dr.soa.old.vo.AdnVo"  resultMap="BaseResultMap">
+    SELECT * FROM ADN
+    <where>
+      <if test="venderId != null and venderId !=''">
+            AND VENDER_ID = #{venderId}
+      </if>
+      <if test="vendeeId != null and vendeeId !=''">
+            AND VENDEE_ID = #{vendeeId}
+      </if>
+      <if test="adnNum != null and adnNum !=''">
+        	AND ADN_NUM = #{adnNum}
+      </if>
+      <if test="idtNum != null and idtNum !=''">
+        	AND IDT_NUM = #{idtNum}
+      </if>
+    </where>
+  </select>
+  
+  <!-- 查询计划配货单 -->
+  <select id="selectAdnDtl" parameterType="mb.erp.dr.soa.old.vo.AdnVo"  resultMap="AdnDtlVoMap">
+    SELECT * FROM ADN_DTL
+    <where>
+      <if test="venderId != null and venderId !=''">
+            AND VENDER_ID = #{venderId}
+      </if>
+      <if test="adnNum != null and adnNum !=''">
+        	AND ADN_NUM = #{adnNum}
+      </if>
+    </where>
+  </select>
+  
+  <!-- 查询计划配货单详情 -->
+  <select id="selectDtl" parameterType="mb.erp.dr.soa.bean.OrderSearchBean"  resultMap="AdnDtlVoMap">
+    SELECT * FROM ADN_DTL
+    <where>
+      <if test="unitId != null and unitId !=''">
+            AND VENDER_ID = #{unitId}
+      </if>
+      <if test="docNum != null and docNum !=''">
+        	AND ADN_NUM = #{docNum}
+      </if>
+    </where>
+  </select>
+  
+  <!-- 查询计划配货单进度 -->
+  <select id="selectProgress" parameterType="mb.erp.dr.soa.old.vo.AdnVo"  resultType="string">
+    SELECT PROGRESS FROM ADN
+    <where>
+      <if test="venderId != null and venderId !=''">
+            AND VENDER_ID = #{venderId}
+	  </if>
+	  <if test="adnNum != null and adnNum !=''">
+	    	AND ADN_NUM = #{adnNum}
+	  </if>
+    </where>
+   </select>
+   
+  <!-- 更新订单进度和状态 
+  <update id="update" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    update ADN
+    <set >
+      <if test="progress != null" >
+        PROGRESS = #{progress},
+      </if>
+      <if test="cancelled != null" >
+        CANCELLED = #{cancelled},
+      </if>
+    </set>
+    where VENDER_ID = #{venderId}
+      and ADN_NUM = #{adnNum}
+  </update>
+  -->
+  
+  <insert id="save" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    insert into ADN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        VENDER_ID,
+      </if>
+      <if test="adnNum != null and adnNum != ''" >
+        ADN_NUM,
+      </if>
+        DOC_DATE,
+      <if test="vendeeId != null and vendeeId != ''" >
+        VENDEE_ID,
+      </if>
+      <if test="idtNum != null and idtNum != ''" >
+        IDT_NUM,
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        WAREH_ID,
+      </if>
+      <if test="dispUnitId != null and dispUnitId != ''" >
+        DISP_UNIT_ID,
+      </if>
+      <if test="dispUnitType != null and dispUnitType != ''" >
+        DISP_UNIT_TYPE,
+      </if>
+        REQD_AT,
+      <if test="ctrlrId != null and ctrlrId != ''" >
+        CTRLR_ID,
+      </if>
+      <if test="dispTime != null and dispTime != ''" >
+        DISP_TIME,
+      </if>
+      <if test="rcvTime != null and rcvTime != ''" >
+        RCV_TIME,
+      </if>
+      <if test="admQty != null" >
+        ADM_QTY,
+      </if>
+      <if test="admVal != null" >
+        ADM_VAL,
+      </if>
+      <if test="psnVal != null" >
+        PSN_VAL,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL,
+      </if>
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        SUSPENDED,
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        CANCELLED,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+        ADM_AT,
+      <if test="productCount != null" >
+        PRODUCT_COUNT,
+      </if>
+      <if test="isGentbn != null and isGentbn != ''" >
+        IS_GENTBN,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="allocationType != null and allocationType != ''" >
+        ALLOCATION_TYPE,
+      </if>
+      <if test="factWarehId != null and factWarehId != ''" >
+        FACT_WAREH_ID,
+      </if>
+      <if test="factVendeeId != null and factVendeeId != ''" >
+        FACT_VENDEE_ID,
+      </if>
+      <if test="factIdtNum != null and factIdtNum != ''" >
+        FACT_IDT_NUM,
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        SRC_UNIT_ID,
+      </if>
+      <if test="srcDocNum != null and srcDocNum != ''" >
+        SRC_DOC_NUM,
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        SRC_DOC_TYPE,
+      </if>
+      <if test="tranRcvWarehId != null and tranRcvWarehId != ''" >
+        TRAN_RCV_WAREH_ID,
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        #{venderId,jdbcType=VARCHAR},
+      </if>
+      <if test="adnNum != null and adnNum != ''" >
+        #{adnNum,jdbcType=VARCHAR},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="vendeeId != null and vendeeId != ''" >
+        #{vendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="idtNum != null and idtNum != ''" >
+        #{idtNum,jdbcType=VARCHAR},
+      </if>
+      <if test="warehId != null and warehId != ''" >
+        #{warehId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispUnitId != null and dispUnitId != ''" >
+        #{dispUnitId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispUnitType != null and dispUnitType != ''" >
+        #{dispUnitType,jdbcType=VARCHAR},
+      </if>
+        SYSDATE,
+      <if test="ctrlrId != null and ctrlrId != ''" >
+        #{ctrlrId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispTime != null and dispTime != ''" >
+        #{dispTime,jdbcType=DATE},
+      </if>
+      <if test="rcvTime != null and rcvTime != ''" >
+        #{rcvTime,jdbcType=DATE},
+      </if>
+      <if test="admQty != null" >
+        #{admQty,jdbcType=DECIMAL},
+      </if>
+      <if test="admVal != null" >
+        #{admVal,jdbcType=DECIMAL},
+      </if>
+      <if test="psnVal != null" >
+        #{psnVal,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivVal != null" >
+        #{delivVal,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvVal != null" >
+        #{rcvVal,jdbcType=DECIMAL},
+      </if>
+      <if test="progress != null and progress != ''" >
+        #{progress,jdbcType=CHAR},
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        #{suspended,jdbcType=CHAR},
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        #{cancelled,jdbcType=CHAR},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+        SYSDATE,
+      <if test="productCount != null" >
+        #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="isGentbn != null and isGentbn != ''" >
+        #{isGentbn,jdbcType=CHAR},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="allocationType != null and allocationType != ''" >
+        #{allocationType,jdbcType=CHAR},
+      </if>
+      <if test="factWarehId != null and factWarehId != ''" >
+        #{factWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="factVendeeId != null and factVendeeId != ''" >
+        #{factVendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="factIdtNum != null and factIdtNum != ''" >
+        #{factIdtNum,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitId != null and srcUnitId != ''" >
+        #{srcUnitId,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocNum != null and srcDocNum != ''" >
+        #{srcDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocType != null and srcDocType != ''" >
+        #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="tranRcvWarehId != null and tranRcvWarehId != ''" >
+        #{tranRcvWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="saveDtl" parameterType="mb.erp.dr.soa.old.vo.AdnDtlVo" >
+    insert into ADN_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        VENDER_ID,
+      </if>
+      <if test="adnNum != null and adnNum != ''" >
+        ADN_NUM,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="unitPrice != null and unitPrice != ''" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        DISC_RATE,
+      </if>
+      <if test="admQty != null" >
+        ADM_QTY,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+      <if test="qtyCurComm != null and qtyCurComm != ''" >
+        QTY_CUR_COMM,
+      </if>
+      <if test="docDate != null and docDate != ''" >
+        DOC_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="venderId != null and venderId != ''" >
+        #{venderId,jdbcType=VARCHAR},
+      </if>
+      <if test="adnNum != null and adnNum != ''" >
+        #{adnNum,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId,jdbcType=CHAR},
+      </if>
+      <if test="unitPrice != null and unitPrice != ''" >
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null and discRate != ''" >
+        #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="admQty != null" >
+        #{admQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="qtyCurComm != null and qtyCurComm != ''" >
+        #{qtyCurComm,jdbcType=DECIMAL},
+      </if>
+      <if test="docDate != null and docDate != ''" >
+        #{docDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    update ADN
+    <set >
+      <if test="docDate != null" >
+        DOC_DATE = #{docDate,jdbcType=DATE},
+      </if>
+      <if test="vendeeId != null" >
+        VENDEE_ID = #{vendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="idtNum != null" >
+        IDT_NUM = #{idtNum,jdbcType=VARCHAR},
+      </if>
+      <if test="warehId != null" >
+        WAREH_ID = #{warehId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispUnitId != null" >
+        DISP_UNIT_ID = #{dispUnitId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispUnitType != null" >
+        DISP_UNIT_TYPE = #{dispUnitType,jdbcType=VARCHAR},
+      </if>
+      <if test="reqdAt != null" >
+        REQD_AT = #{reqdAt},
+      </if>
+      <if test="ctrlrId != null" >
+        CTRLR_ID = #{ctrlrId,jdbcType=VARCHAR},
+      </if>
+      <if test="dispTime != null" >
+        DISP_TIME = #{dispTime},
+      </if>
+      <if test="rcvTime != null" >
+        RCV_TIME = #{rcvTime},
+      </if>
+      <if test="admQty != null" >
+        ADM_QTY = #{admQty,jdbcType=DECIMAL},
+      </if>
+      <if test="admVal != null" >
+        ADM_VAL = #{admVal,jdbcType=DECIMAL},
+      </if>
+      <if test="psnVal != null" >
+        PSN_VAL = #{psnVal,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY = #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL = #{delivVal,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY = #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL = #{rcvVal,jdbcType=DECIMAL},
+      </if>
+      <if test="progress != null" >
+        PROGRESS = #{progress,jdbcType=CHAR},
+      </if>
+      <if test="suspended != null" >
+        SUSPENDED = #{suspended,jdbcType=CHAR},
+      </if>
+      <if test="cancelled != null" >
+        CANCELLED = #{cancelled,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="admAt != null" >
+        ADM_AT = #{admAt},
+      </if>
+      <if test="productCount != null" >
+        PRODUCT_COUNT = #{productCount,jdbcType=DECIMAL},
+      </if>
+      <if test="isGentbn != null" >
+        IS_GENTBN = #{isGentbn,jdbcType=CHAR},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId,jdbcType=VARCHAR},
+      </if>
+      <if test="allocationType != null" >
+        ALLOCATION_TYPE = #{allocationType,jdbcType=CHAR},
+      </if>
+      <if test="factWarehId != null" >
+        FACT_WAREH_ID = #{factWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="factVendeeId != null" >
+        FACT_VENDEE_ID = #{factVendeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="factIdtNum != null" >
+        FACT_IDT_NUM = #{factIdtNum,jdbcType=VARCHAR},
+      </if>
+      <if test="srcUnitId != null" >
+        SRC_UNIT_ID = #{srcUnitId,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocNum != null" >
+        SRC_DOC_NUM = #{srcDocNum,jdbcType=VARCHAR},
+      </if>
+      <if test="srcDocType != null" >
+        SRC_DOC_TYPE = #{srcDocType,jdbcType=VARCHAR},
+      </if>
+      <if test="tranRcvWarehId != null" >
+        TRAN_RCV_WAREH_ID = #{tranRcvWarehId,jdbcType=VARCHAR},
+      </if>
+      <if test="osDocCode != null" >
+        OS_DOC_CODE = #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where VENDER_ID = #{venderId,jdbcType=VARCHAR}
+      and ADN_NUM = #{adnNum,jdbcType=VARCHAR}
+       <if test="idtNum != null and idtNum != ''" >
+       	and IDT_NUM = #{idtNum}
+       </if>
+       <if test="idtNum != null and idtNum != ''" >
+       	and VENDEE_ID = #{vendeeId}
+       </if>
+       <if test="progressList.size() > 0">
+        and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  
+  <update id="updateDtl" parameterType="mb.erp.dr.soa.old.vo.AdnDtlVo">
+    update ADN_DTL
+    <set>
+      <if test="unitPrice != null">
+        UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null">
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="admQty != null">
+        ADM_QTY = #{admQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null">
+        DELIV_QTY = #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null">
+        RCV_QTY = #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="qtyCurComm != null">
+        QTY_CUR_COMM = #{qtyCurComm,jdbcType=DECIMAL},
+      </if>
+      <if test="docDate != null">
+        DOC_DATE = #{docDate,jdbcType=DATE},
+      </if>
+    </set>
+    where VENDER_ID = #{venderId,jdbcType=VARCHAR}
+      and ADN_NUM = #{adnNum,jdbcType=VARCHAR}
+      <if test="prodId != null and prodId != ''" >
+     	 and PROD_ID = #{prodId,jdbcType=CHAR}
+      </if>
+  </update>
+  
+  <!-- 根据VENDEE_ID IDT_NUM 更新计划配货单明细中收货数量为0 -->
+  <update id="updateAdnDtlByIdt" parameterType="mb.erp.dr.soa.old.vo.AdnVo">
+   update (select t.RCV_QTY FROM ADN_DTL T INNER JOIN ADN A ON T.VENDER_ID = A.VENDER_ID AND T.ADN_NUM = A.ADN_NUM
+	WHERE A.VENDEE_ID = #{vendeeId}
+	AND A.IDT_NUM = #{idtNum})
+	set 
+	   RCV_QTY= 0
+  </update>
+  
+  <!-- 更新计划配货单进度为已收货RD,发货数量为入库单入库数量，发货金额为入库单入库金额 -->
+  <update id="updateAdnByGrn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update ADN I
+	set I.PROGRESS = 'RD',
+	    (RCV_QTY,RCV_VAL)=(SELECT G.TTL_QTY,G.TTL_VAL FROM GRN G WHERE I.ADN_NUM = G.SRC_DOC_NUM  AND G.SRC_UNIT_ID = I.VENDER_ID
+                                  AND G.SRC_DOC_TYPE = 'AAD'),
+        I.RCV_TIME = SYSDATE
+	 where  I.IDT_NUM = #{idtNum} AND I.VENDEE_ID = #{vendeeId}  AND I.VENDER_ID = #{venderId}
+  </update>
+  
+  <!-- 更新计划配货单的进度为已发货DD 发货数量为出库单出库数量，发货金额为出库单出库金额 -->
+  <update id="updateAdnByGdn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+ update ADN I
+   set I.PROGRESS  = 'DD',
+       (DELIV_QTY, DELIV_VAL) = (SELECT G.TTL_QTY, G.TTL_VAL
+                                             FROM GDN G
+                                            WHERE I.ADN_NUM =G.SRC_DOC_NUM
+                                            AND G.SRC_UNIT_ID =I.VENDER_ID
+                                            AND G.SRC_DOC_TYPE ='AAD'),
+       I.DISP_TIME = SYSDATE
+	 where  I.IDT_NUM = #{idtNum} AND I.VENDEE_ID = #{vendeeId}  AND I.VENDER_ID = #{venderId}
+  </update>
+  
+  <!-- 更新计划配货单明细上的发货数量为入库单入库数量 -->
+  <update id="updateAdnDtlByGrn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+      update (SELECT AD.RCV_QTY,AD.QTY_CUR_COMM,AD.PROD_ID FROM ADN_DTL AD 
+			INNER JOIN ADN A ON AD.VENDER_ID = A.VENDER_ID AND A.ADN_NUM = AD.ADN_NUM
+                  AND A.VENDEE_ID = #{vendeeId}  AND A.VENDER_ID = #{venderId}  AND A.IDT_NUM = #{idtNum}) T
+			set  T.RCV_QTY=NVL(
+			(SELECT NVL(gd.quantity,0) FROM  GRN_DTL GD
+			    INNER JOIN GRN G ON GD.UNIT_ID=G.UNIT_ID AND GD.GRN_NUM=G.GRN_NUM
+			    INNER JOIN ADN A ON G.SRC_DOC_NUM = A.ADN_NUM AND A.VENDER_ID = G.SRC_UNIT_ID
+			    WHERE G.SRC_DOC_TYPE = 'AAD'
+			    AND A.VENDEE_ID = #{vendeeId} AND A.VENDER_ID = #{venderId} AND A.IDT_NUM = #{idtNum} 
+			),0),QTY_CUR_COMM = 0
+  </update>
+  
+  <!-- 更新计划配货单明细上的发货数量为出库单出库数量 -->
+  <update id="updateAdnDtlByGdn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update (SELECT AD.DELIV_QTY,AD.PROD_ID FROM ADN_DTL AD 
+    INNER JOIN ADN A ON AD.VENDER_ID = A.VENDER_ID AND A.ADN_NUM = AD.ADN_NUM
+                                          AND A.VENDEE_ID = #{vendeeId}
+                                          AND A.VENDER_ID = #{venderId}
+                                          AND A.IDT_NUM = #{idtNum}) T
+  set  T.DELIV_QTY=NVL((SELECT NVL(gd.quantity,0) FROM  GDN_DTL GD
+          INNER JOIN GDN G ON GD.UNIT_ID=G.UNIT_ID AND GD.GDN_NUM=G.GDN_NUM
+          INNER JOIN ADN A ON G.SRC_DOC_NUM = A.ADN_NUM AND A.VENDER_ID = G.SRC_UNIT_ID
+          WHERE G.SRC_DOC_TYPE = 'AAD'
+			    AND A.VENDEE_ID = #{vendeeId} AND A.VENDER_ID = #{venderId} AND A.IDT_NUM = #{idtNum} ),0)
+  </update>
+  
+  <!-- ==============上层配货单更新========================  -->
+   
+  <!-- 更新上层计划配货单进度为已收货RD,发货数量为入库单入库数量，发货金额为入库单入库金额 -->
+  <update id="updateUpAdnByGrn" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    update ADN I
+    set I.PROGRESS = 'RD',
+        (RCV_QTY,RCV_VAL)=(SELECT G.TTL_QTY,G.TTL_VAL FROM GRN G WHERE I.ADN_NUM = G.SRC_DOC_NUM 
+                                 AND G.SRC_UNIT_ID = I.VENDER_ID AND G.SRC_DOC_TYPE = 'AAD'),
+        I.RCV_TIME = SYSDATE
+     WHERE  I.ADN_NUM = #{adnNum} AND I.VENDER_ID = #{venderId}
+  </update>
+  
+  <!-- 更新上层计划配货单的进度为已发货DD 发货数量为出库单出库数量，发货金额为出库单出库金额 -->
+  <update id="updateUpAdnByGdn" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    update ADN I
+    set I.PROGRESS = 'DD',
+        (DELIV_QTY,DELIV_VAL)=(SELECT G.TTL_QTY,G.TTL_VAL FROM GDN G WHERE I.ADN_NUM = G.SRC_DOC_NUM 
+                                   AND G.SRC_UNIT_ID = I.VENDER_ID  AND G.SRC_DOC_TYPE = 'AAD' ),
+                                   I.DISP_TIME = SYSDATE
+    WHERE  I.ADN_NUM = #{adnNum} AND I.VENDER_ID = #{venderId}
+  </update>
+  
+  <!-- 更新上层计划配货单明细上的发货数量为入库单入库数量 -->
+  <update id="updateUpAdnDtlByGrn" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+      update (SELECT AD.RCV_QTY,AD.QTY_CUR_COMM,AD.PROD_ID FROM ADN_DTL AD 
+      WHERE  AD.VENDER_ID = #{venderId} AND AD.ADN_NUM = #{adnNum} ) T
+      set  T.RCV_QTY=NVL((SELECT GD.QUANTITY FROM GRN_DTL GD INNER JOIN GRN G ON G.UNIT_ID = GD.UNIT_ID AND G.GRN_NUM = GD.GRN_NUM
+                                            INNER JOIN ADN_DTL AD ON G.SRC_UNIT_ID = AD.VENDER_ID AND G.SRC_DOC_NUM = AD.ADN_NUM
+                                            WHERE G.SRC_DOC_TYPE='AAD'
+                                            AND GD.PROD_ID = AD.PROD_ID
+                                            AND T.PROD_ID = AD.PROD_ID
+                                            AND AD.VENDER_ID = #{venderId}
+                                            AND AD.ADN_NUM = #{adnNum} ),0),QTY_CUR_COMM = 0
+  </update>
+  
+  <!-- 更新上层计划配货单明细上的发货数量为出库单出库数量 -->
+  <update id="updateUpAdnDtlByGdn" parameterType="mb.erp.dr.soa.old.vo.AdnVo" >
+    update (SELECT AD.DELIV_QTY,AD.PROD_ID FROM ADN_DTL AD 
+      WHERE  AD.VENDER_ID = #{venderId} AND AD.ADN_NUM = #{adnNum} ) T
+    set  T.DELIV_QTY=NVL((SELECT GD.QUANTITY FROM GDN_DTL GD INNER JOIN GDN G ON G.UNIT_ID = GD.UNIT_ID AND G.GDN_NUM = GD.GDN_NUM 
+                                            INNER JOIN ADN_DTL AD ON G.SRC_UNIT_ID = AD.VENDER_ID AND G.SRC_DOC_NUM = AD.ADN_NUM
+                                            WHERE G.SRC_DOC_TYPE='AAD'
+                                            AND GD.PROD_ID = AD.PROD_ID
+                                            AND T.PROD_ID = AD.PROD_ID
+                                            AND AD.VENDER_ID = #{venderId}
+                                            AND AD.ADN_NUM = #{adnNum} ),0)
+  </update>
+</mapper>

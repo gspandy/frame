@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.mba.dao.TradesEntityMapper" >
+  <resultMap id="BaseResultMap" type="mb.mba.core.entity.TradesEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="doc_num" property="docNum" jdbcType="VARCHAR" />
+    <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+    <result column="doc_mod" property="docMod" jdbcType="CHAR" />
+    <result column="doc_date" property="docDate" jdbcType="TIMESTAMP" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="vender_code" property="venderCode" jdbcType="VARCHAR" />
+    <result column="vender_wareh_code" property="venderWarehCode" jdbcType="VARCHAR" />
+    <result column="vendee_code" property="vendeeCode" jdbcType="VARCHAR" />
+    <result column="vendee_wareh_code" property="vendeeWarehCode" jdbcType="VARCHAR" />
+    <result column="inoutwareh_code" property="inoutwarehCode" jdbcType="VARCHAR" />
+    <result column="src_doc_code" property="srcDocCode" jdbcType="VARCHAR" />
+    <result column="src_doc_num" property="srcDocNum" jdbcType="VARCHAR" />
+    <result column="from_doc_code" property="fromDocCode" jdbcType="VARCHAR" />
+    <result column="from_doc_num" property="fromDocNum" jdbcType="VARCHAR" />
+    <result column="deliv_code" property="delivCode" jdbcType="VARCHAR" />
+    <result column="rel_trader_code" property="relTraderCode" jdbcType="VARCHAR" />
+    <result column="rel_trade_wareh_code" property="relTradeWarehCode" jdbcType="VARCHAR" />
+    <result column="tosap" property="tosap" jdbcType="VARCHAR" />
+    <result column="process" property="process" jdbcType="VARCHAR" />
+    <result column="intax_amount" property="intaxAmount" jdbcType="DECIMAL" />
+    <result column="tax1_amount" property="tax1Amount" jdbcType="DECIMAL" />
+    <result column="tax2_amount" property="tax2Amount" jdbcType="DECIMAL" />
+    <result column="tax3_amount" property="tax3Amount" jdbcType="DECIMAL" />
+    <result column="disrate_amount" property="disrateAmount" jdbcType="DECIMAL" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_oper" property="createOper" jdbcType="VARCHAR" />
+    <result column="modify_oper" property="modifyOper" jdbcType="VARCHAR" />
+    <result column="isvalid" property="isvalid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, doc_num, doc_type, doc_mod, doc_date, brand, quantity, vender_code, vender_wareh_code, 
+    vendee_code, vendee_wareh_code, inoutwareh_code, src_doc_code, src_doc_num, from_doc_code, 
+    from_doc_num, deliv_code, rel_trader_code, rel_trade_wareh_code, tosap, process, 
+    intax_amount, tax1_amount, tax2_amount, tax3_amount, disrate_amount, remarks, modify_time, 
+    create_time, create_oper, modify_oper, isvalid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="queryTradesList" resultMap="BaseResultMap" parameterType="mb.mba.core.entity.TradesEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from trades
+    where 1=1 
+    <if test="createTime != null" >
+       and doc_date &lt;= #{createTime,jdbcType=BIGINT}
+    </if>
+    <if test="modifyTime != null" >
+       and doc_date &gt;= #{modifyTime,jdbcType=BIGINT}
+    </if>
+    <if test="docType != null" >
+       and doc_type=#{docType,jdbcType=BIGINT}
+    </if>
+    <if test="inoutwarehCode != null" >
+       and inoutwareh_code=#{inoutwarehCode,jdbcType=BIGINT}
+    </if>
+    <if test="venderCode != null" >
+       and vender_code=#{venderCode,jdbcType=BIGINT}
+    </if>
+    <if test="vendeeCode != null" >
+       and vendee_code=#{vendeeCode,jdbcType=BIGINT}
+    </if>
+  </select>
+  <select id="queryTradesListCount" resultType="int" parameterType="mb.mba.core.entity.TradesEntity" >
+    select count(1)
+    from trades
+    where 1=1 
+    <if test="createTime != null" >
+       and doc_date &lt;= #{createTime,jdbcType=BIGINT}
+    </if>
+    <if test="modifyTime != null" >
+       and doc_date &gt;= #{modifyTime,jdbcType=BIGINT}
+    </if>
+    <if test="docType != null" >
+       and doc_type=#{docType,jdbcType=BIGINT}
+    </if>
+    <if test="inoutwarehCode != null" >
+       and inoutwareh_code=#{inoutwarehCode,jdbcType=BIGINT}
+    </if>
+    <if test="venderCode != null" >
+       and vender_code=#{venderCode,jdbcType=BIGINT}
+    </if>
+    <if test="vendeeCode != null" >
+       and vendee_code=#{vendeeCode,jdbcType=BIGINT}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,86 @@
+package mb.erp.dr.o2o.drools.rules.idt;
+
+import mb.erp.dr.soa.service.price.NewSettlementPriceRateService;
+import mb.erp.dr.soa.vo.SfIdtDtlVo;
+import mb.erp.dr.soa.vo.SfIdtVo;
+import mb.erp.dr.soa.vo.common.MsgVo;
+import mb.erp.dr.soa.vo.common.MsgListVo;
+import java.util.ArrayList;
+import java.util.List;
+import mb.erp.dr.soa.bean.BalanceBean;
+import mb.erp.dr.soa.service.balance.NewBalanceService;
+import mb.erp.dr.soa.constant.O2OBillConstant.BillType;
+import mb.erp.dr.soa.utils.SoaBillUtils;
+
+/**rule "是否需要判断结转日期"
+	lock-on-active true
+	salience 100
+    when
+        $sfIdt : SfIdtVo( controlStatus matches "^1{1}.*" )
+    then
+    	// System.out.println( "新ERP判断结转日期" );
+        $idtService.isSettle($idt.getVendeeId());
+end
+**/
+
+rule "是否需要重算单价"
+	lock-on-active true
+	salience 90
+    when
+        $sfIdt : SfIdtVo( controlStatus matches "^1{1}.*" )
+        $settlementPriceRateService : NewSettlementPriceRateService()
+        $soaUtil : SoaBillUtils()
+    then
+        // System.out.println( "新ERP现货订单审核重新获取单价" );
+        List<SfIdtDtlVo> idtDtlVos = $sfIdt.getSfIdtDtlVos();
+        List<String> prod_numlist = new ArrayList<String>();
+        for(int i=0;i<idtDtlVos.size();i++){
+            prod_numlist.add(idtDtlVos.get(i).getProdCode());
+        }
+        List<MsgListVo> msgList= $settlementPriceRateService.bulkGetSettlementPriceRateByProdIdList(prod_numlist,$sfIdt.getVenderCode(),$sfIdt.getVendeeCode(),$sfIdt.getCurrency());
+        for(int i=0;i<msgList.size();i++){
+            for(int j=0;j<idtDtlVos.size();j++){
+                if("success".equals(msgList.get(i).getCode())){
+                    if(msgList.get(i).getProdId().equals(idtDtlVos.get(j).getProdCode())){
+                        idtDtlVos.get(j).setUnitPrice(msgList.get(i).getPrice());
+                        idtDtlVos.get(j).setDiscRate(msgList.get(i).getDiscRate());
+                    }
+                }
+            }
+        }
+        $soaUtil.resetSfOrderVal($sfIdt);
+        $sfIdt.setSfIdtDtlVos(idtDtlVos);
+        update($sfIdt);
+end
+
+
+/**
+rule "是否需要冻结金额"
+	lock-on-active true
+	salience 80
+    when
+        $sfIdt : SfIdtVo( controlStatus matches "^[0-1]{2}[1].*" )
+    then
+        // System.out.println( "冻结金额" );
+end
+
+rule "冻结金额是否允许为负数-负数冻结"
+	lock-on-active true
+	salience 70
+    when
+        $sfIdt : SfIdtVo( controlStatus matches "^[0-1]{2}[1].*" && controlStatus matches "^[0-1]{3}[1].*" )
+        $balanceService : NewBalanceService()
+    then
+    	// System.out.println( "负数冻结" );
+end
+
+rule "冻结金额是否允许为负数-正数冻结"
+	lock-on-active true
+	salience 60
+    when
+        $sfIdt : SfIdtVo( controlStatus matches "^[0-1]{2}[1].*" && controlStatus matches "^[0-1]{3}[0].*" )
+        $balanceService : NewBalanceService()
+    then
+    	// System.out.println( "正数冻结" );
+end
+**/

@@ -1,0 +1,344 @@
+package mb.erp.dr.o2o.drools.rules.gdn;
+
+import mb.erp.dr.soa.old.vo.GdnVo;
+import mb.erp.dr.soa.old.vo.GdnDtlVo;
+import mb.erp.dr.soa.old.vo.FreezeTran;
+import mb.erp.dr.soa.constant.O2OBillConstant.BillType;
+import mb.erp.dr.soa.constant.O2OBillConstant.GdnMode;
+import mb.erp.dr.soa.bean.WarehBean;
+import mb.erp.dr.soa.bean.BalanceBean;
+import mb.erp.dr.soa.old.service.wareh.WarehService;
+import mb.erp.dr.soa.old.service.balance.BalanceService;
+import mb.erp.dr.soa.vo.common.MsgListVo;
+import mb.erp.dr.soa.old.service.price.SettlementPriceRateService;
+import mb.erp.dr.soa.old.service.price.CostPriceRateService;
+import java.util.List;
+import java.util.ArrayList;
+import mb.erp.dr.soa.bean.ProdBean;
+import mb.erp.dr.soa.bean.OrderSearchBean;
+import mb.erp.dr.soa.old.vo.WarehCommitedTranVo;
+import mb.erp.dr.soa.old.dao.WarehMapper;
+import mb.erp.dr.soa.old.vo.AdnVo;
+import mb.erp.dr.soa.old.vo.TbnVo;
+import mb.erp.dr.soa.utils.SoaBillUtils;
+import mb.erp.dr.soa.old.service.impl.bill.GdnService
+rule "是否需要重新获取单价"
+    salience 100
+    lock-on-active true
+    when
+        $gdn : GdnVo(controlStatus matches "^1.*" )
+    then
+        // System.out.println( "gdn重新获取单价" );
+        $gdn.getRulesGroup().add("rule1");
+end
+
+
+rule "原始单据类型是否ABG或TBN"
+    salience 90
+    lock-on-active true
+    when
+        $gdn : GdnVo( srcDocType == BillType.ABG || srcDocType == BillType.TBN,$rulesGroup : rulesGroup)
+        $costPriceRateService:CostPriceRateService()
+        $soaUtil : SoaBillUtils()
+    then
+        if($rulesGroup.contains("rule1")){
+            // System.out.println( "按发货组织获取成本价，折率为100%" );
+            $gdn.getRulesGroup().add("rule2");
+            List<GdnDtlVo> gdnDtlVos = $gdn.getGdnDtlVos();
+            List<String> prod_numlist = new ArrayList<String>();
+            for(int i=0;i<gdnDtlVos.size();i++){
+                prod_numlist.add(gdnDtlVos.get(i).getProdId());
+            }
+            List<MsgListVo> msgList= $costPriceRateService.bulkGetCostPriceRateByProdId(prod_numlist,$gdn.getUnitId());
+           for(int i=0;i<msgList.size();i++){
+                MsgListVo tempVo = msgList.get(i);
+                for(int j=0;j<gdnDtlVos.size();j++){
+                    if("success".equals(tempVo.getCode())){
+                        if(tempVo.getProdId().equals(gdnDtlVos.get(j).getProdId())){
+                            gdnDtlVos.get(j).setUnitPrice(tempVo.getPrice());
+                            gdnDtlVos.get(j).setDiscRate(tempVo.getDiscRate());
+                        }
+                    }
+                }
+            }
+            $soaUtil.resetOrderVal($gdn);
+            $gdn.setGdnDtlVos(gdnDtlVos);
+            update($gdn);
+        }
+end
+
+rule "原始单据类型是否AAD或FON"
+    salience 80
+    lock-on-active true
+    when
+        $gdn : GdnVo( srcDocType == BillType.AAD,$rulesGroup : rulesGroup)
+        $settlementPriceRateService:SettlementPriceRateService()
+        $soaUtil : SoaBillUtils()
+   then
+        if($rulesGroup.contains("rule1") && !$rulesGroup.contains("rule2")){
+            // System.out.println( "根据订单购货方+购货方明细，重新获取结算价格和折率" );
+            List<GdnDtlVo> gdnDtlVos = $gdn.getGdnDtlVos();
+	        List<String> prod_numlist = new ArrayList<String>();
+	        for(int i=0;i<gdnDtlVos.size();i++){
+	            prod_numlist.add(gdnDtlVos.get(i).getProdId());
+	        }
+	        List<MsgListVo> msgList= $settlementPriceRateService.bulkGetSettlementPriceRateByProdIdList(prod_numlist,$gdn.getUnitId(),$gdn.getRcvUnitId(),$gdn.getCurrency());
+	        for(int i=0;i<msgList.size();i++){
+	            MsgListVo tempVo = msgList.get(i);
+	            for(int j=0;j<gdnDtlVos.size();j++){
+	                if("success".equals(tempVo.getCode())){
+	                    if(tempVo.getProdId().equals(gdnDtlVos.get(j).getProdId())){
+	                        gdnDtlVos.get(j).setUnitPrice(tempVo.getPrice());
+	                        gdnDtlVos.get(j).setDiscRate(tempVo.getDiscRate());
+	                    }
+	                }
+	            }
+	        }
+	        $soaUtil.resetOrderVal($gdn);
+	        $gdn.setGdnDtlVos(gdnDtlVos);
+	        update($gdn);
+        }
+end
+
+rule "是否需要释放冻结金额"
+    salience 70
+    lock-on-active true
+    when
+        $gdn : GdnVo(controlStatus matches "^[0-1][1].*")
+    then
+        $gdn.getRulesGroup().add("rule3");
+        // System.out.println( "需要释放冻结金额" );
+end
+
+rule "原始单据是否冻结过金额"
+    salience 60
+    lock-on-active true
+    when
+        $gdn : GdnVo($rulesGroup : rulesGroup)
+        $balanceService:BalanceService()
+        $amount:Double()
+    then
+     if ($rulesGroup.contains("rule3")) {
+         // System.out.println( "原始单据冻结过金额" );
+         // 查询冻结事务，判断是否冻结过金额
+        List<FreezeTran> list = $balanceService.selectFreezeTranByDocTypeNum($gdn.getSrcUnitId(),$gdn.getRcvUnitId(),$gdn.getSrcDocType(),$gdn.getSrcDocNum());
+        if(list != null && list.size() > 0){
+            // 按原始单据冻结的金额进行释放
+            // System.out.println( "按原始单据冻结的金额进行释放"+$amount );
+            BalanceBean bb = new BalanceBean();
+            bb.setBalance($amount);
+            bb.setUid($gdn.getSrcUnitId()); // 原始单据供货方
+            bb.setCpdUid($gdn.getRcvUnitId());// 购货方
+            bb.setDocType($gdn.getSrcDocType());
+            bb.setDocNum($gdn.getSrcDocNum());
+            $balanceService.reduceFreeze(bb);
+        }
+     }
+end
+
+rule "第二次判断原始单据类型是否AAD或FON"
+    salience 50
+    lock-on-active true
+    when
+        $gdn : GdnVo(srcDocType == BillType.AAD || srcDocType == BillType.FON)
+   then
+        // System.out.println( "第二次判断原始单据是AAD或FON" );
+        $gdn.getRulesGroup().add("rule4");
+end
+
+rule "是否需要扣减余额"
+    salience 40
+    lock-on-active true
+    when
+        $gdn : GdnVo(controlStatus matches "^[0-1]{2}[1].*" ,$rulesGroup : rulesGroup)
+   then
+        if(!$rulesGroup.contains("rule4")){
+            // System.out.println( "需要扣减余额" );
+            $gdn.getRulesGroup().add("rule5");
+        }
+end
+
+rule "出库方式是否AGRT或SHOR"
+    salience 35
+    lock-on-active true
+    when
+        $gdn : GdnVo($rulesGroup : rulesGroup)
+   then
+        if($rulesGroup.contains("rule4") || $rulesGroup.contains("rule5")){
+            // System.out.println( "出库方式是否AGRT或SHOR ? " );
+            if(GdnMode.SHOR.name().equals($gdn.getDelivMode()) || GdnMode.AGRT.name().equals($gdn.getDelivMode())){
+                // System.out.println( "出库方式是："+$gdn.getDelivMode() );
+                $gdn.getRulesGroup().add("rule35");
+            }
+        }
+end
+
+rule "是否允许余额扣负"
+    salience 30
+    lock-on-active true
+    when
+        $gdn : GdnVo(controlStatus matches "^[0-1]{3}[1].*" ,$rulesGroup : rulesGroup )
+        $balanceService:BalanceService()
+   then
+        if(($rulesGroup.contains("rule4") || $rulesGroup.contains("rule5") ) && !$rulesGroup.contains("rule35")){
+            // System.out.println( "允许余额扣负" +"  供货方:"+$gdn.getUnitId()+" 购货方: "+$gdn.getRcvUnitId()+"金额:"+$gdn.getTtlVal());
+            BalanceBean balanceBean = new BalanceBean();
+	        balanceBean.setUid($gdn.getUnitId()); // 供货方（发货组织）
+	        balanceBean.setCpdUid($gdn.getRcvUnitId()); // 购货方(接收方)
+	        balanceBean.setBalance($gdn.getTtlVal()); // 总金额
+	        balanceBean.setDocType(BillType.GDN);
+	        balanceBean.setDocNum($gdn.getGdnNum());
+	        $balanceService.reduceBalanceNegative(balanceBean); // 负数扣减余额
+        }
+end
+
+rule "调用正数扣减余额接口"
+    salience 29
+    lock-on-active true
+    when
+        $gdn : GdnVo( controlStatus matches "^[0-1]{3}[0].*",$rulesGroup : rulesGroup )
+        $balanceService:BalanceService()
+   then
+        if(($rulesGroup.contains("rule4") || $rulesGroup.contains("rule5") ) && !$rulesGroup.contains("rule35")){
+            // System.out.println( "调用正数扣减余额接口" );
+            BalanceBean balanceBean = new BalanceBean();
+            balanceBean.setUid($gdn.getUnitId()); // 供货方（发货组织）
+            balanceBean.setCpdUid($gdn.getRcvUnitId()); // 购货方(接收方)
+            balanceBean.setBalance($gdn.getTtlVal()); // 总金额
+            balanceBean.setDocDate($gdn.getDocDate()); // 单据日期，查询可支配金额用到
+            // System.out.println( "出库 - 专项资金单据日期："+$gdn.getDocDate() );
+            balanceBean.setDocType(BillType.GDN);
+            balanceBean.setDocNum($gdn.getGdnNum());
+            $balanceService.reduceBalancePositive(balanceBean); //调用正数扣减余额接口
+        }
+end
+
+rule "原始单据是否增加了已分配库存"
+    salience 25
+    lock-on-active true
+    when
+        $gdn : GdnVo()
+        $warehMapper:WarehMapper()
+   then
+        // System.out.println( "判断原始单据是否增加了已分配库存"+$gdn.getWarehId()+" "+ $gdn.getSrcDocNum()+" "+$gdn.getSrcDocType() +" 最终发货仓："+$gdn.getLastFactDispWarehId()+" hadLock:"+$gdn.getHadLockWareh());
+        if($gdn.getWarehId().equals($gdn.getLastFactDispWarehId()) &&  "1".equals($gdn.getHadLockWareh())){
+        	// System.out.println( "最终发货仓都需要释放已分配库存" );
+	        $gdn.getRulesGroup().add("rule7");
+        }else{
+	        OrderSearchBean orderSearchBean = new OrderSearchBean();
+	        orderSearchBean.setWarehId($gdn.getWarehId());
+	        orderSearchBean.setDocNum($gdn.getSrcDocNum());
+	        orderSearchBean.setDocType($gdn.getSrcDocType());
+	        //判断计划配货单或者调配单是否增加过已分配库存
+	        List<WarehCommitedTranVo> warehCommitedTranVo = $warehMapper.searchCommitTranInfo(orderSearchBean);
+	        if (warehCommitedTranVo != null && warehCommitedTranVo.size() > 0) {
+	          // System.out.println( "原始单据增加了已分配库存" );
+	          $gdn.getRulesGroup().add("rule7");
+	        }
+        }
+end
+
+rule "释放已分配库存"
+    salience 20
+    lock-on-active true
+    when
+        $gdn : GdnVo( $rulesGroup : rulesGroup)
+        $warehService : WarehService()
+   then
+        if($rulesGroup.contains("rule7")) {
+           if (BillType.AAD.equals($gdn.getSrcDocType()) || BillType.SAD.equals($gdn.getSrcDocType()) ){
+               // System.out.println( "计划配货单释放已分配库存" );
+               AdnVo vo = new AdnVo();
+               vo.setVenderId($gdn.getUnitId());
+               vo.setAdnNum($gdn.getSrcDocNum());
+               vo.setWarehId($gdn.getWarehId());
+               $warehService.reduceCommitQtyByADN(vo);
+           } 
+            if (BillType.TBN.equals($gdn.getSrcDocType()) ){
+               // System.out.println( "调配单释放已分配库存" );
+               TbnVo vo = new TbnVo();
+               vo.setVenderId($gdn.getRcvUnitId());
+               vo.setVendeeId($gdn.getUnitId());
+               vo.setTbnNum($gdn.getSrcDocNum());
+               vo.setDispWarehId($gdn.getWarehId());
+	           $warehService.reduceCommitQtyByTBN(vo);
+	       }
+        }
+end
+
+rule "是否需要扣减库存"
+    salience 18
+    lock-on-active true
+    when
+        $gdn : GdnVo(controlStatus matches "^[0-1]{4}[1].*" ,$rulesGroup : rulesGroup)
+   then
+            // System.out.println( "需要扣减库存，发货仓："+$gdn.getWarehId());
+            $gdn.getRulesGroup().add("rule6");
+end
+
+rule "扣减库存"
+    salience 15
+    lock-on-active true
+    when
+        $gdn : GdnVo($rulesGroup : rulesGroup  )
+        $warehService : WarehService()
+   then
+        if($rulesGroup.contains("rule6")) {
+            // System.out.println( "扣减库存" );
+            $warehService.reduceQtyByGDN($gdn); // 根据出库单扣减库存
+            $gdn.getRulesGroup().add("rule7");
+        }
+end
+
+rule "出库单上是否存在货位ID"
+    salience 13
+    lock-on-active true
+    when
+        $gdn : GdnVo($rulesGroup : rulesGroup  )
+        $warehService : WarehService()
+   then
+        if($rulesGroup.contains("rule7")) {
+             // System.out.println( "按收货货位或者指定货位扣减库存:出库单编号"+$gdn.getGdnNum() );
+               $warehService.reduceLocQtyByGDN($gdn);
+        }
+end
+
+rule "如果是调拨流程则增加在途库存"
+    salience 12
+    lock-on-active true
+    when
+        $gdn : GdnVo(srcDocType != BillType.SBG)
+        $warehService : WarehService()
+   then
+         if($gdn.getUnitId().equals($gdn.getRcvUnitId())) {
+            // System.out.println( "调拨增加在途库存" );
+        	$warehService.increaseTransitQtyByGDN($gdn); // 根据出库单增加在途库存
+        }
+end
+
+rule "是否需要传输SAP"
+    salience 10
+    lock-on-active true
+    when
+        $gdn : GdnVo(controlStatus matches "^[0-1]{5}[1].*",$rulesGroup : rulesGroup )
+        $warehService : WarehService()
+        $gdnService : GdnService()
+   then
+            //SAP出库传输控制
+            // System.out.println( "SAP出库传输控制" );
+            $gdnService.sapControl($gdn);
+end
+
+rule "是否需要传输新ERP"
+    salience 9
+    lock-on-active true
+    when
+        $gdn : GdnVo(controlStatus matches "^[0-1]{6}[1].*",$rulesGroup : rulesGroup )
+        $warehService : WarehService()
+        $gdnService : GdnService()
+   then
+            //新ERP出库传输控制
+           // System.out.println( "新ERP出库传输控制" );
+           $gdnService.newFlagControl($gdn);
+end
+

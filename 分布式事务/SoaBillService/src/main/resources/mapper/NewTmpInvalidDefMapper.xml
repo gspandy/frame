@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.NewTmpInvalidDefMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.vo.NewTmpInvalidDefVo" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="ACTION" property="action" jdbcType="VARCHAR" />
+    <result column="FLG" property="flg" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 验证订单规则 -->
+  <select id="selectInvalid" parameterType="mb.erp.dr.soa.vo.NewTmpInvalidDefVo"  resultMap="BaseResultMap">
+		SELECT * FROM (SELECT B.ID,A.CODE,
+			       A.TYPE,
+			       A.ACTION,
+			       CASE A.ACTION
+			         WHEN 'EXT' THEN
+			          CASE
+			            WHEN B.PROD_NUM IS NULL THEN
+			             0
+			            ELSE
+			             1
+			          END
+			         WHEN 'STA' THEN
+			          CASE
+			            WHEN B.PROD_STATUS = 'A' THEN
+			             1
+			            ELSE
+			             0
+			          END
+			         ELSE
+			          0
+			       END FLG
+			  FROM NEW_TMP_INVALID_DEF A
+			  LEFT OUTER JOIN BF_PRODUCT B <!--商品表-->
+			    ON (A.CODE = B.PROD_NUM)
+			 WHERE A.TYPE = 'GOODS'
+			UNION ALL
+			SELECT B.ID,A.CODE,
+			       A.TYPE,
+			       A.ACTION,
+			       CASE A.ACTION
+			         WHEN 'EXT' THEN
+			          CASE
+			            WHEN B.CODE IS NULL THEN
+			             0
+			            ELSE
+			             1
+			          END
+			         WHEN 'STA' THEN
+			          CASE
+			            WHEN B.STATUS = 'A' THEN
+			             1
+			            ELSE
+			             0
+			          END
+			         ELSE
+			          0
+			       END FLG
+			  FROM NEW_TMP_INVALID_DEF A
+			  LEFT OUTER JOIN BF_ORG B
+			    ON (A.CODE = B.CODE) <!--组织表-->
+			 WHERE A.TYPE = 'UNIT'
+			
+			UNION ALL
+			SELECT TO_NUMBER(D.KEY_CODE) AS ID,A.CODE,
+			       A.TYPE,
+			       A.ACTION,
+			       CASE A.ACTION
+			         WHEN 'EXT' THEN
+			          CASE
+			            WHEN D.KEY_CODE IS NULL THEN
+			             0
+			            ELSE
+			             1
+			          END
+			         ELSE
+			          0
+			       END FLG
+			  FROM NEW_TMP_INVALID_DEF A
+			  LEFT OUTER JOIN DR_ATP C
+			    ON (C.ATP_CODE = 'BRAND_CLASS')
+			  LEFT OUTER JOIN DR_ATP_DTL D  <!--品牌表-->
+			    ON (C.ID = D.DR_ATP_ID AND D.AT_CODE = A.CODE)
+			 WHERE A.TYPE = 'BRAND')
+		 WHERE FLG = '0'
+  </select>
+  
+  <insert id="save" parameterType="java.util.List" >
+    insert into NEW_TMP_INVALID_DEF (CODE, TYPE, ACTION)
+    <foreach collection="list" item="item" index="index"  separator="UNION ALL" > 
+      SELECT 
+        #{item.code,jdbcType=VARCHAR},
+        #{item.type,jdbcType=VARCHAR},
+        #{item.action,jdbcType=VARCHAR}
+      from dual 
+    </foreach> 
+  </insert>
+  
+  <!-- 向临时表 TMP_PRODUCT_NUM 插入数据 -->
+  <insert id="saveTempProductNum" parameterType="java.util.List" >
+    insert into TMP_PRODUCT_NUM (PROD_NUM)
+    <foreach collection="list" item="item" index="index"  separator="UNION ALL" > 
+      SELECT 
+        #{item,jdbcType=VARCHAR}
+      from dual 
+    </foreach> 
+  </insert>
+  
+</mapper>

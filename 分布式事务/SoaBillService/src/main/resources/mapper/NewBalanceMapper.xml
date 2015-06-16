@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.dao.NewBalanceMapper" >
+    
+    <update id="">
+        UPDATE FI_FSCL_AC A
+	   SET A.ID = A.ID
+	 WHERE A.AC_TYPE = @AC_TYPE
+	   AND A.UNIT_ID = @UNIT_ID
+	   AND A.STATUS = 'A'
+	   AND EXISTS (SELECT 1
+	          FROM FI_FSCL_AC_SCOPE C
+	         WHERE A.ID = C.FSCL_AC_ID
+	           AND C.CPD_UNIT_ID = @CPD_UNIT_ID)
+    </update>
+</mapper>

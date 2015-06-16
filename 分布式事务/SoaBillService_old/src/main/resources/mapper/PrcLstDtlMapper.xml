@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.PrcLstDtlMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.PrcLstDtlVo" >
+    <id column="UNIT_ID" property="unitId" jdbcType="VARCHAR" />
+    <id column="PRC_LST_TYPE" property="prcLstType" jdbcType="CHAR" />
+    <id column="CURRENCY" property="currency" jdbcType="VARCHAR" />
+    <id column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="PROD_PROP" property="prodProp" jdbcType="CHAR" />
+    <result column="PROD_SORT" property="prodSort" jdbcType="CHAR" />
+    <result column="PROD_STYLE" property="prodStyle" jdbcType="CHAR" />
+    <result column="COLOR" property="color" jdbcType="CHAR" />
+    <result column="EDITION" property="edition" jdbcType="CHAR" />
+    <result column="SPEC" property="spec" jdbcType="CHAR" />
+    <result column="PRC_PLCY" property="prcPlcy" jdbcType="CHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="DISC_RATE" property="discRate" jdbcType="DECIMAL" />
+    <result column="EFF_DATE" property="effDate" jdbcType="DATE" />
+    <result column="BRAND_ID" property="brandId" jdbcType="VARCHAR" />
+    <result column="PRN_NUM" property="prnNum" jdbcType="VARCHAR" />
+    <result column="OWNER_ID" property="ownerId" jdbcType="VARCHAR" />
+    <result column="EXEC_DATE" property="execDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    UNIT_ID, PRC_LST_TYPE, CURRENCY, PROD_ID, PROD_PROP, PROD_SORT, PROD_STYLE, COLOR, 
+    EDITION, SPEC, PRC_PLCY, PRICE, DISC_RATE, EFF_DATE, BRAND_ID, PRN_NUM, OWNER_ID, 
+    EXEC_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="mb.erp.dr.soa.old.vo.PrcLstDtlVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from MTSBW.PRC_LST_DTL
+    where UNIT_ID = #{unitId,jdbcType=VARCHAR}
+      and PRC_LST_TYPE = #{prcLstType,jdbcType=CHAR}
+      and CURRENCY = #{currency,jdbcType=VARCHAR}
+      and PROD_ID = #{prodId,jdbcType=VARCHAR}
+  </select>
+	
+  <select id="selectByProdClsNum" resultMap="BaseResultMap" parameterType="map">
+  	SELECT *
+	  FROM (SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               1 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'SHMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND A.UNIT_ID = #{unit_id}
+	        UNION
+	        SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               2 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'AGMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND A.UNIT_ID = #{ag_unit_id}
+	        UNION   
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'GNMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND EXISTS (SELECT 1
+	                  FROM SYS_UNIT X
+	                 WHERE X.UNIT_ID = #{ag_unit_id}
+	                   AND A.UNIT_ID = X.OWNER_ID))
+	 ORDER BY DateOrder
+  </select>
+	
+  <select id="selectByUnitIDProdID" resultMap="BaseResultMap" parameterType="map">
+	SELECT *
+	  FROM (SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               1 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PRODUCT B
+	         WHERE A.PROD_ID = B.PROD_ID
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'SHMK'
+	           AND A.PROD_ID = #{prod_id}
+	           AND A.UNIT_ID = #{unit_id}
+	        UNION
+	        SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               2 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PRODUCT B
+	         WHERE A.PROD_ID = B.PROD_ID
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'AGMK'
+	           AND A.PROD_ID = #{prod_id}
+	           AND A.UNIT_ID = #{ag_unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PRODUCT B
+	         WHERE A.PROD_ID = B.PROD_ID
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'GNMK'
+	           AND A.PROD_ID = #{prod_id}
+	           AND EXISTS (SELECT 1
+	                  FROM SYS_UNIT X
+	                 WHERE X.UNIT_ID = #{ag_unit_id}
+	                   AND A.UNIT_ID = X.OWNER_ID)
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 1||2 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'SHMK'
+	           AND EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE)
+	           AND A.COLOR = #{color}
+	           AND LENGTH(A.PROD_ID) = 8
+	           AND A.UNIT_ID = #{unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 2||2 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'AGMK'
+	           AND EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE)
+	           AND A.COLOR = #{color}
+	           AND LENGTH(A.PROD_ID) = 8
+	           AND A.UNIT_ID = #{ag_unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3||2 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'GNMK'
+	          AND EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE)
+	           AND A.COLOR = #{color}
+	           AND LENGTH(A.PROD_ID) = 8
+	           AND EXISTS (SELECT 1
+	                  FROM SYS_UNIT X
+	                 WHERE X.UNIT_ID = #{ag_unit_id}
+	                   AND A.UNIT_ID = X.OWNER_ID)           
+	        UNION
+	        SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               1 || 3 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'SHMK'
+	           AND EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE)
+	           AND LENGTH(A.PROD_ID) = 6
+	           AND A.UNIT_ID = #{unit_id}
+	        UNION
+	        SELECT A.PRICE,
+	               A.DISC_RATE,
+	               A.PRC_PLCY,
+	               2 || 3 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'AGMK'
+	           AND EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE)
+	           AND LENGTH(A.PROD_ID) = 6
+	           AND A.UNIT_ID = #{ag_unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 3 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND EXISTS (SELECT 1
+	                  FROM PRODUCT P
+	                 WHERE P.PROD_ID = #{prod_id}
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE)
+	           AND LENGTH(A.PROD_ID) = 6
+	           AND A.PRC_LST_TYPE = 'GNMK'
+	           AND A.CURRENCY = #{currency}
+	           AND EXISTS (SELECT 1
+	                  FROM SYS_UNIT X
+	                 WHERE X.UNIT_ID = #{ag_unit_id}
+	                   AND A.UNIT_ID = X.OWNER_ID))
+	 ORDER BY DateOrder
+  </select>
+  
+  <select id="selectByProdColorNum" resultMap="BaseResultMap" parameterType="map">
+	SELECT *
+	  FROM (SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 1 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'SHMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND A.COLOR = #{color}
+	           AND LENGTH(A.PROD_ID) = 6
+	           AND A.UNIT_ID = #{unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 2 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'AGMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND A.COLOR = #{color}
+	           AND LENGTH(A.PROD_ID) = 6
+	           AND A.UNIT_ID = #{ag_unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'GNMK'
+	          AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND A.COLOR = #{color}
+	           AND LENGTH(A.PROD_ID) = 6
+	           AND EXISTS (SELECT 1
+	                  FROM SYS_UNIT X
+	                 WHERE X.UNIT_ID = #{ag_unit_id}
+	                   AND A.UNIT_ID = X.OWNER_ID)
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 1 || 2 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'SHMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND A.UNIT_ID = #{unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 2 || 2 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'AGMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND A.UNIT_ID = #{ag_unit_id}
+	        UNION
+	        SELECT A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 2 AS DateOrder
+	          FROM PRC_LST_DTL A, PROD_CLS B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'GNMK'
+	           AND B.PROD_PROP = #{prod_prop}
+	           AND B.PROD_SORT = #{prod_sort}
+	           AND B.PROD_STYLE = #{prod_style}
+	           AND EXISTS (SELECT 1
+	                  FROM SYS_UNIT X
+	                 WHERE X.UNIT_ID = #{ag_unit_id}
+	                   AND A.UNIT_ID = X.OWNER_ID))
+	 ORDER BY DateOrder
+  </select>
+  
+  <select id="bulkGetRetailPriceRateByProdClsNum" resultMap="BaseResultMap" parameterType="map">
+  	  SELECT TT.PROD_ID, TT.PRICE, TT.DISC_RATE, TT.PRC_PLCY
+	  FROM (SELECT T.PROD_NUM AS PROD_ID,
+	               T.PRICE,
+	               T.DISC_RATE,
+	               T.PRC_PLCY,
+	               ROW_NUMBER() OVER(PARTITION BY T.PROD_NUM ORDER BY T.DateOrder) "RANK"
+	          FROM (SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       1 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'SHMK'
+	                   AND B.PROD_PROP = SUBSTR(C.PROD_NUM, 0, 1)
+	                   AND B.PROD_SORT = SUBSTR(C.PROD_NUM, 2, 2)
+	                   AND B.PROD_STYLE = SUBSTR(C.PROD_NUM, 4, 3)
+	                   AND A.UNIT_ID = #{unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       2 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'AGMK'
+	                   AND B.PROD_PROP = SUBSTR(C.PROD_NUM, 0, 1)
+	                   AND B.PROD_SORT = SUBSTR(C.PROD_NUM, 2, 2)
+	                   AND B.PROD_STYLE = SUBSTR(C.PROD_NUM, 4, 3)
+	                   AND A.UNIT_ID = #{ag_unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       3 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'GNMK'
+	                   AND B.PROD_PROP = SUBSTR(C.PROD_NUM, 0, 1)
+	                   AND B.PROD_SORT = SUBSTR(C.PROD_NUM, 2, 2)
+	                   AND B.PROD_STYLE = SUBSTR(C.PROD_NUM, 4, 3)
+	                   AND EXISTS (SELECT 1
+	                          FROM SYS_UNIT X
+	                         WHERE X.UNIT_ID = #{ag_unit_id}
+	                           AND A.UNIT_ID = X.OWNER_ID)) T) TT
+	 WHERE TT.RANK = 1
+  </select>
+  
+  <select id="bulkGetRetailPriceUnitIDProdIDOld" resultMap="BaseResultMap" parameterType="map">
+	SELECT TTT.PROD_ID, TTT.PRICE, TTT.DISC_RATE, TTT.PRC_PLCY
+	  FROM (SELECT TT.PROD_ID,
+	               TT.PRICE,
+	               TT.DISC_RATE,
+	               TT.PRC_PLCY,
+	               ROW_NUMBER() OVER(PARTITION BY TT.PROD_ID ORDER BY TT.DATEORDER) RN
+	          FROM (SELECT A.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       1 || 1 AS DATEORDER
+	                  FROM PRC_LST_DTL A, PRODUCT B
+	                 WHERE A.PROD_ID = B.PROD_ID
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'SHMK'
+	                   AND A.UNIT_ID = #{unit_id}
+	                   AND EXISTS (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE T.PROD_NUM = A.PROD_ID)
+	                UNION
+	                SELECT A.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       2 || 1 AS DATEORDER
+	                  FROM PRC_LST_DTL A, PRODUCT B
+	                 WHERE A.PROD_ID = B.PROD_ID
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'AGMK'
+	                   AND EXISTS (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE T.PROD_NUM = A.PROD_ID)
+	                   AND A.UNIT_ID = #{ag_unit_id}
+	                UNION
+	                SELECT A.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       3 || 1 AS DATEORDER
+	                  FROM PRC_LST_DTL A, PRODUCT B
+	                 WHERE A.PROD_ID = B.PROD_ID
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'GNMK'
+	                   AND EXISTS (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE T.PROD_NUM = A.PROD_ID)
+	                   AND EXISTS (SELECT 1
+	                          FROM SYS_UNIT X
+	                         WHERE X.UNIT_ID = #{ag_unit_id}
+	                           AND A.UNIT_ID = X.OWNER_ID)
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       1 || 2 AS DATEORDER
+	                  FROM PRC_LST_DTL A
+	                 INNER JOIN PROD_CLS B ON (NVL(A.PROD_PROP, B.PROD_PROP) =
+	                                          B.PROD_PROP AND
+	                                          NVL(A.PROD_SORT, B.PROD_SORT) =
+	                                          B.PROD_SORT AND
+	                                          NVL(A.PROD_STYLE, B.PROD_STYLE) =
+	                                          B.PROD_STYLE)
+	                 INNER JOIN PRODUCT P ON (B.PROD_PROP = P.PROD_PROP AND
+	                                         B.PROD_SORT = P.PROD_SORT AND
+	                                         B.PROD_STYLE = P.PROD_STYLE)
+	                 INNER JOIN TMP_PRODUCT_NUM T ON T.PROD_NUM = P.PROD_ID
+	                 WHERE A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'SHMK'
+	                   AND A.COLOR = SUBSTR(T.PROD_NUM, 7, 2)
+	                   AND LENGTH(A.PROD_ID) = 8
+	                   AND A.UNIT_ID = #{unit_id}
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       2 || 2 AS DATEORDER
+	                  FROM PRC_LST_DTL A
+	                 INNER JOIN PROD_CLS B ON (NVL(A.PROD_PROP, B.PROD_PROP) =
+	                                          B.PROD_PROP AND
+	                                          NVL(A.PROD_SORT, B.PROD_SORT) =
+	                                          B.PROD_SORT AND
+	                                          NVL(A.PROD_STYLE, B.PROD_STYLE) =
+	                                          B.PROD_STYLE)
+	                 INNER JOIN PRODUCT P ON (B.PROD_PROP = P.PROD_PROP AND
+	                                         B.PROD_SORT = P.PROD_SORT AND
+	                                         B.PROD_STYLE = P.PROD_STYLE)
+	                 INNER JOIN TMP_PRODUCT_NUM T ON T.PROD_NUM = P.PROD_ID
+	                 WHERE A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'AGMK'
+	                   AND A.COLOR = SUBSTR(T.PROD_NUM, 7, 2)
+	                   AND LENGTH(A.PROD_ID) = 8
+	                   AND A.UNIT_ID = #{ag_unit_id}
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       3 || 2 AS DATEORDER
+	                  FROM PRC_LST_DTL A
+	                 INNER JOIN PROD_CLS B ON (NVL(A.PROD_PROP, B.PROD_PROP) =
+	                                          B.PROD_PROP AND
+	                                          NVL(A.PROD_SORT, B.PROD_SORT) =
+	                                          B.PROD_SORT AND
+	                                          NVL(A.PROD_STYLE, B.PROD_STYLE) =
+	                                          B.PROD_STYLE)
+	                 INNER JOIN PRODUCT P ON (B.PROD_PROP = P.PROD_PROP AND
+	                                         B.PROD_SORT = P.PROD_SORT AND
+	                                         B.PROD_STYLE = P.PROD_STYLE)
+	                 INNER JOIN TMP_PRODUCT_NUM T ON T.PROD_NUM = P.PROD_ID
+	                 WHERE A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'GNMK'
+	                   AND A.COLOR = SUBSTR(T.PROD_NUM, 7, 2)
+	                   AND LENGTH(A.PROD_ID) = 8
+	                   AND EXISTS (SELECT 1
+	                          FROM SYS_UNIT X
+	                         WHERE X.UNIT_ID = #{ag_unit_id}
+	                           AND A.UNIT_ID = X.OWNER_ID)
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       1 || 3 AS DATEORDER
+	                  FROM PRC_LST_DTL A, PROD_CLS B, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'SHMK'
+	                   AND EXISTS (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE T.PROD_NUM = P.PROD_ID)
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.UNIT_ID = #{unit_id}
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       2 || 3 AS DATEORDER
+	                  FROM PRC_LST_DTL A, PROD_CLS B, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'AGMK'
+	                   AND EXISTS (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE T.PROD_NUM = P.PROD_ID)
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.UNIT_ID = #{ag_unit_id}
+	                UNION
+	                SELECT P.PROD_ID,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       3 || 3 AS DATEORDER
+	                  FROM PRC_LST_DTL A, PROD_CLS B, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND EXISTS (SELECT 1
+	                          FROM TMP_PRODUCT_NUM T
+	                         WHERE T.PROD_NUM = P.PROD_ID)
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.PRC_LST_TYPE = 'GNMK'
+	                   AND A.CURRENCY = #{currency}
+	                   AND EXISTS (SELECT 1
+	                          FROM SYS_UNIT X
+	                         WHERE X.UNIT_ID = #{ag_unit_id}
+	                           AND A.UNIT_ID = X.OWNER_ID)) TT
+	         ORDER BY TT.PROD_ID) TTT
+	 WHERE TTT.RN = 1
+  </select>
+  
+  <select id="selectByProdColorNum2" resultMap="BaseResultMap" parameterType="map">
+	SELECT *
+	  FROM (SELECT A.PROD_ID,A.PRICE, A.DISC_RATE,A.PRC_PLCY, 1 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PRODUCT B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND NVL(TRIM(A.COLOR), B.COLOR) = B.COLOR
+	           AND NVL(TRIM(A.EDITION), B.EDITION) = B.EDITION
+	           AND NVL(TRIM(A.SPEC), B.SPEC) = B.SPEC
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'SHMK'
+	           AND SUBSTR(A.PROD_ID,8)= @PROD_ID
+	           AND A.UNIT_ID = #{unit_id}
+	        UNION
+	        SELECT A.PROD_ID,A.PRICE, A.DISC_RATE,A.PRC_PLCY, 2 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PRODUCT B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND NVL(TRIM(A.COLOR), B.COLOR) = B.COLOR
+	           AND NVL(TRIM(A.EDITION), B.EDITION) = B.EDITION
+	           AND NVL(TRIM(A.SPEC), B.SPEC) = B.SPEC
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'AGMK'
+	           AND SUBSTR(A.PROD_ID,8) = #{prod_id}
+	           AND A.UNIT_ID = #{ag_unit_id}
+	        UNION
+	        SELECT A.PROD_ID,A.PRICE, A.DISC_RATE,A.PRC_PLCY, 3 || 1 AS DateOrder
+	          FROM PRC_LST_DTL A, PRODUCT B
+	         WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	           AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	           AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	           AND NVL(TRIM(A.COLOR), B.COLOR) = B.COLOR
+	           AND NVL(TRIM(A.EDITION), B.EDITION) = B.EDITION
+	           AND NVL(TRIM(A.SPEC), B.SPEC) = B.SPEC
+	           AND A.CURRENCY = #{currency}
+	           AND A.PRC_LST_TYPE = 'GNMK'
+	           AND SUBSTR(A.PROD_ID,8) = #{prod_id}
+	           AND EXISTS (SELECT 1
+	                  FROM SYS_UNIT X
+	                 WHERE X.UNIT_ID = #{ag_unit_id}
+	                   AND A.UNIT_ID = X.OWNER_ID))
+	 ORDER BY DateOrder
+  </select>
+  
+  <select id="bulkGetRetailPriceRateByIntnlBc" resultMap="BaseResultMap" parameterType="map">
+	SELECT TT.PROD_ID, TT.PRICE, TT.DISC_RATE, TT.PRC_PLCY
+	  FROM (SELECT T.PROD_NUM AS PROD_ID,
+	               T.PRICE,
+	               T.DISC_RATE,
+	               T.PRC_PLCY,
+	               ROW_NUMBER() OVER(PARTITION BY T.PROD_NUM ORDER BY T.DateOrder) "RANK"
+	          FROM (SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       1 || 1 AS DateOrder
+	                  FROM PRC_LST_DTL A, PRODUCT B, TMP_PROD_NUM C
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND NVL(TRIM(A.COLOR), B.COLOR) = B.COLOR
+	                   AND NVL(TRIM(A.EDITION), B.EDITION) = B.EDITION
+	                   AND NVL(TRIM(A.SPEC), B.SPEC) = B.SPEC
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'SHMK'
+	                   AND B.INTNL_BC = C.PROD_NUM
+	                   AND A.UNIT_ID = #{unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       2 || 1 AS DateOrder
+	                  FROM PRC_LST_DTL A, PRODUCT B, TMP_PROD_NUM C
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND NVL(TRIM(A.COLOR), B.COLOR) = B.COLOR
+	                   AND NVL(TRIM(A.EDITION), B.EDITION) = B.EDITION
+	                   AND NVL(TRIM(A.SPEC), B.SPEC) = B.SPEC
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'AGMK'
+	                   AND B.INTNL_BC = C.PROD_NUM
+	                   AND A.UNIT_ID = #{ag_unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       3 || 1 AS DateOrder
+	                  FROM PRC_LST_DTL A, PRODUCT B, TMP_PROD_NUM C
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND NVL(TRIM(A.COLOR), B.COLOR) = B.COLOR
+	                   AND NVL(TRIM(A.EDITION), B.EDITION) = B.EDITION
+	                   AND NVL(TRIM(A.SPEC), B.SPEC) = B.SPEC
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'GNMK'
+	                   AND B.INTNL_BC = C.PROD_NUM
+	                   AND EXISTS (SELECT 1
+	                          FROM SYS_UNIT X
+	                         WHERE X.UNIT_ID = #{ag_unit_id}
+	                           AND A.UNIT_ID = X.OWNER_ID)
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       1 || 2 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND P.INTNL_BC = C.PROD_NUM
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'SHMK'
+	                   AND A.COLOR = P.COLOR
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.UNIT_ID = #{unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       2 || 2 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND P.INTNL_BC = C.PROD_NUM
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'AGMK'
+	                   AND A.COLOR = P.COLOR
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.UNIT_ID = #{ag_unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       3 || 2 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND P.INTNL_BC = C.PROD_NUM
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'GNMK'
+	                   AND A.COLOR = P.COLOR
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND EXISTS (SELECT 1
+	                          FROM SYS_UNIT X
+	                         WHERE X.UNIT_ID = #{ag_unit_id}
+	                           AND A.UNIT_ID = X.OWNER_ID)
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       1 || 3 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND P.INTNL_BC = C.PROD_NUM
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'SHMK'
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.UNIT_ID = #{unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       2 || 3 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND P.INTNL_BC = C.PROD_NUM
+	                   AND A.CURRENCY = #{currency}
+	                   AND A.PRC_LST_TYPE = 'AGMK'
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.UNIT_ID = #{ag_unit_id}
+	                UNION
+	                SELECT C.PROD_NUM,
+	                       A.PRICE,
+	                       A.DISC_RATE,
+	                       A.PRC_PLCY,
+	                       3 || 3 AS DateOrder
+	                  FROM PRC_LST_DTL A, PROD_CLS B, TMP_PROD_NUM C, PRODUCT P
+	                 WHERE NVL(A.PROD_PROP, B.PROD_PROP) = B.PROD_PROP
+	                   AND NVL(A.PROD_SORT, B.PROD_SORT) = B.PROD_SORT
+	                   AND NVL(A.PROD_STYLE, B.PROD_STYLE) = B.PROD_STYLE
+	                   AND B.PROD_PROP = P.PROD_PROP
+	                   AND B.PROD_SORT = P.PROD_SORT
+	                   AND B.PROD_STYLE = P.PROD_STYLE
+	                   AND P.INTNL_BC = C.PROD_NUM
+	                   AND LENGTH(A.PROD_ID) = 6
+	                   AND A.PRC_LST_TYPE = 'GNMK'
+	                   AND A.CURRENCY = #{currency}
+	                   AND EXISTS (SELECT 1
+	                          FROM SYS_UNIT X
+	                         WHERE X.UNIT_ID = #{ag_unit_id}
+	                           AND A.UNIT_ID = X.OWNER_ID)) T) TT
+	 WHERE TT.RANK = 1
+  </select>
+  
+</mapper>

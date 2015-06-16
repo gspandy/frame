@@ -1,0 +1,977 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mb.erp.dr.soa.old.dao.IdtMapper" >
+  <resultMap id="BaseResultMap" type="mb.erp.dr.soa.old.vo.IdtVo" >
+    <id column="VENDEE_ID" property="vendeeId"  />
+    <id column="IDT_NUM" property="idtNum"  />
+    <result column="DOC_DATE" property="docDate"  />
+    <result column="VENDER_ID" property="venderId"  />
+    <result column="PID_NUM" property="pidNum"  />
+    <result column="OPR_ID" property="oprId"  />
+    <result column="BUYER_ID" property="buyerId"  />
+    <result column="SELLER_ID" property="sellerId"  />
+    <result column="INVSG_ID" property="invsgId"  />
+    <result column="RCV_WAREH_ID" property="rcvWarehId"  />
+    <result column="DELIV_MTHD" property="delivMthd"  />
+    <result column="DELIV_ADDR" property="delivAddr"  />
+    <result column="DELIV_PSTD" property="delivPstd"  />
+    <result column="REQD_AT" property="reqdAt"  />
+    <result column="TAX_RATE" property="taxRate"  />
+    <result column="CURRENCY" property="currency"  />
+    <result column="ORDER_QTY" property="orderQty"  />
+    <result column="ORDER_VAL" property="orderVal"  />
+    <result column="ADM_QTY" property="admQty"  />
+    <result column="ADM_VAL" property="admVal"  />
+    <result column="DELIV_QTY" property="delivQty"  />
+    <result column="DELIV_VAL" property="delivVal"  />
+    <result column="RCV_QTY" property="rcvQty"  />
+    <result column="RCV_VAL" property="rcvVal"  />
+    <result column="PROGRESS" property="progress"  />
+    <result column="SUSPENDED" property="suspended"  />
+    <result column="CANCELLED" property="cancelled"  />
+    <result column="REMARK" property="remark"  />
+    <result column="ORD_AT" property="ordAt"  />
+    <result column="PRODUCT_COUNT" property="productCount"  />
+    <result column="CIT_TYPE" property="citType"  />
+    <result column="ADN_TAG" property="adnTag"  />
+    <result column="IDT_TYPE" property="idtType"  />
+    <result column="PID_TYPE" property="pidType"  />
+    <result column="SHOP_ID" property="shopId"  />
+    <result column="LOW_IDT_FLAG" property="lowIdtFlag"  />
+    <result column="LOW_SHOP_ID" property="lowShopId"  />
+    <result column="BRAND_ID" property="brandId"  />
+    <result column="CU_UNIT_ID" property="cuUnitId"  />
+    <result column="EFFICIENT_TIME" property="efficientTime"  />
+    <result column="INNER_ORDERNO" property="innerOrderno"  />
+    <result column="MESSAGES" property="messages"  />
+    <result column="TOPIC_SEQ_ID" property="topicSeqId"  />
+    <result column="LAST_MODIFIED_DATE" property="lastModifiedDate"  />
+    <result column="NEW_IDT_ID" property="newIdtId"  />
+    <result column="DATA_SOURCE" property="dataSource"  />
+    <result column="APPROVED" property="approved"  />
+    <result column="DIST_STATUS" property="distStatus"  />
+    <result column="ORDER_DIST_NUMBER" property="orderDistNumber"  />
+    <result column="NS_STATE" property="nsState"  />
+    <result column="AUTO_DIST" property="autoDist"  />
+    <result column="DIST_COUNT" property="distCount"  />
+    <result column="DIST_AUDIT_RESULTS" property="distAuditResults"  />
+    <result column="BEGIN_DIST_TIME" property="beginDistTime"  />
+    <result column="DIST_REMARK" property="distRemark"  />
+    <result column="IS_DISP_REQ" property="isDispReq"  />
+    <result column="IS_OOS" property="isOos"  />
+    <result column="IS_PICKED" property="isPicked"  />
+    <result column="IS_DFT_DISP" property="isDftDisp"  />
+    <result column="APPOINT_WAREH_ID" property="appointWarehId"  />
+    <result column="IS_NEED" property="isNeed"  />
+    <result column="IS_STOCK_DISP" property="isStockDisp"  />
+    <result column="DIST_MSG" property="distMsg"  />
+    <result column="CONSIGN_TYPE" property="consignType"  />
+    <result column="OS_DOC_CODE" property="osDocCode" />
+  </resultMap>
+  
+  <resultMap id="IdtDtlVoResultMap" type="mb.erp.dr.soa.old.vo.IdtDtlVo" >
+    <id column="VENDEE_ID" property="vendeeId"  />
+    <id column="IDT_NUM" property="idtNum"  />
+    <id column="PROD_ID" property="prodId"  />
+    <result column="ORDER_QTY" property="orderQty"  />
+    <result column="ADM_QTY" property="admQty"  />
+    <result column="DELIV_QTY" property="delivQty"  />
+    <result column="RCV_QTY" property="rcvQty"  />
+    <result column="UNIT_PRICE" property="unitPrice"  />
+    <result column="DISC_RATE" property="discRate"  />
+    <result column="REMARK" property="remark"  />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    VENDEE_ID, IDT_NUM, DOC_DATE, VENDER_ID, PID_NUM, OPR_ID, BUYER_ID, SELLER_ID, INVSG_ID, 
+    RCV_WAREH_ID, DELIV_MTHD, DELIV_ADDR, DELIV_PSTD, REQD_AT, TAX_RATE, CURRENCY, ORDER_QTY, 
+    ORDER_VAL, ADM_QTY, ADM_VAL, DELIV_QTY, DELIV_VAL, RCV_QTY, RCV_VAL, PROGRESS, SUSPENDED, 
+    CANCELLED, REMARK, ORD_AT, PRODUCT_COUNT, CIT_TYPE, ADN_TAG, IDT_TYPE, PID_TYPE, 
+    SHOP_ID, LOW_IDT_FLAG, LOW_SHOP_ID, BRAND_ID, CU_UNIT_ID, EFFICIENT_TIME, INNER_ORDERNO, 
+    MESSAGES, TOPIC_SEQ_ID, LAST_MODIFIED_DATE, NEW_IDT_ID, DATA_SOURCE, APPROVED, DIST_STATUS, 
+    ORDER_DIST_NUMBER, NS_STATE, AUTO_DIST, DIST_COUNT, DIST_AUDIT_RESULTS, BEGIN_DIST_TIME, 
+    DIST_REMARK, IS_DISP_REQ, IS_OOS, IS_PICKED, IS_DFT_DISP, APPOINT_WAREH_ID, IS_NEED, 
+    IS_STOCK_DISP, DIST_MSG, CONSIGN_TYPE, OS_DOC_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    select 
+    <include refid="Base_Column_List" />
+    from IDT
+    where VENDEE_ID = #{vendeeId}
+      and IDT_NUM = #{idtNum}
+  </select>
+  <!-- 查询现货订单 -->
+  <select id="select" parameterType="mb.erp.dr.soa.old.vo.IdtVo"  resultMap="BaseResultMap">
+    SELECT * FROM IDT
+    <where>
+      <if test="vendeeId != null and vendeeId !=''">
+            AND VENDEE_ID = #{vendeeId}
+      </if>
+      <if test="idtNum != null and idtNum !=''">
+        	AND IDT_NUM = #{idtNum}
+      </if>
+    </where>
+  </select>
+  
+  <!-- 查询现货订单详情 -->
+  <select id="selectDtl" parameterType="mb.erp.dr.soa.old.vo.IdtVo"  resultMap="IdtDtlVoResultMap">
+    SELECT * FROM IDT_DTL
+    <where>
+      <if test="vendeeId != null and vendeeId !=''">
+            AND VENDEE_ID = #{vendeeId}
+      </if>
+      <if test="idtNum != null and idtNum !=''">
+        	AND IDT_NUM = #{idtNum}
+      </if>
+    </where>
+  </select>
+  
+  <!-- 查询现货订单进度 -->
+  <select id="selectProgress" parameterType="mb.erp.dr.soa.old.vo.IdtVo"  resultType="string">
+    SELECT PROGRESS FROM IDT
+    <where>
+      <if test="vendeeId != null and vendeeId !=''">
+            AND VENDEE_ID = #{vendeeId}
+	  </if>
+	  <if test="idtNum != null and idtNum !=''">
+	    	AND IDT_NUM = #{idtNum}
+	  </if>
+    </where>
+  </select>
+  
+  <!-- 更新订单进度和状态 
+  <update id="update" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update IDT
+    <set >
+      <if test="progress != null" >
+        PROGRESS = #{progress},
+      </if>
+      <if test="cancelled != null" >
+        CANCELLED = #{cancelled},
+      </if>
+    </set>
+    where VENDEE_ID = #{vendeeId}
+      and IDT_NUM = #{idtNum}
+  </update>
+  -->
+  
+  <delete id="deleteByPrimaryKey" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    delete from MTSBW.IDT
+    where VENDEE_ID = #{vendeeId}
+      and IDT_NUM = #{idtNum}
+  </delete>
+
+  <insert id="save" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    insert into IDT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null and vendeeId != ''" >
+        VENDEE_ID,
+      </if>
+      <if test="idtNum != null and idtNum != ''" >
+        IDT_NUM,
+      </if>
+        DOC_DATE,
+      <if test="venderId != null and venderId != ''" >
+        VENDER_ID,
+      </if>
+      <if test="pidNum != null and pidNum != ''" >
+        PID_NUM,
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        OPR_ID,
+      </if>
+      <if test="buyerId != null and buyerId != ''" >
+        BUYER_ID,
+      </if>
+      <if test="sellerId != null and sellerId != ''" >
+        SELLER_ID,
+      </if>
+      <if test="invsgId != null and invsgId != ''" >
+        INVSG_ID,
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        RCV_WAREH_ID,
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        DELIV_MTHD,
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        DELIV_ADDR,
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        DELIV_PSTD,
+      </if>
+        REQD_AT,
+      <if test="taxRate != null" >
+        TAX_RATE,
+      </if>
+      <if test="currency != null and currency != ''" >
+        CURRENCY,
+      </if>
+      <if test="orderQty != null" >
+        ORDER_QTY,
+      </if>
+      <if test="orderVal != null" >
+        ORDER_VAL,
+      </if>
+      <if test="admQty != null" >
+        ADM_QTY,
+      </if>
+      <if test="admVal != null" >
+        ADM_VAL,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL,
+      </if>
+      <if test="progress != null and progress != ''" >
+        PROGRESS,
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        SUSPENDED,
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        CANCELLED,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+        ORD_AT,
+      <if test="productCount != null" >
+        PRODUCT_COUNT,
+      </if>
+      <if test="citType != null and citType != ''" >
+        CIT_TYPE,
+      </if>
+      <if test="adnTag != null and adnTag != ''" >
+        ADN_TAG,
+      </if>
+      <if test="idtType != null and idtType != ''" >
+        IDT_TYPE,
+      </if>
+      <if test="pidType != null and pidType != ''" >
+        PID_TYPE,
+      </if>
+      <if test="shopId != null and shopId != ''" >
+        SHOP_ID,
+      </if>
+      <if test="lowIdtFlag != null and lowIdtFlag != ''" >
+        LOW_IDT_FLAG,
+      </if>
+      <if test="lowShopId != null and lowShopId != ''" >
+        LOW_SHOP_ID,
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        BRAND_ID,
+      </if>
+      <if test="cuUnitId != null and cuUnitId != ''" >
+        CU_UNIT_ID,
+      </if>
+      <if test="efficientTime != null and efficientTime != ''" >
+        EFFICIENT_TIME,
+      </if>
+      <if test="innerOrderno != null and innerOrderno != ''" >
+        INNER_ORDERNO,
+      </if>
+      <if test="messages != null and messages != ''" >
+        MESSAGES,
+      </if>
+      <if test="topicSeqId != null and topicSeqId != ''" >
+        TOPIC_SEQ_ID,
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        LAST_MODIFIED_DATE,
+      </if>
+      <if test="newIdtId != null and newIdtId != ''" >
+        NEW_IDT_ID,
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        DATA_SOURCE,
+      </if>
+      <if test="approved != null and approved != ''" >
+        APPROVED,
+      </if>
+      <if test="distStatus != null and distStatus != ''" >
+        DIST_STATUS,
+      </if>
+      <if test="orderDistNumber != null and orderDistNumber != ''" >
+        ORDER_DIST_NUMBER,
+      </if>
+      <if test="nsState != null and nsState != ''" >
+        NS_STATE,
+      </if>
+      <if test="autoDist != null and autoDist != ''" >
+        AUTO_DIST,
+      </if>
+      <if test="distCount != null" >
+        DIST_COUNT,
+      </if>
+      <if test="distAuditResults != null and distAuditResults != ''" >
+        DIST_AUDIT_RESULTS,
+      </if>
+      <if test="beginDistTime != null and beginDistTime != ''" >
+        BEGIN_DIST_TIME,
+      </if>
+      <if test="distRemark != null and distRemark != ''" >
+        DIST_REMARK,
+      </if>
+      <if test="isDispReq != null and isDispReq != ''" >
+        IS_DISP_REQ,
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        IS_OOS,
+      </if>
+      <if test="isPicked != null and isPicked != ''" >
+        IS_PICKED,
+      </if>
+      <if test="isDftDisp != null and isDftDisp != ''" >
+        IS_DFT_DISP,
+      </if>
+      <if test="appointWarehId != null and appointWarehId != ''" >
+        APPOINT_WAREH_ID,
+      </if>
+      <if test="isNeed != null and isNeed != ''" >
+        IS_NEED,
+      </if>
+      <if test="isStockDisp != null and isStockDisp != ''" >
+        IS_STOCK_DISP,
+      </if>
+      <if test="distMsg != null and distMsg != ''" >
+        DIST_MSG,
+      </if>
+      <if test="consignType != null and consignType != ''" >
+        CONSIGN_TYPE,
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        OS_DOC_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null and vendeeId != ''" >
+        #{vendeeId},
+      </if>
+      <if test="idtNum != null and idtNum != ''" >
+        #{idtNum},
+      </if>
+       TRUNC(SYSDATE),
+      <if test="venderId != null and venderId != ''" >
+        #{venderId},
+      </if>
+      <if test="pidNum != null and pidNum != ''" >
+        #{pidNum},
+      </if>
+      <if test="oprId != null and oprId != ''" >
+        #{oprId},
+      </if>
+      <if test="buyerId != null and buyerId != ''" >
+        #{buyerId},
+      </if>
+      <if test="sellerId != null and sellerId != ''" >
+        #{sellerId},
+      </if>
+      <if test="invsgId != null and invsgId != ''" >
+        #{invsgId},
+      </if>
+      <if test="rcvWarehId != null and rcvWarehId != ''" >
+        #{rcvWarehId},
+      </if>
+      <if test="delivMthd != null and delivMthd != ''" >
+        #{delivMthd},
+      </if>
+      <if test="delivAddr != null and delivAddr != ''" >
+        #{delivAddr},
+      </if>
+      <if test="delivPstd != null and delivPstd != ''" >
+        #{delivPstd},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="taxRate != null" >
+        #{taxRate},
+      </if>
+      <if test="currency != null and currency != ''" >
+        #{currency},
+      </if>
+      <if test="orderQty != null" >
+        #{orderQty},
+      </if>
+      <if test="orderVal != null" >
+        #{orderVal},
+      </if>
+      <if test="admQty != null" >
+        #{admQty},
+      </if>
+      <if test="admVal != null" >
+        #{admVal},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty},
+      </if>
+      <if test="delivVal != null" >
+        #{delivVal},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty},
+      </if>
+      <if test="rcvVal != null" >
+        #{rcvVal},
+      </if>
+      <if test="progress != null and progress != ''" >
+        #{progress},
+      </if>
+      <if test="suspended != null and suspended != ''" >
+        #{suspended},
+      </if>
+      <if test="cancelled != null and cancelled != ''" >
+        #{cancelled},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark},
+      </if>
+        TRUNC(SYSDATE),
+      <if test="productCount != null" >
+        #{productCount},
+      </if>
+      <if test="citType != null and citType != ''" >
+        #{citType},
+      </if>
+      <if test="adnTag != null and adnTag != ''" >
+        #{adnTag},
+      </if>
+      <if test="idtType != null and idtType != ''" >
+        #{idtType},
+      </if>
+      <if test="pidType != null and pidType != ''" >
+        #{pidType},
+      </if>
+      <if test="shopId != null and shopId != ''" >
+        #{shopId},
+      </if>
+      <if test="lowIdtFlag != null and lowIdtFlag != ''" >
+        #{lowIdtFlag},
+      </if>
+      <if test="lowShopId != null and lowShopId != ''" >
+        #{lowShopId},
+      </if>
+      <if test="brandId != null and brandId != ''" >
+        #{brandId},
+      </if>
+      <if test="cuUnitId != null and cuUnitId != ''" >
+        #{cuUnitId},
+      </if>
+      <if test="efficientTime != null and efficientTime != ''" >
+        #{efficientTime},
+      </if>
+      <if test="innerOrderno != null and innerOrderno != ''" >
+        #{innerOrderno},
+      </if>
+      <if test="messages != null and messages != ''" >
+        #{messages},
+      </if>
+      <if test="topicSeqId != null and topicSeqId != ''" >
+        #{topicSeqId},
+      </if>
+      <if test="lastModifiedDate != null and lastModifiedDate != ''" >
+        #{lastModifiedDate},
+      </if>
+      <if test="newIdtId != null and newIdtId != ''" >
+        #{newIdtId},
+      </if>
+      <if test="dataSource != null and dataSource != ''" >
+        #{dataSource},
+      </if>
+      <if test="approved != null and approved != ''" >
+        #{approved},
+      </if>
+      <if test="distStatus != null and distStatus != ''" >
+        #{distStatus},
+      </if>
+      <if test="orderDistNumber != null and orderDistNumber != ''" >
+        #{orderDistNumber},
+      </if>
+      <if test="nsState != null and nsState != ''" >
+        #{nsState},
+      </if>
+      <if test="autoDist != null and autoDist != ''" >
+        #{autoDist},
+      </if>
+      <if test="distCount != null" >
+        #{distCount},
+      </if>
+      <if test="distAuditResults != null and distAuditResults != ''" >
+        #{distAuditResults},
+      </if>
+      <if test="beginDistTime != null and beginDistTime != ''" >
+        #{beginDistTime},
+      </if>
+      <if test="distRemark != null and distRemark != ''" >
+        #{distRemark},
+      </if>
+      <if test="isDispReq != null and isDispReq != ''" >
+        #{isDispReq},
+      </if>
+      <if test="isOos != null and isOos != ''" >
+        #{isOos},
+      </if>
+      <if test="isPicked != null and isPicked != ''" >
+        #{isPicked},
+      </if>
+      <if test="isDftDisp != null and isDftDisp != ''" >
+        #{isDftDisp},
+      </if>
+      <if test="appointWarehId != null and appointWarehId != ''" >
+        #{appointWarehId},
+      </if>
+      <if test="isNeed != null and isNeed != ''" >
+        #{isNeed},
+      </if>
+      <if test="isStockDisp != null and isStockDisp != ''" >
+        #{isStockDisp},
+      </if>
+      <if test="distMsg != null and distMsg != ''" >
+        #{distMsg},
+      </if>
+      <if test="consignType != null and consignType != ''" >
+        #{consignType},
+      </if>
+      <if test="osDocCode != null and osDocCode != ''" >
+        #{osDocCode},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="saveDtl" parameterType="mb.erp.dr.soa.old.vo.IdtDtlVo" >
+    insert into IDT_DTL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null and vendeeId != ''" >
+        VENDEE_ID,
+      </if>
+      <if test="idtNum != null and idtNum != ''" >
+        IDT_NUM,
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        PROD_ID,
+      </if>
+      <if test="orderQty != null" >
+        ORDER_QTY,
+      </if>
+      <if test="admQty != null" >
+        ADM_QTY,
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY,
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY,
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE,
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE,
+      </if>
+      <if test="remark != null and remark != ''" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="vendeeId != null and vendeeId != ''" >
+        #{vendeeId},
+      </if>
+      <if test="idtNum != null and idtNum != ''" >
+        #{idtNum},
+      </if>
+      <if test="prodId != null and prodId != ''" >
+        #{prodId},
+      </if>
+      <if test="orderQty != null" >
+        #{orderQty},
+      </if>
+      <if test="admQty != null" >
+        #{admQty},
+      </if>
+      <if test="delivQty != null" >
+        #{delivQty},
+      </if>
+      <if test="rcvQty != null" >
+        #{rcvQty},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice},
+      </if>
+      <if test="discRate != null" >
+        #{discRate},
+      </if>
+      <if test="remark != null and remark != ''" >
+        #{remark},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update IDT
+    <set >
+      <if test="docDate != null" >
+        DOC_DATE = #{docDate},
+      </if>
+      <if test="venderId != null" >
+        VENDER_ID = #{venderId},
+      </if>
+      <if test="pidNum != null" >
+        PID_NUM = #{pidNum},
+      </if>
+      <if test="oprId != null" >
+        OPR_ID = #{oprId},
+      </if>
+      <if test="buyerId != null" >
+        BUYER_ID = #{buyerId},
+      </if>
+      <if test="sellerId != null" >
+        SELLER_ID = #{sellerId},
+      </if>
+      <if test="invsgId != null" >
+        INVSG_ID = #{invsgId},
+      </if>
+      <if test="rcvWarehId != null" >
+        RCV_WAREH_ID = #{rcvWarehId},
+      </if>
+      <if test="delivMthd != null" >
+        DELIV_MTHD = #{delivMthd},
+      </if>
+      <if test="delivAddr != null" >
+        DELIV_ADDR = #{delivAddr},
+      </if>
+      <if test="delivPstd != null" >
+        DELIV_PSTD = #{delivPstd},
+      </if>
+      <if test="reqdAt != null" >
+        REQD_AT = #{reqdAt},
+      </if>
+      <if test="taxRate != null" >
+        TAX_RATE = #{taxRate},
+      </if>
+      <if test="currency != null" >
+        CURRENCY = #{currency},
+      </if>
+      <if test="orderQty != null" >
+        ORDER_QTY = #{orderQty},
+      </if>
+      <if test="orderVal != null" >
+        ORDER_VAL = #{orderVal},
+      </if>
+      <if test="admQty != null" >
+        ADM_QTY = #{admQty},
+      </if>
+      <if test="admVal != null" >
+        ADM_VAL = #{admVal},
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY = #{delivQty},
+      </if>
+      <if test="delivVal != null" >
+        DELIV_VAL = #{delivVal},
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY = #{rcvQty},
+      </if>
+      <if test="rcvVal != null" >
+        RCV_VAL = #{rcvVal},
+      </if>
+      <if test="progress != null" >
+        PROGRESS = #{progress},
+      </if>
+      <if test="suspended != null" >
+        SUSPENDED = #{suspended},
+      </if>
+      <if test="cancelled != null" >
+        CANCELLED = #{cancelled},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark},
+      </if>
+      <if test="ordAt != null" >
+        ORD_AT = #{ordAt},
+      </if>
+      <if test="productCount != null" >
+        PRODUCT_COUNT = #{productCount},
+      </if>
+      <if test="citType != null" >
+        CIT_TYPE = #{citType},
+      </if>
+      <if test="adnTag != null" >
+        ADN_TAG = #{adnTag},
+      </if>
+      <if test="idtType != null" >
+        IDT_TYPE = #{idtType},
+      </if>
+      <if test="pidType != null" >
+        PID_TYPE = #{pidType},
+      </if>
+      <if test="shopId != null" >
+        SHOP_ID = #{shopId},
+      </if>
+      <if test="lowIdtFlag != null" >
+        LOW_IDT_FLAG = #{lowIdtFlag},
+      </if>
+      <if test="lowShopId != null" >
+        LOW_SHOP_ID = #{lowShopId},
+      </if>
+      <if test="brandId != null" >
+        BRAND_ID = #{brandId},
+      </if>
+      <if test="cuUnitId != null" >
+        CU_UNIT_ID = #{cuUnitId},
+      </if>
+      <if test="efficientTime != null" >
+        EFFICIENT_TIME = #{efficientTime},
+      </if>
+      <if test="innerOrderno != null" >
+        INNER_ORDERNO = #{innerOrderno},
+      </if>
+      <if test="messages != null" >
+        MESSAGES = #{messages},
+      </if>
+      <if test="topicSeqId != null" >
+        TOPIC_SEQ_ID = #{topicSeqId},
+      </if>
+      <if test="lastModifiedDate != null" >
+        LAST_MODIFIED_DATE = #{lastModifiedDate},
+      </if>
+      <if test="newIdtId != null" >
+        NEW_IDT_ID = #{newIdtId},
+      </if>
+      <if test="dataSource != null" >
+        DATA_SOURCE = #{dataSource},
+      </if>
+      <if test="approved != null" >
+        APPROVED = #{approved},
+      </if>
+      <if test="distStatus != null" >
+        DIST_STATUS = #{distStatus},
+      </if>
+      <if test="orderDistNumber != null" >
+        ORDER_DIST_NUMBER = #{orderDistNumber},
+      </if>
+      <if test="nsState != null" >
+        NS_STATE = #{nsState},
+      </if>
+      <if test="autoDist != null" >
+        AUTO_DIST = #{autoDist},
+      </if>
+      <if test="distCount != null" >
+        DIST_COUNT = #{distCount},
+      </if>
+      <if test="distAuditResults != null" >
+        DIST_AUDIT_RESULTS = #{distAuditResults},
+      </if>
+      <if test="beginDistTime != null" >
+        BEGIN_DIST_TIME = #{beginDistTime},
+      </if>
+      <if test="distRemark != null" >
+        DIST_REMARK = #{distRemark},
+      </if>
+      <if test="isDispReq != null" >
+        IS_DISP_REQ = #{isDispReq},
+      </if>
+      <if test="isOos != null" >
+        IS_OOS = #{isOos},
+      </if>
+      <if test="isPicked != null" >
+        IS_PICKED = #{isPicked},
+      </if>
+      <if test="isDftDisp != null" >
+        IS_DFT_DISP = #{isDftDisp},
+      </if>
+      <if test="appointWarehId != null" >
+        APPOINT_WAREH_ID = #{appointWarehId},
+      </if>
+      <if test="isNeed != null" >
+        IS_NEED = #{isNeed},
+      </if>
+      <if test="isStockDisp != null" >
+        IS_STOCK_DISP = #{isStockDisp},
+      </if>
+      <if test="distMsg != null" >
+        DIST_MSG = #{distMsg},
+      </if>
+      <if test="consignType != null" >
+        CONSIGN_TYPE = #{consignType},
+      </if>
+      <if test="osDocCode != null" >
+        OS_DOC_CODE = #{osDocCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where VENDEE_ID = #{vendeeId}
+      and IDT_NUM = #{idtNum}
+      <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  
+  <update id="updateDtl" parameterType="mb.erp.dr.soa.old.vo.IdtDtlVo" >
+    update IDT_DTL
+    <set >
+      <if test="orderQty != null" >
+        ORDER_QTY = #{orderQty,jdbcType=DECIMAL},
+      </if>
+      <if test="admQty != null" >
+        ADM_QTY = #{admQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delivQty != null" >
+        DELIV_QTY = #{delivQty,jdbcType=DECIMAL},
+      </if>
+      <if test="rcvQty != null" >
+        RCV_QTY = #{rcvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="unitPrice != null" >
+        UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discRate != null" >
+        DISC_RATE = #{discRate,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where VENDEE_ID = #{vendeeId,jdbcType=VARCHAR}
+      and IDT_NUM = #{idtNum,jdbcType=VARCHAR}
+      <if test="prodId != null and prodId != ''" >
+      	and PROD_ID = #{prodId,jdbcType=CHAR}
+      </if>
+  </update>
+  
+  <!-- 更新现货订单的配货数量和配货金额为计划配货单的对应值 -->
+  <update id="updateByAdn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update IDT T
+     set 
+      PROGRESS = #{progress},
+      (ADM_QTY,ADM_VAL) = (SELECT G.ADM_QTY,G.ADM_VAL FROM ADN G WHERE G.IDT_NUM = T.IDT_NUM AND G.VENDEE_ID = T.VENDEE_ID )
+    where T.VENDEE_ID = #{vendeeId,jdbcType=VARCHAR}
+      and T.IDT_NUM = #{idtNum,jdbcType=VARCHAR}
+       <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  
+  <!-- 更新现货订单详情的配货数量为计划配货单详情的对应值 -->
+  <update id="updateDtlByAdn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update MTSBW.IDT_DTL T
+    set 
+       ADM_QTY= NVL(
+         (SELECT AD.ADM_QTY FROM ADN_DTL AD INNER JOIN ADN A ON A.ADN_NUM = AD.ADN_NUM
+         AND A.VENDER_ID = AD.VENDER_ID
+         WHERE AD.PROD_ID = T.PROD_ID  AND A.IDT_NUM=T.IDT_NUM AND A.VENDEE_ID = T.VENDEE_ID),0
+       )
+    where T.VENDEE_ID = #{vendeeId,jdbcType=VARCHAR}
+      and T.IDT_NUM = #{idtNum,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 更新现货订单进度为已收货RD,发货数量为入库单入库数量，发货金额为入库单入库金额 -->
+  <update id="updateIdtByGrn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update IDT I
+	set I.PROGRESS = #{progress},
+	    (RCV_QTY,RCV_VAL)=(SELECT G.TTL_QTY,G.TTL_VAL FROM GRN G INNER JOIN ADN A ON A.ADN_NUM = G.SRC_DOC_NUM  AND G.SRC_UNIT_ID = A.VENDER_ID
+                                  AND G.SRC_DOC_TYPE = 'AAD' WHERE A.IDT_NUM = I.IDT_NUM AND A.VENDEE_ID = I.VENDEE_ID)
+	 where  I.IDT_NUM = #{idtNum} AND I.VENDEE_ID = #{vendeeId} 
+	 <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+	  
+  </update>
+  
+  <!-- 更新现货订单的进度为已发货DD 发货数量为出库单出库数量，发货金额为出库单出库金额 -->
+  <update id="updateIdtByGdn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update IDT I
+	set I.PROGRESS = #{progress},
+	    (DELIV_QTY,DELIV_VAL)=(SELECT G.TTL_QTY,G.TTL_VAL FROM GDN G INNER JOIN ADN A ON A.ADN_NUM = G.SRC_DOC_NUM  AND G.UNIT_ID = A.VENDER_ID
+                                  AND G.SRC_DOC_TYPE = 'AAD' WHERE A.IDT_NUM = I.IDT_NUM AND A.VENDEE_ID = I.VENDEE_ID)
+	 where  I.IDT_NUM = #{idtNum} AND I.VENDEE_ID = #{vendeeId}  
+	  <if test="progressList.size() > 0">
+         and 
+       <foreach item="item" index="index" collection="progressList"  open="(" separator="or" close=")">               
+                PROGRESS =  #{item}            
+       </foreach>
+      </if>
+  </update>
+  
+  <!-- 更新现货订单明细上的发货数量为入库单入库数量 -->
+  <update id="updateIdtDtlByGrn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update IDT_DTL I 
+	set  RCV_QTY=NVL((SELECT GD.QUANTITY FROM GRN_DTL GD INNER JOIN GRN G ON G.UNIT_ID = GD.UNIT_ID AND G.GRN_NUM = GD.GRN_NUM 
+                                        INNER JOIN ADN A ON G.SRC_DOC_NUM = A.ADN_NUM AND G.SRC_UNIT_ID = A.VENDER_ID
+                                        WHERE G.SRC_DOC_TYPE='AAD'
+                                        AND GD.PROD_ID = I.PROD_ID
+                                        AND A.VENDEE_ID = I.VENDEE_ID
+                                        AND A.IDT_NUM = I.IDT_NUM),0)
+	 where  I.IDT_NUM = #{idtNum} AND I.VENDEE_ID = #{vendeeId}  
+  </update>
+  
+  <!-- 更新现货订单明细上的发货数量为出库单出库数量 -->
+  <update id="updateIdtDtlByGdn" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update IDT_DTL I 
+	set  DELIV_QTY=NVL((SELECT GD.QUANTITY FROM GDN_DTL GD INNER JOIN GDN G ON G.UNIT_ID = GD.UNIT_ID AND G.GDN_NUM = GD.GDN_NUM 
+                                        INNER JOIN ADN A ON G.SRC_DOC_NUM = A.ADN_NUM AND G.SRC_UNIT_ID = A.VENDER_ID
+                                        WHERE G.SRC_DOC_TYPE='AAD'
+                                        AND GD.PROD_ID = I.PROD_ID
+                                        AND A.VENDEE_ID = I.VENDEE_ID
+                                        AND A.IDT_NUM = I.IDT_NUM),0)
+	 where  I.IDT_NUM = #{idtNum} AND I.VENDEE_ID = #{vendeeId}  
+  </update>
+  
+  <!-- 根据出库单 GDN 查询 现货订单 -->
+  <select id="selectIdtByGdn" parameterType="mb.erp.dr.soa.old.vo.GdnVo"  resultMap="BaseResultMap">
+    SELECT I.* FROM IDT I INNER JOIN ADN A ON A.IDT_NUM = I.IDT_NUM AND A.VENDEE_ID = I.VENDEE_ID
+                      INNER JOIN GDN G ON G.SRC_DOC_NUM = A.ADN_NUM AND A.VENDER_ID = G.UNIT_ID
+                      WHERE G.SRC_DOC_TYPE = 'AAD'
+                      AND   G.UNIT_ID = #{unitId}
+                      AND   G.GDN_NUM = #{gdnNum}
+  </select>
+  
+  <!-- 根据入库单 GRN 查询 现货订单 -->
+  <select id="selectIdtByGrn" parameterType="mb.erp.dr.soa.old.vo.GrnVo"  resultMap="BaseResultMap">
+    SELECT I.* FROM IDT I INNER JOIN ADN A ON A.IDT_NUM = I.IDT_NUM AND A.VENDEE_ID = I.VENDEE_ID
+                      INNER JOIN GRN G ON G.SRC_DOC_NUM = A.ADN_NUM AND A.VENDER_ID = G.DISP_UNIT_ID
+                      WHERE G.SRC_DOC_TYPE = 'AAD'
+                      AND   G.UNIT_ID = #{unitId}
+                      AND   G.GRN_NUM = #{grnNum}
+  </select>
+  
+  <!--  根据计划配货单关联到现货订单-〉从现货订单中获取税率 -->
+  <select id="selectTaxRateFromIdt" parameterType="map"  resultType="java.lang.Double">
+  	    SELECT NVL(MAX(I.TAX_RATE),-1)
+	    FROM ADN A, IDT I
+	   WHERE A.IDT_NUM = I.IDT_NUM
+	     AND A.VENDEE_ID = I.VENDEE_ID
+	     AND A.SUSPENDED = 'F'
+	     AND A.CANCELLED = 'F'
+	     AND I.SUSPENDED = 'F'
+	     AND I.CANCELLED = 'F'
+	     AND A.VENDER_ID = #{unit_id}
+	     AND A.ADN_NUM = #{docNum}
+  </select>
+  
+   <!-- 将新ERP的现货订单单号写入到老ERP现货订单 -->
+  <update id="updateNewErpIdtCode" parameterType="mb.erp.dr.soa.old.vo.IdtVo" >
+    update MTSBW.IDT
+    set 
+      NEW_IDT_ID = #{newIdtId}
+    where VENDEE_ID = #{vendeeId}
+      and IDT_NUM = #{idtNum}
+  </update>
+</mapper>
