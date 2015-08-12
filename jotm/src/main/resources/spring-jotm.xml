@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:context="http://www.springframework.org/schema/context"   
+    xmlns:aop="http://www.springframework.org/schema/aop"   
+    xmlns:tx="http://www.springframework.org/schema/tx"   
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd   
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd   
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd   
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+    
+    <description>spring JTA</description>
+    
+    <!-- 指定spring配置中用到的属性文件 -->
+    <bean id="propertyConfig" 
+                    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- JOTM实例 -->
+    <bean id="jotm" class="org.springframework.transaction.jta.JotmFactoryBean">
+        <property name="defaultTimeout" value="500000" />
+    </bean>
+    
+    <!-- JTA事务管理器 -->
+    <bean id="jtaTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="userTransation" ref="jotm" />
+    </bean>
+    
+    <!-- 数据源A
+    <bean id="dataSourceA" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource">
+    </bean> -->
+    
+     <!-- 配置数据源A -->
+    <bean name="dataSourceA" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url"     value="${jdbcUrl}" />  
+        <property name="username" value="${user}" />  
+        <property name="password" value="${password}" />  
+        <property name="initialSize" value="${initialPoolSize}" />  
+        <property name="maxWait" value="${maxIdleTime}" />  
+        <property name="maxActive" value="${maxPoolSize}" />  
+        <property name="testWhileIdle"  value="false"/>
+    </bean>  
+    
+         <!-- 配置数据源B -->
+    <bean name="dataSourceB" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url"     value="${jdbcUrl}" />  
+        <property name="username" value="${user}" />  
+        <property name="password" value="${password}" />  
+        <property name="initialSize" value="${initialPoolSize}" />  
+        <property name="maxWait" value="${maxIdleTime}" />  
+        <property name="maxActive" value="${maxPoolSize}" />  
+        <property name="testWhileIdle"  value="false"/>
+    </bean>  
+    
+    <!-- springjdbc -->
+    <bean id="jdbcTemplateA"  class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceA" />
+    </bean>
+    
+    <bean id="jdbcTemplateB"  class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceB" />
+    </bean>
+    
+    <aop:config>
+        <aop:pointcut id="pointCut" expression="execution( * *..common.service..*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
+    </aop:config>
+    
+    <!-- 通知配置 -->
+    <tx:advice id="txAdvice" transaction-manager="jtaTransactionManager">
+        <tx:attributes>
+            <tx:method name="delete*" rollback-for="Exception"/>
+            <tx:method name="save*" rollback-for="Exception"/>
+            <tx:method name="update*" rollback-for="Exception"/>
+            <tx:method name="find*"  read-only="true" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+    
+    <bean id="genericDao"   class="com.yucy.jotm.dao.GenericDao" />
+    
+    <bean id="userService"   class="com.yucy.jotm.service.impl.UserServiceImpl" />
+        
+</beans>
