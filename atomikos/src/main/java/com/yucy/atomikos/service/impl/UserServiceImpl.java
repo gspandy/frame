@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 		
 		sql.delete(0, sql.length());
 		sql.append(" insert into t_user(name,sex) values(?,?);");
-		objs = new Object[]{username,"女"}; // 值超出范围
+		objs = new Object[]{username,"0"}; // 值超出范围
 		genericDao.save("B", sql.toString(), objs);
 		
 	}

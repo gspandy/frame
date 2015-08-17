@@ -1,5 +1,6 @@
 
 总体来说呢，atomikos比jotm配置起来复杂一点，还需要配置实现类：UserTransactionImp
+还要配置一个属性文件：jta.properties
 
 两个用DB驱动也有点不一样：
 jotm里面用com.mysql.jdbc.Driver是可以的，但是到了atomikos，必须用com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
@@ -8,3 +9,5 @@ jotm里面用com.mysql.jdbc.Driver是可以的，但是到了atomikos，必须�
 
 而且，其testQuery配置项无比坑爹，两个数据源的表名一样，同一个sql居然在另外一个数据源执行失败
 （SELECT * FROM T_USER），后来改成了 SELECT 1 ，当然，如果是oracle，需要改成 SELECT 1 FROM DUAL
+
+当然，最让人无法忍受的是他的日志输出，巨多

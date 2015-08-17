@@ -47,7 +47,6 @@
         <groupId>com.atomikos</groupId>
         <artifactId>transactions-jdbc</artifactId>
         <version>3.7.0</version>
-        <scope>compile</scope>
     </dependency>
         
     <dependency>
