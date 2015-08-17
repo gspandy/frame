@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd ">
+    
+    <description>spring jdbc</description>
+
+    <!-- 配置数据源A -->
+    <bean name="dataSourceA" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource" destroy-method="shutdown">
+<!--         <property name="url"     value="${jdbcUrlB}" />   -->
+<!--         <property name="username" value="${userB}" />   -->
+<!--         <property name="password" value="${passwordB}" />   -->
+<!--         <property name="initialSize" value="${initialPoolSizeB}" />   -->
+<!--         <property name="maxWait" value="${maxIdleTimeB}" />   -->
+<!--         <property name="maxActive" value="${maxPoolSizeB}" />   -->
+<!--         <property name="testWhileIdle"  value="false"/> -->
+        <property name="dataSource">  
+            <bean class="org.enhydra.jdbc.standard.StandardXADataSource"  
+                destroy-method="shutdown">  
+                <property name="transactionManager" ref="jotm"></property>  
+                <property name="driverName" value="com.mysql.jdbc.Driver"></property>  
+                <property name="url" value="${jdbcUrlA}"></property>  
+            </bean>  
+        </property>  
+        <property name="user" value="${userA}" />  
+        <property name="password" value="${passwordA}" />
+    </bean>  
+    
+         <!-- 配置数据源B com.alibaba.druid.pool.DruidDataSource -->
+    <bean name="dataSourceB" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource" destroy-method="shutdown">
+        <property name="dataSource">  
+            <bean class="org.enhydra.jdbc.standard.StandardXADataSource"  
+                destroy-method="shutdown">  
+                <property name="transactionManager" ref="jotm"></property>  
+                <property name="driverName" value="com.mysql.jdbc.Driver"></property>  
+                <property name="url" value="${jdbcUrlB}"></property>  
+            </bean>  
+        </property>  
+        <property name="user" value="${userB}" />  
+        <property name="password" value="${passwordB}" />
+    </bean>  
+    
+</beans>
