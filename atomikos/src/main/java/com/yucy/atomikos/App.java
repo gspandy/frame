@@ -1,4 +1,4 @@
-package com.yucy.jotm;
+package com.yucy.atomikos;
 
 /**
  * Hello world!

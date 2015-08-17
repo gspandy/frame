@@ -1,4 +1,4 @@
-package com.yucy.jotm;
+package com.yucy.atomikos;
 
 import javax.annotation.Resource;
 
@@ -8,21 +8,21 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.yucy.jotm.service.UserService;
+import com.yucy.atomikos.service.UserService;
 
 
 /**
- * 测试jotm分布式事务
+ * Unit test for simple App.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:spring-jotm.xml"})
-public class AppTest {
+@ContextConfiguration(locations={"classpath:spring-atomikos.xml"})
+public class AppTest{
 	
 	@Resource
 	private UserService userService;
 	
 	@Test
-	public void test_jot(){
+	public void test_atomikos(){
 		System.out.println("==============start...");
 		try {
 			userService.saveUser();

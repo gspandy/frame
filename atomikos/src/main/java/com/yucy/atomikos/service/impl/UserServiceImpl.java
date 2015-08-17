@@ -1,9 +1,9 @@
-package com.yucy.jotm.service.impl;
+package com.yucy.atomikos.service.impl;
 
 import javax.annotation.Resource;
 
-import com.yucy.jotm.dao.GenericDao;
-import com.yucy.jotm.service.UserService;
+import com.yucy.atomikos.dao.GenericDao;
+import com.yucy.atomikos.service.UserService;
 
 public class UserServiceImpl implements UserService {
 
@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void saveUser() throws Exception {
-		String username = "jotm_user_"+Math.round(Math.random()*10000);
+		String username = "atomikos_user_"+Math.round(Math.random()*10000);
 		System.out.println(username);
 		
 		StringBuilder sql = new StringBuilder();
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 		
 		sql.delete(0, sql.length());
 		sql.append(" insert into t_user(name,sex) values(?,?);");
-		objs = new Object[]{username,"1"}; // 值超出范围
+		objs = new Object[]{username,"女"}; // 值超出范围
 		genericDao.save("B", sql.toString(), objs);
 		
 	}

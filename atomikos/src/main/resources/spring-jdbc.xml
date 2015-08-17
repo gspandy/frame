@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd ">
+    
+    <description>spring jdbc</description>
+
+    <bean id="atomikosJdbcConfigParent" class="com.atomikos.jdbc.AtomikosDataSourceBean" 
+        init-method="init" destroy-method="close" abstract="true">
+        <!-- 因为都是mysql的数据库，所以此项属性可以写在父bean里面，否则需要在各个数据源区分定义 -->
+        <property name="xaDataSourceClassName"  value="${xaDriverClass}"/>
+        <property name="maxPoolSize"  value="${maxPoolSize}"/>
+        <property name="minPoolSize"  value="${minPoolSize}"/>
+        <property name="testQuery"  value="${testQuery}"/>
+        <!--  <property name="borrowConnectionTimeout" value="${borrowConnectionTimeout}"/>  
+        <property name="reapTimeout" value="${reapTimeout}"/>  
+        <property name="maxIdleTime" value="${maxIdleTime}"/>  
+        <property name="maintenanceInterval" value="${maintenanceInterval}"/>  -->
+    </bean>
+    
+    <!-- 数据源A -->
+    <bean id="datasourceA" parent="atomikosJdbcConfigParent"  lazy-init="true">
+        <property name="uniqueResourceName"  value="datasource_A_"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="URL">${jdbcUrlA}</prop>
+                <prop key="user">${userA}</prop>
+                <prop key="password">${passwordA}</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!-- 数据源B -->
+    <bean id="datasourceB" parent="atomikosJdbcConfigParent"   lazy-init="true">
+        <property name="uniqueResourceName"  value="datasource_B_"/>
+        <property name="xaProperties">
+            <props>
+                <prop key="URL">${jdbcUrlB}</prop>
+                <prop key="user">${userB}</prop>
+                <prop key="password">${passwordB}</prop>
+            </props>
+        </property>
+    </bean>
+    
+</beans>
