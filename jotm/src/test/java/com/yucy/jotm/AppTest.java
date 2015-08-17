@@ -1,5 +1,7 @@
 package com.yucy.jotm;
 
+import javax.annotation.Resource;
+
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +17,12 @@ import com.yucy.jotm.service.UserService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-jotm.xml"})
 public class AppTest {
+	
+	@Resource
 	private UserService userService;
 	
 	@Test
-	private void test(){
+	public void test(){
 		System.out.println("==============start...");
 		try {
 			userService.saveUser();

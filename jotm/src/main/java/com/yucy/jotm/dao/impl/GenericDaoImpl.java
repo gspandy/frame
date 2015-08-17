@@ -1,22 +1,18 @@
 package com.yucy.jotm.dao.impl;
 
+import javax.annotation.Resource;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.yucy.jotm.dao.GenericDao;
 
 public class GenericDaoImpl implements GenericDao {
 	
+	@Resource
 	private JdbcTemplate jdbcTemplateA;
 	
+	@Resource
 	private JdbcTemplate jdbcTemplateB;
-
-	public void setJdbcTemplateA(JdbcTemplate jdbcTemplateA) {
-		this.jdbcTemplateA = jdbcTemplateA;
-	}
-
-	public void setJdbcTemplateB(JdbcTemplate jdbcTemplateB) {
-		this.jdbcTemplateB = jdbcTemplateB;
-	}
 
 	@Override
 	public int save(String ds, String sql, Object[] obj) throws Exception{

@@ -12,8 +12,7 @@
     <description>spring JTA</description>
     
     <!-- 指定spring配置中用到的属性文件 -->
-    <bean id="propertyConfig" 
-                    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean id="propertyConfig"   class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
                 <value>classpath:jdbc.properties</value>
@@ -21,40 +20,54 @@
         </property>
     </bean>
     
-    <!-- JOTM实例 -->
-    <bean id="jotm" class="org.springframework.transaction.jta.JotmFactoryBean">
-        <property name="defaultTimeout" value="500000" />
-    </bean>
+    <!-- JOTM实例 JotmFactoryBean -->
+    <bean id="jotm" class="com.yucy.jotm.JotmFactoryBean" />
     
     <!-- JTA事务管理器 -->
     <bean id="jtaTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
-        <property name="userTransation" ref="jotm" />
+        <property name="userTransaction" ref="jotm" />
     </bean>
     
-    <!-- 数据源A
-    <bean id="dataSourceA" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource">
-    </bean> -->
-    
      <!-- 配置数据源A -->
-    <bean name="dataSourceA" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-        <property name="url"     value="${jdbcUrl}" />  
-        <property name="username" value="${user}" />  
-        <property name="password" value="${password}" />  
-        <property name="initialSize" value="${initialPoolSize}" />  
-        <property name="maxWait" value="${maxIdleTime}" />  
-        <property name="maxActive" value="${maxPoolSize}" />  
-        <property name="testWhileIdle"  value="false"/>
+    <bean name="dataSourceA" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource" destroy-method="shutdown">
+<!--         <property name="url"     value="${jdbcUrlB}" />   -->
+<!--         <property name="username" value="${userB}" />   -->
+<!--         <property name="password" value="${passwordB}" />   -->
+<!--         <property name="initialSize" value="${initialPoolSizeB}" />   -->
+<!--         <property name="maxWait" value="${maxIdleTimeB}" />   -->
+<!--         <property name="maxActive" value="${maxPoolSizeB}" />   -->
+<!--         <property name="testWhileIdle"  value="false"/> -->
+        <property name="dataSource">  
+            <bean class="org.enhydra.jdbc.standard.StandardXADataSource"  
+                destroy-method="shutdown">  
+                <property name="transactionManager" ref="jotm"></property>  
+                <property name="driverName" value="com.mysql.jdbc.Driver"></property>  
+                <property name="url" value="${jdbcUrlA}"></property>  
+            </bean>  
+        </property>  
+        <property name="user" value="${userA}" />  
+        <property name="password" value="${passwordA}" />
     </bean>  
     
-         <!-- 配置数据源B -->
-    <bean name="dataSourceB" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-        <property name="url"     value="${jdbcUrl}" />  
-        <property name="username" value="${user}" />  
-        <property name="password" value="${password}" />  
-        <property name="initialSize" value="${initialPoolSize}" />  
-        <property name="maxWait" value="${maxIdleTime}" />  
-        <property name="maxActive" value="${maxPoolSize}" />  
-        <property name="testWhileIdle"  value="false"/>
+         <!-- 配置数据源B com.alibaba.druid.pool.DruidDataSource -->
+    <bean name="dataSourceB" class="org.enhydra.jdbc.pool.StandardXAPoolDataSource" destroy-method="shutdown">
+<!--         <property name="url"     value="${jdbcUrlB}" />   -->
+<!--         <property name="username" value="${userB}" />   -->
+<!--         <property name="password" value="${passwordB}" />   -->
+<!--         <property name="initialSize" value="${initialPoolSizeB}" />   -->
+<!--         <property name="maxWait" value="${maxIdleTimeB}" />   -->
+<!--         <property name="maxActive" value="${maxPoolSizeB}" />   -->
+<!--         <property name="testWhileIdle"  value="false"/> -->
+        <property name="dataSource">  
+            <bean class="org.enhydra.jdbc.standard.StandardXADataSource"  
+                destroy-method="shutdown">  
+                <property name="transactionManager" ref="jotm"></property>  
+                <property name="driverName" value="com.mysql.jdbc.Driver"></property>  
+                <property name="url" value="${jdbcUrlB}"></property>  
+            </bean>  
+        </property>  
+        <property name="user" value="${userB}" />  
+        <property name="password" value="${passwordB}" />
     </bean>  
     
     <!-- springjdbc -->
@@ -66,8 +79,9 @@
         <property name="dataSource" ref="dataSourceB" />
     </bean>
     
+    <!-- com.yucy.jotm.service.impl -->
     <aop:config>
-        <aop:pointcut id="pointCut" expression="execution( * *..common.service..*(..))" />
+        <aop:pointcut id="pointCut" expression="execution( * com.yucy.jotm.service.impl.*.*(..))" />
         <aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
     </aop:config>
     
@@ -81,7 +95,7 @@
         </tx:attributes>
     </tx:advice>
     
-    <bean id="genericDao"   class="com.yucy.jotm.dao.GenericDao" />
+    <bean id="genericDao"   class="com.yucy.jotm.dao.impl.GenericDaoImpl" />
     
     <bean id="userService"   class="com.yucy.jotm.service.impl.UserServiceImpl" />
         

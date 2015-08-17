@@ -1,0 +1,21 @@
+
+首先：spring 2.5以后，spring 删除了JotmFactoryBean ，spring不再提供对jotm提供支持，NND.
+
+于是，我在项目里自己实现了一个JotmFactoryBean，（找这玩意半天）
+
+而且，阿里的Druid对jotm分布式事务数据源支持有点问题，（其中一个事务出现异常，会部分提交成功。）不过也说不定是我配置错误。
+
+最后还是换成了网上推荐的enhydra做数据源支持。
+
+记录下异常的配置，后面碰到再做研究。
+
+<!-- 配置数据源A -->
++    <bean name="dataSourceA" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
++        <property name="url"     value="${jdbcUrl}" />  
++        <property name="username" value="${user}" />  
++        <property name="password" value="${password}" />  
++        <property name="initialSize" value="${initialPoolSize}" />  
++        <property name="maxWait" value="${maxIdleTime}" />  
++        <property name="maxActive" value="${maxPoolSize}" />  
++        <property name="testWhileIdle"  value="false"/>
++    </bean>  
